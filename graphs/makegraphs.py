@@ -169,9 +169,12 @@ for data_folder in sorted(folder_structure.keys()):
       if len(labels) > 0:
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
-        plt.ylim(.2,0.5)
-        plt.xlim(-5, 30000)
-        plt.xlim(-500, 1000000)
+        # For HP
+        plt.ylim(.6, 1.0)
+        # For MQ
+        # plt.ylim(.2, .55)
+        plt.xlim(-5, 5300)
+        # plt.xlim(-500, 1000000)
         # plt.xlim(-5, max_ind)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')

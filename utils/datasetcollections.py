@@ -232,6 +232,24 @@ DATASET_COLLECTION['local_MQ2008'] = DataSet('MQ2008',
                                              '/Users/hroosterhuis/Documents/ILPS/datasets/MQ2008/Fold*/'
                                              , 'short', True, 40)
 
+DATASET_COLLECTION['local_HP2003'] = DataSet('HP2003', 'datasets/HP2003/Fold*/',
+                                       'bin', True, 59,
+                                       multileave_feat=[
+                                               range(11,16), #TF-IDF
+                                               range(21,26), #BM25
+                                               range(26,41), #LMIR
+                                               [41,42],      #SiteMap
+                                               [49,50]       #HITS
+                                             ])
+DATASET_COLLECTION['local_MQ2007'] = DataSet('MQ2007',
+                                'datasets/MQ2007/Fold*/',
+                                'short',
+                                       True, 41,
+                                       multileave_feat=[
+                                               range(11,16), #TF-IDF
+                                               range(21,26), #BM25
+                                               range(26,41)  #LMIR
+                                             ])
 
 DATASET_COLLECTION['local_single_MNIST'] = DataSet('mnist',
                                              [

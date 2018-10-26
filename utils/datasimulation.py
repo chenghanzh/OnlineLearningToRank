@@ -70,7 +70,7 @@ class DataSimulation(object):
     self.update_active()
 
     seconds_past = time.time() - starttime
-    print ('Time taken: %s (%d seconds)' %
+    print (' Time taken: %s (%d seconds)' %
         (str(datetime.timedelta(seconds=seconds_past)),
          seconds_past))
 
@@ -92,6 +92,7 @@ class DataSimulation(object):
       self.update_active()
     print 'Read   %d: Fold %d of dataset %s.' % (self.read_index,
               datafold.fold_num + 1, datafold.name)
+
     datafold.read_data()
     self.read_index += 1
     self.wait_for_output()
