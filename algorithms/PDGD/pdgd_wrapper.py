@@ -79,7 +79,7 @@ class PDGD_Wrapper(PDGD):
     # _last_query_feat
     for i in range(last_doc_index):
         docid = self.ranking[i]
-        feature = _last_query_feat[docid]
+        feature = self._last_query_feat[docid]
         viewed_list.append(feature)
 
     ###############################################################

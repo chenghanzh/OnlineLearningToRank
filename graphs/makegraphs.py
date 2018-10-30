@@ -170,15 +170,19 @@ for data_folder in sorted(folder_structure.keys()):
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
         # For HP
-        plt.ylim(.6, 1.0)
+        # plt.ylim(.6, 0.8)
         # For MQ
-        # plt.ylim(.2, .55)
-        plt.xlim(-5, 5300)
+        plt.ylim(.3, .5)
+        # For Yahoo
+        plt.ylim(.4, .8)
+        # For Web10k
+        # plt.ylim(.1, .4)
+        # plt.xlim(-5, 5300)
         # plt.xlim(-500, 1000000)
         # plt.xlim(-5, max_ind)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')
-        if click_model == 'perfect':
+        if click_model == 'informational':
           plt.legend(labels, loc=4, fontsize=16, frameon=False, ncol=1)
         # plt.legend(labels, loc=0, fontsize=26, frameon=False, ncol=1)
 

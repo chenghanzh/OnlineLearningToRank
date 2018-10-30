@@ -5,24 +5,17 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from models.linearmodel import LinearModel
 import utils.rankings as rnk
-from algorithms.DBGD.tdmgd import TD_MGD
+from algorithms.DBGD.tddbgd import TD_DBGD
 
 # Dueling Bandit Gradient Descent
-class TD_MGD_Wrapper(TD_MGD):
+class TD_DBGD_Wrapper(TD_DBGD):
 
-  def __init__(self, n_candidates, *args, **kargs):
-    super(TD_MGD_Wrapper, self).__init__(n_candidates, *args, **kargs)
-  #   self.model = LinearModel(n_features = self.n_features,
-  #                            learning_rate = self.learning_rate,
-  #                            n_candidates = n_candidates)
+  def __init__(self, *args, **kargs):
+    super(TD_DBGD_Wrapper, self).__init__(*args, **kargs)
+    # self.model = LinearModel(n_features = self.n_features,
+    #                          learning_rate = self.learning_rate)
 
-  # @staticmethod
-  # def default_parameters():
-  #   parent_parameters = TD_DBGD.default_parameters()
-  #   parent_parameters.update({
-  #     'n_candidates': 9,
-  #     })
-  #   return parent_parameters
+
   def update_to_interaction(self, clicks):
     winners = self.multileaving.winning_rankers(clicks)
     ###############################################################

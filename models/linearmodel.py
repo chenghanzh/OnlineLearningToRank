@@ -31,6 +31,28 @@ class LinearModel(object):
     vectors /= vector_norms[None, :]
     self.weights[:, 1:] = self.weights[:, 0, None] + vectors
 
+
+
+
+
+  # def sample_candidates(self):
+  #   assert self.n_models > 1
+  #   vectors = np.random.randn(self.n_features, self.n_models-1)
+  #   vector_norms = np.sum(vectors ** 2, axis=0) ** (1. / 2)
+  #   vectors /= vector_norms[None, :]
+  #   self.weights[:, 1:] = self.weights[:, 0, None] + vectors
+
+  #   ### From lerot
+  #   delta = 1.0
+  #   for i in range(0, self.n_models-1):
+  #       u = self.sample_unit_sphere(self.n_features)
+  #       r = self.w + delta * u
+  #       self.weights[:, 1:] = self.weights[:, 0, None] + delta * u
+  #   ###
+
+
+    
+
   def update_to_mean_winners(self, winners, viewed_list=None):
     assert self.n_models > 1
     if len(winners) > 0:
