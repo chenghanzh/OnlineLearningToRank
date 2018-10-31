@@ -60,7 +60,7 @@ class LinearModel(object):
       self.learning_rate *= self.learning_rate_decay
 
   def update_to_documents(self, doc_ind, doc_weights, viewed_list=None, svd=None, project_norm=None):
-    print("svd: %s, project_norm: %s " %(svd,project_norm))
+    # print("svd: %s, project_norm: %s " %(svd,project_norm))
     weighted_docs = self._last_features[doc_ind, :] * doc_weights[:, None]
     # added for projection
     gradient = np.sum(weighted_docs, axis=0)
