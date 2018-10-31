@@ -44,7 +44,7 @@ class P_DBGD_Wrapper(TD_DBGD):
     multileaved_list = self.multileaving.make_multileaving(inverted_rankings)
     return multileaved_list
 
-  
+
   def update_to_interaction(self, clicks):
     # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
     winners = self.multileaving.winning_rankers(clicks)

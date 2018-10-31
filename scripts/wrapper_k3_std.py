@@ -19,6 +19,7 @@ from algorithms.DBGD.pmgd_wrapper import P_MGD_Wrapper
 from algorithms.baselines.pairwise import Pairwise
 from algorithms.DBGD.neural.pdbgd import Neural_P_DBGD
 import pdb
+# python scripts/wrapper_k3_std.py --data_sets web2018 --click_models inf nav per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 15 --n_impr 10000
 
 description = 'Run script for testing framework.'
 parser = SimulationArgumentParser(description=description)
@@ -34,10 +35,10 @@ ranker_params = {
   'k_increase': False}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrapper_k3_std/TD_DBGD_Wrapper' 
+run_name = 'wrapper_k3_std_10/TD_DBGD_Wrapper' 
 rankers.append((run_name, TD_DBGD_Wrapper, other_args))
 
-run_name = 'wrapper_k3_std/P_DBGD_Wrapper' 
+run_name = 'wrapper_k3_std_10/P_DBGD_Wrapper' 
 rankers.append((run_name, TD_DBGD_Wrapper, other_args))
 
 
@@ -51,10 +52,10 @@ ranker_params = {
   'k_increase': False}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrapper_k3_std/TD_MGD9_Wrapper' 
+run_name = 'wrapper_k3_std_10/TD_MGD9_Wrapper' 
 rankers.append((run_name, TD_MGD_Wrapper, other_args))
 
-run_name = 'wrapper_k3_std/P_MGD_Wrapper' 
+run_name = 'wrapper_k3_std_10/P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 ###   PDGD  ###
@@ -68,7 +69,7 @@ ranker_params = {
 }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrapper_k3_std/PDGD_Wrapper' 
+run_name = 'wrapper_k3_std_10/PDGD_Wrapper' 
 rankers.append((run_name, PDGD_Wrapper, other_args))
 
 sim = DataSimulation(sim_args)

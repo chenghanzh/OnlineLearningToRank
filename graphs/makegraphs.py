@@ -169,13 +169,13 @@ for data_folder in sorted(folder_structure.keys()):
       if len(labels) > 0:
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
-        # For HP
+        ### For HP
         # plt.ylim(.6, 0.8)
-        # For MQ
-        plt.ylim(.3, .5)
-        # For Yahoo
+        ### For MQ
+        # plt.ylim(.3, .5)
+        ### For Yahoo
         plt.ylim(.4, .8)
-        # For Web10k
+        ### For Web10k
         # plt.ylim(.1, .4)
         # plt.xlim(-5, 5300)
         # plt.xlim(-500, 1000000)
