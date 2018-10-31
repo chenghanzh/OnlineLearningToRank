@@ -3,23 +3,48 @@
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
-from models.linearmodel import LinearModel
 import utils.rankings as rnk
 from algorithms.DBGD.tddbgd import TD_DBGD
+from multileaving.ProbabilisticMultileave import ProbabilisticMultileave
 
-# Dueling Bandit Gradient Descent
-class TD_DBGD_Wrapper(TD_DBGD):
+# Probabilistic Interleaving Dueling Bandit Gradient Descent
+class P_DBGD_Wrapper(TD_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, *args, **kargs):
-    super(TD_DBGD_Wrapper, self).__init__(*args, **kargs)
+  def __init__(self, svd, project_norm, k_initial, k_increase, PM_n_samples, PM_tau, *args, **kargs):
+    super(P_DBGD_Wrapper, self).__init__(*args, **kargs)
+    self.multileaving = ProbabilisticMultileave(
+                             n_samples = PM_n_samples,
+                             tau = PM_tau,
+                             n_results=self.n_results)
     self.svd = svd
     self.project_norm = project_norm
     self.k_initial = k_initial
     self.k_increase = k_increase
-    # self.model = LinearModel(n_features = self.n_features,
-    #                          learning_rate = self.learning_rate)
 
+  @staticmethod
+  def default_parameters():
+    parent_parameters = TD_DBGD.default_parameters()
+    parent_parameters.update({
+      'learning_rate': 0.01,
+      'learning_rate_decay': 1.0,
+      'PM_n_samples': 10000,
+      'PM_tau': 3.0,
+      })
+    return parent_parameters
 
+  def _create_train_ranking(self, query_id, query_feat, inverted):
+    # Save query_id to get access to query_feat when updating
+    self.query_id = query_id
+    assert inverted==False
+    self.model.sample_candidates()
+    scores = self.model.candidate_score(query_feat)
+    inverted_rankings = rnk.rank_single_query(scores,
+                                              inverted=True,
+                                              n_results=None)
+    multileaved_list = self.multileaving.make_multileaving(inverted_rankings)
+    return multileaved_list
+
+  
   def update_to_interaction(self, clicks):
     # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
     winners = self.multileaving.winning_rankers(clicks)
@@ -45,14 +70,3 @@ class TD_DBGD_Wrapper(TD_DBGD):
     ###############################################################
     else:
       self.model.update_to_mean_winners(winners)
-
-
-  def _create_train_ranking(self, query_id, query_feat, inverted):
-    # Save query_id to get access to query_feat when updating
-    self.query_id = query_id
-    assert inverted == False
-    self.model.sample_candidates()
-    scores = self.model.candidate_score(query_feat)
-    rankings = rnk.rank_single_query(scores, inverted=False, n_results=self.n_results)
-    multileaved_list = self.multileaving.make_multileaving(rankings)
-    return multileaved_list

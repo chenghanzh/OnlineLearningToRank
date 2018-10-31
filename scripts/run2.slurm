@@ -9,5 +9,5 @@
 #SBATCH --mail-user=sak2km@virginia.edu
 #SBATCH -A hcdm
 module load anaconda2
-python scripts/test1.py --data_sets test_new2  --click_models inf nav per --log_folder outdir/logs/ --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 28 --n_impr 5000 --log_folder log_folder
+python scripts/wrapper_k3_std.py --data_sets web2018 --click_models inf nav per --log_folder outdir/logs/ --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 10 --n_proc 15 --n_impr 10000 --log_folder log_folder
 

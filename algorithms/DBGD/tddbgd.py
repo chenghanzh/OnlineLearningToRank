@@ -29,8 +29,7 @@ class TD_DBGD(BasicOnlineRanker):
     parent_parameters = BasicOnlineRanker.default_parameters()
     parent_parameters.update({
       'learning_rate': 0.01,
-      'learning_rate_decay': 1.0,
-      'n_results': 60
+      'learning_rate_decay': 1.0
       })
     return parent_parameters
 

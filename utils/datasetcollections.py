@@ -38,9 +38,9 @@ def get_datasets(sim_args):
     elif len(sim_args.data_sets) == 1 and sim_args.data_sets[0] == 'web2018':
         data_tags = [
             'Webscope_C14_Set1',
-            #'Webscope_C14_Set2',
+            'Webscope_C14_Set2',
             'MSLR-WEB10K',
-            'MSLR-WEB30K',
+            # 'MSLR-WEB30K',
             'MQ2007',
             'MQ2008',
             'HP2003',
