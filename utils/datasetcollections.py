@@ -48,11 +48,11 @@ def get_datasets(sim_args):
             'NP2003',
             # 'mnist',
             ]
-    elif len(sim_args.data_sets) == 1 and sim_args.data_sets[0] == 'new':
+    elif len(sim_args.data_sets) == 1 and sim_args.data_sets[0] == 'web2018_new':
         data_tags = [
             'Webscope_C14_Set1',
-            'Webscope_C14_Set2',
             'MSLR-WEB10K',
+            'Webscope_C14_Set2',
             # 'MSLR-WEB30k',
             # 'istella'
             # 'MQ2007',
@@ -67,7 +67,7 @@ def get_datasets(sim_args):
             # 'MSLR-WEB30K',
             'istella'
             ]
-    elif len(sim_args.data_sets) == 1 and sim_args.data_sets[0] == 'old':
+    elif len(sim_args.data_sets) == 1 and sim_args.data_sets[0] == 'web2018_old':
         data_tags = [
             'MQ2007',
             'MQ2008',

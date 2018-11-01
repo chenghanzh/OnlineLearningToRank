@@ -2,7 +2,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --time=48:00:00
-#SBATCH -p parallel
+#SBATCH -p largemem
 #SBATCH --output=job_output/out
 #SBATCH --error=job_output/error
 #SBATCH --mail-type=ALL
@@ -10,5 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda2
-python scripts/test1.py --data_sets test_new  --click_models inf nav per --log_folder outdir/logs/ --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 50 --n_impr 5000 --log_folder log_folder
-
+python scripts/wrapper_k3_std.py --data_sets web2018_old --click_models inf nav per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 25 --n_impr 5000

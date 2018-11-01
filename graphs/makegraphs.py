@@ -173,8 +173,10 @@ for data_folder in sorted(folder_structure.keys()):
         # plt.ylim(.6, 0.8)
         ### For MQ
         # plt.ylim(.3, .5)
+        ### For YahooS1, n_result=100
+        plt.ylim(.65, .9)
         ### For Yahoo
-        plt.ylim(.4, .8)
+        # plt.ylim(.4, .8)
         ### For Web10k
         # plt.ylim(.1, .4)
         # plt.xlim(-5, 5300)
@@ -182,8 +184,8 @@ for data_folder in sorted(folder_structure.keys()):
         # plt.xlim(-5, max_ind)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')
-        if click_model == 'informational':
-          plt.legend(labels, loc=4, fontsize=16, frameon=False, ncol=1)
+        # if click_model == 'informational':
+        plt.legend(labels, loc=4, fontsize=16, frameon=False, ncol=1)
         # plt.legend(labels, loc=0, fontsize=26, frameon=False, ncol=1)
 
         if not pdf_folder:

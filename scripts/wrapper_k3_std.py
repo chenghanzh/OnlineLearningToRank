@@ -19,7 +19,7 @@ from algorithms.DBGD.pmgd_wrapper import P_MGD_Wrapper
 from algorithms.baselines.pairwise import Pairwise
 from algorithms.DBGD.neural.pdbgd import Neural_P_DBGD
 import pdb
-# python scripts/wrapper_k3_std.py --data_sets web2018 --click_models inf nav per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 15 --n_impr 10000
+# python scripts/wrapper_k3_std.py --data_sets web2018 --click_models inf nav per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 25 --n_impr 5000
 
 description = 'Run script for testing framework.'
 parser = SimulationArgumentParser(description=description)
