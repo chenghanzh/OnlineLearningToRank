@@ -69,7 +69,11 @@ class PDGD_Wrapper(PDGD):
     # index of last click
     last_click = max(pos_ind)
     # prevent last_click+k from exceeding interleaved list length
-    last_doc_index = min(last_click+self.k_increase, len(self.ranking)-1)
+    k_current = self.k_initial
+    if self.k_increase:
+      # gradually increast k
+      k_current += int(self.n_interactions/1000)
+    last_doc_index = min(last_click+k_current, len(self._last_ranking)-1)
     # print(last_doc_index)
 
     # query_feat = self.get_query_features(self.query_id,

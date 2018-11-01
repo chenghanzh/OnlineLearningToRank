@@ -47,14 +47,14 @@ rankers.append((run_name, P_MGD, other_args))
 # run_name = 'CIKM2018/Pairwise' 
 # rankers.append((run_name, Pairwise, other_args))
 
-ranker_params = {
-  'learning_rate': 0.1,
-  'learning_rate_decay': 0.9999977,
-}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+# ranker_params = {
+#   'learning_rate': 0.1,
+#   'learning_rate_decay': 0.9999977,
+# }
+# sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'CIKM2018_10/PDGD' 
-rankers.append((run_name, PDGD, other_args))
+# run_name = 'CIKM2018_10/PDGD' 
+# rankers.append((run_name, PDGD, other_args))
 
 # run_name = 'CIKM2018/DeepPDGD' 
 # rankers.append((run_name, DeepPDGD, other_args))

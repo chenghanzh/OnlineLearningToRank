@@ -34,13 +34,13 @@ rankers = []
 #   'learning_rate_decay': 0.9999977,}
 # sim_args, other_args = parser.parse_all_args(ranker_params)
 
-# ranker_params = {
-#   'learning_rate_decay': 0.9999977,
-#   'svd': True,
-#   'project_norm': False,
-#   'k_initial': 3,
-#   'k_increase': False}
-# sim_args, other_args = parser.parse_all_args(ranker_params)
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': False,
+  'k_initial': 3,
+  'k_increase': False}
+sim_args, other_args = parser.parse_all_args(ranker_params)
 
 # run_name = 'WEB2018/TD_DBGD' 
 # rankers.append((run_name, TD_DBGD, other_args))
@@ -50,6 +50,9 @@ rankers = []
 
 # run_name = 'WEB2018/P-DBGD' 
 # rankers.append((run_name, P_DBGD, other_args))
+
+run_name = 'WEB2018/P-DBGD_Wrapper' 
+rankers.append((run_name, P_DBGD_Wrapper, other_args))
 
 # run_name = 'WEB2018/P_DBGD_Wrapper' 
 # rankers.append((run_name, TD_DBGD_Wrapper, other_args))
@@ -102,21 +105,21 @@ rankers = []
 #   'learning_rate': 0.1,
 #   'learning_rate_decay': 0.9999977,
 # }
-ranker_params = {
-  'learning_rate': 0.1,
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': False,
-  'k_initial': 3,
-  'k_increase': False
-}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+# ranker_params = {
+#   'learning_rate': 0.1,
+#   'learning_rate_decay': 0.9999977,
+#   'svd': True,
+#   'project_norm': False,
+#   'k_initial': 3,
+#   'k_increase': False
+# }
+# sim_args, other_args = parser.parse_all_args(ranker_params)
 
-# run_name = 'WEB2018/PDGD' 
-# rankers.append((run_name, PDGD, other_args))
+# # run_name = 'WEB2018/PDGD' 
+# # rankers.append((run_name, PDGD, other_args))
 
-run_name = 'WEB2018/PDGD_Wrapper' 
-rankers.append((run_name, PDGD_Wrapper, other_args))
+# run_name = 'WEB2018/PDGD_Wrapper' 
+# rankers.append((run_name, PDGD_Wrapper, other_args))
 
 # run_name = 'CIKM2018/DeepPDGD'
 # rankers.append((run_name, DeepPDGD, other_args))

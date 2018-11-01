@@ -35,25 +35,18 @@ ranker_params = {
   'k_increase': False}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'svd_norm/svd_norm/P_DBGD_Wrapper' 
-rankers.append((run_name, TD_DBGD_Wrapper, other_args))
+run_name = 'svd_norm2/svd_norm/P_DBGD_Wrapper' 
+rankers.append((run_name, P_DBGD_Wrapper, other_args))
 
-run_name = 'svd_norm/svd_norm/P_MGD_Wrapper' 
+run_name = 'svd_norm2/svd_norm/P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
-# PDGD
-ranker_params = {
-  'learning_rate': 0.1,
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False
-}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+run_name = 'svd_norm2/svd_norm/TD_DBGD_Wrapper' 
+rankers.append((run_name, TD_DBGD_Wrapper, other_args))
 
-run_name = 'svd_norm/svd_norm/PDGD_Wrapper' 
-rankers.append((run_name, PDGD_Wrapper, other_args))
+run_name = 'svd_norm2/svd_norm/TD_MGD_Wrapper' 
+rankers.append((run_name, TD_MGD_Wrapper, other_args))
+
 
 #######    QR, with Normalization     #######
 # DBGD MGD
@@ -65,25 +58,17 @@ ranker_params = {
   'k_increase': False}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'svd_norm/qr_norm/P_DBGD_Wrapper' 
-rankers.append((run_name, TD_DBGD_Wrapper, other_args))
+run_name = 'svd_norm2/qr_norm/P_DBGD_Wrapper' 
+rankers.append((run_name, P_DBGD_Wrapper, other_args))
 
-run_name = 'svd_norm/qr_norm/P_MGD_Wrapper' 
+run_name = 'svd_norm2/qr_norm/P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
-# PDGD
-ranker_params = {
-  'learning_rate': 0.1,
-  'learning_rate_decay': 0.9999977,
-  'svd': False,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False
-}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+run_name = 'svd_norm2/qr_norm/TD_DBGD_Wrapper' 
+rankers.append((run_name, TD_DBGD_Wrapper, other_args))
 
-run_name = 'svd_norm/qr_norm/PDGD_Wrapper' 
-rankers.append((run_name, PDGD_Wrapper, other_args))
+run_name = 'svd_norm2/qr_norm/TD_MGD_Wrapper' 
+rankers.append((run_name, TD_MGD_Wrapper, other_args))
 
 
 #######    QR, with NO Normalization     #######
@@ -96,26 +81,17 @@ ranker_params = {
   'k_increase': False}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'svd_norm/qr_no_norm/P_DBGD_Wrapper' 
-rankers.append((run_name, TD_DBGD_Wrapper, other_args))
+run_name = 'svd_norm2/qr_no_norm/P_DBGD_Wrapper' 
+rankers.append((run_name, P_DBGD_Wrapper, other_args))
 
-run_name = 'svd_norm/qr_no_norm/P_MGD_Wrapper' 
+run_name = 'svd_norm2/qr_no_norm/P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
-# PDGD
-ranker_params = {
-  'learning_rate': 0.1,
-  'learning_rate_decay': 0.9999977,
-  'svd': False,
-  'project_norm': False,
-  'k_initial': 3,
-  'k_increase': False
-}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+run_name = 'svd_norm2/qr_no_norm/TD_DBGD_Wrapper' 
+rankers.append((run_name, TD_DBGD_Wrapper, other_args))
 
-run_name = 'svd_norm/qr_no_norm/PDGD_Wrapper' 
-rankers.append((run_name, PDGD_Wrapper, other_args))
-
+run_name = 'svd_norm2/qr_no_norm/TD_MGD_Wrapper' 
+rankers.append((run_name, TD_MGD_Wrapper, other_args))
 
 
 

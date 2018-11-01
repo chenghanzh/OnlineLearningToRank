@@ -244,7 +244,7 @@ DATASET_COLLECTION['MSLR-WEB10K'] = DataSet('MSLR-WEB10K',
                                                # range(96,106), #Boolean Model, Vector Space Model
                                              ])
 DATASET_COLLECTION['MSLR-WEB30K'] = DataSet('MSLR-WEB30K',
-                                            '/home/sak2km/onlineL2R/datasets/MSLR-WEB30K/Fold*/', 'long',
+                                            '/scratch/sak2km/MSLR-WEB30K/Fold*/', 'long',
                                             False, 136, max_folds=2,
                                             multileave_feat=[
                                                range(71,91), #TF-IDF
