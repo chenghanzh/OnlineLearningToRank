@@ -19,7 +19,6 @@ class TD_MGD(TD_DBGD):
   def default_parameters():
     parent_parameters = TD_DBGD.default_parameters()
     parent_parameters.update({
-      'n_candidates': 9,
-      'n_results': 60
+      'n_candidates': 9
       })
     return parent_parameters

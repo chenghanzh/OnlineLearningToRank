@@ -69,7 +69,7 @@ class SimulationArgumentParser(argparse.ArgumentParser):
     self._sim_add_argument('--no_run_details', dest='no_run_details', action='store_true',
                       help='Print all run arguments at start of simulation.')
 
-    self._sim_add_argument('--n_results', dest='n_results', default=100, type=int,
+    self._sim_add_argument('--n_results', dest='n_results', default=10, type=int,
                       help='Number of results shown after each query.')
 
     self._sim_add_argument('--skip_read_bin_data', dest='read_binarized_data', action='store_false')

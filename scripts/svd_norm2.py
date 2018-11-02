@@ -19,58 +19,81 @@ from algorithms.DBGD.pmgd_wrapper import P_MGD_Wrapper
 from algorithms.baselines.pairwise import Pairwise
 from algorithms.DBGD.neural.pdbgd import Neural_P_DBGD
 import pdb
-# python scripts/wrapper_k3_std.py --data_sets web2018 --click_models inf nav per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 25 --n_impr 5000
+# python scripts/svd_norm.py --data_sets MQ2007 Webscope_C14_Set1 MSLR-WEB10K --click_models inf --log_folder log_folder ---average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 20 --n_impr 5000
 
 description = 'Run script for testing framework.'
 parser = SimulationArgumentParser(description=description)
 
 rankers = []
-
-###		DBGD	###
+#######    SVD, with Normalization     #######
+# DBGD MGD
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
-  'project_norm': False,
+  'project_norm': True,
   'k_initial': 3,
   'k_increase': False}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrapper_k3_std_10/TD_DBGD_Wrapper' 
-rankers.append((run_name, TD_DBGD_Wrapper, other_args))
+run_name = 'svd_norm2/svd_norm/P_DBGD_Wrapper' 
+rankers.append((run_name, P_DBGD_Wrapper, other_args))
 
-run_name = 'wrapper_k3_std_10/P_DBGD_Wrapper' 
-rankers.append((run_name, TD_DBGD_Wrapper, other_args))
-
-
-###		MGD9	###
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'n_candidates': 9,
-  'svd': True,
-  'project_norm': False,
-  'k_initial': 3,
-  'k_increase': False}
-sim_args, other_args = parser.parse_all_args(ranker_params)
-
-run_name = 'wrapper_k3_std_10/TD_MGD9_Wrapper' 
-rankers.append((run_name, TD_MGD_Wrapper, other_args))
-
-run_name = 'wrapper_k3_std_10/P_MGD_Wrapper' 
+run_name = 'svd_norm2/svd_norm/P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
-###   PDGD  ###
+run_name = 'svd_norm2/svd_norm/TD_DBGD_Wrapper' 
+rankers.append((run_name, TD_DBGD_Wrapper, other_args))
+
+run_name = 'svd_norm2/svd_norm/TD_MGD_Wrapper' 
+rankers.append((run_name, TD_MGD_Wrapper, other_args))
+
+
+#######    QR, with Normalization     #######
+# DBGD MGD
 ranker_params = {
-  'learning_rate': 0.1,
   'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': False,
+  'svd': False,
+  'project_norm': True,
   'k_initial': 3,
-  'k_increase': False
-}
+  'k_increase': False}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrapper_k3_std_10/PDGD_Wrapper' 
-rankers.append((run_name, PDGD_Wrapper, other_args))
+run_name = 'svd_norm2/qr_norm/P_DBGD_Wrapper' 
+rankers.append((run_name, P_DBGD_Wrapper, other_args))
+
+run_name = 'svd_norm2/qr_norm/P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
+run_name = 'svd_norm2/qr_norm/TD_DBGD_Wrapper' 
+rankers.append((run_name, TD_DBGD_Wrapper, other_args))
+
+run_name = 'svd_norm2/qr_norm/TD_MGD_Wrapper' 
+rankers.append((run_name, TD_MGD_Wrapper, other_args))
+
+
+#######    QR, with NO Normalization     #######
+# DBGD MGD
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': False,
+  'project_norm': False,
+  'k_initial': 3,
+  'k_increase': False}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'svd_norm2/qr_no_norm/P_DBGD_Wrapper' 
+rankers.append((run_name, P_DBGD_Wrapper, other_args))
+
+run_name = 'svd_norm2/qr_no_norm/P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
+run_name = 'svd_norm2/qr_no_norm/TD_DBGD_Wrapper' 
+rankers.append((run_name, TD_DBGD_Wrapper, other_args))
+
+run_name = 'svd_norm2/qr_no_norm/TD_MGD_Wrapper' 
+rankers.append((run_name, TD_MGD_Wrapper, other_args))
+
+
 
 sim = DataSimulation(sim_args)
 sim.run(rankers)

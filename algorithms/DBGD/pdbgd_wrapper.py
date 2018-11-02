@@ -44,7 +44,7 @@ class P_DBGD_Wrapper(TD_DBGD):
     multileaved_list = self.multileaving.make_multileaving(inverted_rankings)
     return multileaved_list
 
-  
+
   def update_to_interaction(self, clicks):
     # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
     winners = self.multileaving.winning_rankers(clicks)
@@ -56,7 +56,11 @@ class P_DBGD_Wrapper(TD_DBGD):
       # index of last click
       last_click = max(loc for loc, val in enumerate(clicks) if val == True)
       # prevent last_click+k from exceeding interleaved list length
-      last_doc_index = min(last_click+self.k_initial, len(self._last_ranking)-1)
+      k_current = self.k_initial
+      if self.k_increase:
+        # gradually increast k
+        k_current += int(self.n_interactions/1000)
+      last_doc_index = min(last_click+k_current, len(self._last_ranking)-1)
       # print(last_doc_index)
 
       query_feat = self.get_query_features(self.query_id,
