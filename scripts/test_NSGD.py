@@ -20,7 +20,7 @@ from algorithms.baselines.pairwise import Pairwise
 from algorithms.DBGD.neural.pdbgd import Neural_P_DBGD
 
 from algorithms.DBGD.tdNSGD import TD_NSGD
-
+from algorithms.DBGD.tdNSGD_wrapper import TD_NSGD_Wrapper
 import pdb
 
 description = 'Run script for testing framework.'
@@ -28,18 +28,26 @@ parser = SimulationArgumentParser(description=description)
 
 rankers = []
 
-# ranker_params = {
-#   'learning_rate_decay': 0.9999977}
-# sim_args, other_args = parser.parse_all_args(ranker_params)
-
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'n_candidates': 9
+  }
+sim_args, other_args = parser.parse_all_args(ranker_params)
+# run_name = 'NSGD/TD-MGD' 
+# rankers.append((run_name, TD_MGD, other_args))
 ###		DBGD	###
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
   'project_norm': False,
   'k_initial': 3,
-  'k_increase': False}
+  'k_increase': False,
+  'GRAD_SIZE':60,
+  'EXP_SIZE':25,}
 sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'NSGD/TD_NSGD_Wrapper' 
+rankers.append((run_name, TD_NSGD_Wrapper, other_args))
 
 # run_name = 'WEB2018/TD_DBGD' 
 # rankers.append((run_name, TD_DBGD, other_args))
@@ -96,7 +104,7 @@ sim_args, other_args = parser.parse_all_args(ranker_params)
 # run_name = 'CIKM2018/Pairwise' 
 # rankers.append((run_name, Pairwise, other_args))
 
-run_name = 'WEB2018/TD_NSGD' 
+run_name = 'NSGD/TD_NSGD' 
 rankers.append((run_name, TD_NSGD, other_args))
 
 ranker_params = {
