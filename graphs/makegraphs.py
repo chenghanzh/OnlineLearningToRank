@@ -173,15 +173,17 @@ for data_folder in sorted(folder_structure.keys()):
         # plt.ylim(.6, 0.8)
         ### For MQ
         # plt.ylim(.3, .5)
-        ### For YahooS1, n_result=100
-        plt.ylim(.65, .9)
-        ### For Yahoo
-        # plt.ylim(.4, .8)
+        ### For MQ08
+        plt.ylim(.4, .8)
+        ### For WebscopeS1
+        # plt.ylim(.5, .75)
         ### For Web10k
         # plt.ylim(.1, .4)
+
+
         # plt.xlim(-5, 5300)
         # plt.xlim(-500, 1000000)
-        # plt.xlim(-5, max_ind)
+        plt.xlim(-100, 5100)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')
         # if click_model == 'informational':

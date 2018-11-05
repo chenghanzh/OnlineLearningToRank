@@ -96,18 +96,18 @@ run_name = 'wrapper_k3_std_10/P_MGD_Wrapper'
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 ###   PDGD  ###
-ranker_params = {
-  'learning_rate': 0.1,
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': False,
-  'k_initial': 3,
-  'k_increase': False
-}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+# ranker_params = {
+#   'learning_rate': 0.1,
+#   'learning_rate_decay': 0.9999977,
+#   'svd': True,
+#   'project_norm': False,
+#   'k_initial': 3,
+#   'k_increase': False
+# }
+# sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrapper_k3_std_10/PDGD_Wrapper' 
-rankers.append((run_name, PDGD_Wrapper, other_args))
+# run_name = 'wrapper_k3_std_10/PDGD_Wrapper' 
+# rankers.append((run_name, PDGD_Wrapper, other_args))
 
 sim = DataSimulation(sim_args)
 sim.run(rankers)

@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda2
-python scripts/svd_norm2.py --data_sets Webscope_C14_Set1 MQ2007 MSLR-WEB10K --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 25 --n_impr 5000
+python scripts/svd_norm2.py --data_sets MQ2007 Webscope_C14_Set1 MQ2008 --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 25 --n_impr 5000

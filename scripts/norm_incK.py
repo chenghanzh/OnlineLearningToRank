@@ -18,6 +18,7 @@ from algorithms.DBGD.pmgd import P_MGD
 from algorithms.DBGD.pmgd_wrapper import P_MGD_Wrapper
 from algorithms.baselines.pairwise import Pairwise
 from algorithms.DBGD.neural.pdbgd import Neural_P_DBGD
+from algorithms.DBGD.tdNSGD_wrapper import TD_NSGD_Wrapper
 import pdb
 # python scripts/norm_incK.py --data_sets MQ2008 MQ2007 Webscope_C14_Set1 MSLR-WEB10K istella--click_models inf --log_folder log_folder ---average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 20 --n_impr 5000
 
@@ -48,6 +49,20 @@ run_name = 'norm_incK/norm_incK/TD_MGD_Wrapper'
 rankers.append((run_name, TD_MGD_Wrapper, other_args))
 
 
+# ranker_params = {
+#   'learning_rate_decay': 0.9999977,
+#   'svd': True,
+#   'project_norm': True,
+#   'k_initial': 3,
+#   'k_increase': True,
+#   'GRAD_SIZE':60,
+#   'EXP_SIZE':25}
+# sim_args, other_args = parser.parse_all_args(ranker_params)
+
+# run_name = 'norm_incK/norm_incK/TD_NSGD_Wrapper' 
+# rankers.append((run_name, TD_NSGD_Wrapper, other_args))
+
+
 #######    Normalization and No Increase K     #######
 # DBGD MGD
 ranker_params = {
@@ -69,6 +84,20 @@ rankers.append((run_name, TD_DBGD_Wrapper, other_args))
 
 run_name = 'norm_incK/norm_NOincK/TD_MGD_Wrapper' 
 rankers.append((run_name, TD_MGD_Wrapper, other_args))
+
+
+# ranker_params = {
+#   'learning_rate_decay': 0.9999977,
+#   'svd': True,
+#   'project_norm': True,
+#   'k_initial': 3,
+#   'k_increase': False,
+#   'GRAD_SIZE':60,
+#   'EXP_SIZE':25}
+# sim_args, other_args = parser.parse_all_args(ranker_params)
+
+# run_name = 'norm_incK/norm_NOincK/TD_NSGD_Wrapper' 
+# rankers.append((run_name, TD_NSGD_Wrapper, other_args))
 
 
 
@@ -93,6 +122,20 @@ rankers.append((run_name, TD_DBGD_Wrapper, other_args))
 
 run_name = 'norm_incK/NOnorm_incK/TD_MGD_Wrapper' 
 rankers.append((run_name, TD_MGD_Wrapper, other_args))
+
+
+# ranker_params = {
+#   'learning_rate_decay': 0.9999977,
+#   'svd': True,
+#   'project_norm': False,
+#   'k_initial': 3,
+#   'k_increase': True,
+#   'GRAD_SIZE':60,
+#   'EXP_SIZE':25}
+# sim_args, other_args = parser.parse_all_args(ranker_params)
+
+# run_name = 'norm_incK/NOnorm_incK/TD_NSGD_Wrapper' 
+# rankers.append((run_name, TD_NSGD_Wrapper, other_args))
 
 
 
