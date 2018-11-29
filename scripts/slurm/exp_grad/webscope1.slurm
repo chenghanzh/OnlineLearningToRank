@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=28
-#SBATCH --time=120:00:00
+#SBATCH --time=48:00:00
 #SBATCH -p standard
 #SBATCH --output=job_output/out
 #SBATCH --error=job_output/error
@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda2
-python scripts/norm_incK_nsgd.py --data_sets MQ2007 --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 25 --n_proc 25 --n_impr 5000
+python scripts/test_exp_grad.py --data_sets Webscope_C14_Set1 --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 10 --n_proc 20 --n_impr 5000

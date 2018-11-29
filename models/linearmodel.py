@@ -5,6 +5,7 @@ from scipy.linalg import norm
 def sample_with_basis(M):
     weight = np.random.normal(0, 1, len(M))
     v = weight.dot(M)
+    # print(v)
     v /= norm(v)
     return v
 

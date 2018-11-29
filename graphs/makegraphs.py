@@ -170,11 +170,13 @@ for data_folder in sorted(folder_structure.keys()):
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
         ### For HP
-        # plt.ylim(.6, 0.8)
-        ### For MQ
+        plt.ylim(.65, 0.9)
+        ### For NP
+        plt.ylim(.5, 0.85)
+        ### For MQ07
         # plt.ylim(.3, .5)
         ### For MQ08
-        plt.ylim(.4, .8)
+        # plt.ylim(.4, .8)
         ### For WebscopeS1
         # plt.ylim(.5, .75)
         ### For Web10k

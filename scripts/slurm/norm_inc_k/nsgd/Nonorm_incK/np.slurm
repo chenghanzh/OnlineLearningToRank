@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda2
-python scripts/norm_incK_nsgd.py --data_sets MQ2007 --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 25 --n_proc 25 --n_impr 5000
+python scripts/nsgd/Nonorm_incK.py --data_sets NP2003 --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 25 --n_proc 25 --n_impr 5000

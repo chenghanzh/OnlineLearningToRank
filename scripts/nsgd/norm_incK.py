@@ -2,7 +2,7 @@
 
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from utils.datasimulation import DataSimulation
 from utils.argparsers.simulationargparser import SimulationArgumentParser
 from algorithms.PDGD.pdgd import PDGD
@@ -19,44 +19,26 @@ from algorithms.DBGD.pmgd_wrapper import P_MGD_Wrapper
 from algorithms.baselines.pairwise import Pairwise
 from algorithms.DBGD.neural.pdbgd import Neural_P_DBGD
 from algorithms.DBGD.tdNSGD_wrapper import TD_NSGD_Wrapper
-from algorithms.DBGD.tdNSGD import TD_NSGD
 import pdb
+# python scripts/norm_incK.py --data_sets MQ2008 MQ2007 Webscope_C14_Set1 MSLR-WEB10K istella--click_models inf --log_folder log_folder ---average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 20 --n_impr 5000
 
 description = 'Run script for testing framework.'
 parser = SimulationArgumentParser(description=description)
 
 rankers = []
-
-
+#######   Normalization and Increase K     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
-  'project_norm': False,
+  'project_norm': True,
   'k_initial': 3,
-  'k_increase': False,
+  'k_increase': True,
   'GRAD_SIZE':60,
-  'EXP_SIZE':25,}
+  'EXP_SIZE':25}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'NSGD/TD_NSGD_Wrapper' 
+run_name = 'norm_incK/norm_incK/TD_NSGD_Wrapper' 
 rankers.append((run_name, TD_NSGD_Wrapper, other_args))
-
-
-###		TD_NSGD	###
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'n_candidates': 9,
-  # 'svd': True,
-  # 'project_norm': False,
-  # 'k_initial': 3,
-  # 'k_increase': False,
-  'GRAD_SIZE':60,
-  'EXP_SIZE':25,
-  }
-sim_args, other_args = parser.parse_all_args(ranker_params)
-
-run_name = 'NSGD/TD_NSGD' 
-rankers.append((run_name, TD_NSGD, other_args))
 
 
 sim = DataSimulation(sim_args)
