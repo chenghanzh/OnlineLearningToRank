@@ -35,6 +35,14 @@ rankers = []
 #   'learning_rate_decay': 0.9999977,}
 # sim_args, other_args = parser.parse_all_args(ranker_params)
 
+ranker_params = {
+  'learning_rate_decay': 0.9999977}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+run_name = 'exp_gradient_sampl/P_DBGD' 
+rankers.append((run_name, P_DBGD, other_args))
+
+
+
 ## TT
 ranker_params = {
   'learning_rate_decay': 0.9999977,
@@ -42,12 +50,12 @@ ranker_params = {
   'project_norm': True,
   'k_initial': 3,
   'k_increase': False,
-  'use_NS':True,
-  'use_all_listed':True
+  'use_NS':True,          # if not, only use DS
+  'use_all_listed':True   # if not, use only clicked
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 run_name = 'exp_gradient_sampl/P_DBGD_exp_TT' 
-rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
+# rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
 
 
 ## TF
@@ -62,7 +70,7 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 run_name = 'exp_gradient_sampl/P_DBGD_exp_TF' 
-rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
+# rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
 
 
 ## FT
@@ -77,7 +85,7 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 run_name = 'exp_gradient_sampl/P_DBGD_exp_FT' 
-rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
+# rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
 
 
 ## FF

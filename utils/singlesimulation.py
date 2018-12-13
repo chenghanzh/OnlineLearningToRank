@@ -150,6 +150,8 @@ class SingleSimulation(object):
 
     ranker.setup(train_features = self.datafold.train_feature_matrix,
                  train_query_ranges = self.datafold.train_doclist_ranges)
+    # Added for ranker to access label directly
+    ranker._train_label = self.datafold.train_label_vector
 
     run_results = []
     impressions = 0

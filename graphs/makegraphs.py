@@ -170,9 +170,9 @@ for data_folder in sorted(folder_structure.keys()):
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
         ### For HP
-        plt.ylim(.65, 0.9)
-        ### For NP
-        plt.ylim(.5, 0.85)
+        # plt.ylim(.65, 0.9)
+        # ### For NP
+        # plt.ylim(.5, 0.85)
         ### For MQ07
         # plt.ylim(.3, .5)
         ### For MQ08
@@ -181,6 +181,8 @@ for data_folder in sorted(folder_structure.keys()):
         # plt.ylim(.5, .75)
         ### For Web10k
         # plt.ylim(.1, .4)
+        ### For testing
+        plt.ylim(.0, .5)
 
 
         # plt.xlim(-5, 5300)
