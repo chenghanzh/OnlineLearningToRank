@@ -58,7 +58,7 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
                                      self._train_query_ranges)
 
     # Add features to the gradient_list if the label > 0
-    for i in range(len(query_feat)-1):
+    for i in range(len(query_feat)):
       if query_label[i] > 0 : 
         gradient_list.append(query_feat[i])
 
@@ -137,7 +137,6 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
                                      self._train_query_ranges)
     # for ranked_list in rankings:
     ndcg_list = evaluate.get_single_ndcg_for_rankers(self.descending_rankings,query_label,10)
-
     winners = []
     if ndcg_list[1] > ndcg_list[0] :
       winners = [1]
