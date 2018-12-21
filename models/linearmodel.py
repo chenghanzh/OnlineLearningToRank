@@ -39,16 +39,20 @@ class LinearModel(object):
     vector_norms = np.sum(vectors ** 2, axis=0) ** (1. / 2)
     vectors /= vector_norms[None, :]
     self.weights[:, 1:] = self.weights[:, 0, None] + vectors
+    # print(self.weights[:,1])
+    # print("#*******************#")
+    # print(self.weights)
+    # print("####################")
 
   def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False):
     assert self.n_models > 1
     if len(winners) > 0:
       # print 'winners:', winners
       gradient = np.mean(self.weights[:, winners], axis=1) - self.weights[:, 0]
+
       # added for projection
       if viewed_list:
         gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
-
       self.weights[:, 0] += self.learning_rate * gradient
       self.learning_rate *= self.learning_rate_decay
 

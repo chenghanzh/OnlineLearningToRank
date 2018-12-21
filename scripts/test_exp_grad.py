@@ -26,81 +26,103 @@ parser = SimulationArgumentParser(description=description)
 
 rankers = []
 
-# ranker_params = {
-#   'learning_rate_decay': 0.9999977}
-# sim_args, other_args = parser.parse_all_args(ranker_params)
-
-###		DBGD	###
-# ranker_params = {
-#   'learning_rate_decay': 0.9999977,}
-# sim_args, other_args = parser.parse_all_args(ranker_params)
 
 ranker_params = {
   'learning_rate_decay': 0.9999977}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 run_name = 'exp_gradient_sampl/P_DBGD' 
-rankers.append((run_name, P_DBGD, other_args))
+# rankers.append((run_name, P_DBGD, other_args))
 
 
-
-## TT
+# PDBGD_useNSGD_uniformSampl
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
   'project_norm': True,
   'k_initial': 3,
   'k_increase': False,
-  'use_NS':True,          # if not, only use DS
-  'use_all_listed':True   # if not, use only clicked
+  'use_regular_sample':True,
+  'use_NDCG':True,
+  'use_NS':False,
+  'use_all_listed':False
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'exp_gradient_sampl/P_DBGD_exp_TT' 
+# run_name = 'exp_gradient_sampl/PDBGD_useNDCG' 
+run_name = 'exp_gradient_sampl/PDBGD_uniformSampl_useNDCG' 
 # rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
 
 
-## TF
+# PDBGD_useML_uniformSampl
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
   'project_norm': True,
   'k_initial': 3,
   'k_increase': False,
+  'use_regular_sample':True,
+  'use_NDCG':False,
+  'use_NS':False,
+  'use_all_listed':False
+  }
+sim_args, other_args = parser.parse_all_args(ranker_params)
+# run_name = 'exp_gradient_sampl/PDBGD_useNDCG' 
+# run_name = 'exp_gradient_sampl/PDBGD_abs(uniformSampl)_useML' 
+run_name = 'exp_gradient_sampl/PDBGD_uniformSampl_useML' 
+# rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
+
+
+
+## PDBGD_docSampl_useNSGD
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  'use_regular_sample':False,
+  'use_NDCG':True,
+  'use_NS':False,
+  'use_all_listed':False
+  }
+sim_args, other_args = parser.parse_all_args(ranker_params)
+# run_name = 'exp_gradient_sampl/PDBGD_useNDCG' 
+run_name = 'exp_gradient_sampl/PDBGD_docSampl_useNDCG' 
+rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
+
+## PDBGD_useML_docSampl
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  'use_regular_sample':False,
+  'use_NDCG':False,
+  'use_NS':False,
+  'use_all_listed':False
+  }
+sim_args, other_args = parser.parse_all_args(ranker_params)
+# run_name = 'exp_gradient_sampl/PDBGD_useNDCG' 
+run_name = 'exp_gradient_sampl/PDBGD_docSampl_useML' 
+rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
+
+## PDBGD_docSampl_NS_useML
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  'use_regular_sample':False,
+  'use_NDCG':False,
   'use_NS':True,
   'use_all_listed':False
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'exp_gradient_sampl/P_DBGD_exp_TF' 
+# run_name = 'exp_gradient_sampl/PDBGD_useNDCG' 
+run_name = 'exp_gradient_sampl/PDBGD_docSampl_NS_useML' 
 # rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
 
-
-## FT
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False,
-  'use_NS':False,
-  'use_all_listed':True
-  }
-sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'exp_gradient_sampl/P_DBGD_exp_FT' 
-# rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
-
-
-## FF
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False,
-  'use_NS':False,
-  'use_all_listed':False
-  }
-sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'exp_gradient_sampl/P_DBGD_exp_FF' 
-rankers.append((run_name, P_DBGD_Wrapper_exp, other_args))
 
 sim = DataSimulation(sim_args)
 sim.run(rankers)
