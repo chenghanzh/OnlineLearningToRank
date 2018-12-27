@@ -10,7 +10,7 @@ from multileaving.ProbabilisticMultileave import ProbabilisticMultileave
 # Probabilistic Interleaving Dueling Bandit Gradient Descent
 class P_DBGD_Wrapper(TD_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, PM_n_samples, PM_tau, *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, PM_n_samples, PM_tau, _lambda=None, *args, **kargs):
     super(P_DBGD_Wrapper, self).__init__(*args, **kargs)
     self.multileaving = ProbabilisticMultileave(
                              n_samples = PM_n_samples,
@@ -20,6 +20,7 @@ class P_DBGD_Wrapper(TD_DBGD):
     self.project_norm = project_norm
     self.k_initial = k_initial
     self.k_increase = k_increase
+    self._lambda = _lambda
 
   @staticmethod
   def default_parameters():
@@ -70,7 +71,7 @@ class P_DBGD_Wrapper(TD_DBGD):
         docid = self._last_ranking[i]
         feature = query_feat[docid]
         viewed_list.append(feature)
-      self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm)
+      self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm,self._lambda)
     ###############################################################
     else:
       self.model.update_to_mean_winners(winners)

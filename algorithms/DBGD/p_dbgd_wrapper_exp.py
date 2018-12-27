@@ -89,10 +89,10 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
       # print("##### Normalized Gradeint")
       # print(gradient_list[0]/np.linalg.norm(gradient_list[0]))
       # print("############################################################")
-      # if self.loss_count + self.win_count > 0:
-      #   print("###### Win Rate: ")
-      #   print(self.win_count/float(self.loss_count + self.win_count))
-      #   print(self.win_count/1000.0)
+    if (self.loss_count + self.win_count > 0) and self.n_interactions%500 == 0:
+      print("###### Win Rate at %s: " %self.n_interactions)
+      # print(self.win_count/float(self.loss_count + self.win_count))
+      print(self.win_count/500.0)
 
 
     # Normalize doc_space gradient
@@ -233,6 +233,8 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
       0.01061898, -0.01129424, -0.04443411, -0.01374962, -0.01553134]
 
       self.model.weights[:, 0] = weight_optimal_dbgd
+      self.win_count = 0
+      self.loss_count = 0
 
 
 

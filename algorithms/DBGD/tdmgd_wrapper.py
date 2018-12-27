@@ -10,7 +10,7 @@ from algorithms.DBGD.tddbgd import TD_DBGD
 # Dueling Bandit Gradient Descent
 class TD_MGD_Wrapper(TD_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, *args, **kargs):
     super(TD_MGD_Wrapper, self).__init__(*args, **kargs)
     self.model = LinearModel(n_features = self.n_features,
                              learning_rate = self.learning_rate,
@@ -20,6 +20,7 @@ class TD_MGD_Wrapper(TD_DBGD):
     self.project_norm = project_norm
     self.k_initial = k_initial
     self.k_increase = k_increase
+    self._lambda = _lambda
     # self.n_results = 60
 
   @staticmethod

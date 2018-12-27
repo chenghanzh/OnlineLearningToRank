@@ -11,7 +11,7 @@ from models.linearmodel import LinearModel
 # Probabilistic Interleaving Dueling Bandit Gradient Descent
 class P_MGD_Wrapper(P_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, *args, **kargs):
     super(P_MGD_Wrapper, self).__init__(*args, **kargs)
     self.n_candidates = n_candidates
     self.model = LinearModel(n_features = self.n_features,
@@ -21,6 +21,7 @@ class P_MGD_Wrapper(P_DBGD):
     self.project_norm = project_norm
     self.k_initial = k_initial
     self.k_increase = k_increase
+    self._lambda = _lambda
 
 
   @staticmethod

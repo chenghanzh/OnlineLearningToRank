@@ -39,7 +39,8 @@ ranker_params = {
   'svd': True,
   'project_norm': False,
   'k_initial': 3,
-  'k_increase': False}
+  'k_increase': False,
+  '_lambda': 0.05}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 # run_name = 'WEB2018/TD_DBGD' 
@@ -79,7 +80,7 @@ ranker_params = {
 # ranker_params = {
 #   'learning_rate_decay': 0.9999977,
 #   'n_candidates': 9,}
-# sim_args, other_args = parser.parse_all_args(ranker_params)
+sim_args, other_args = parser.parse_all_args(ranker_params)
 # run_name = 'WEB2018/TD_MGD9' 
 # rankers.append((run_name, TD_MGD, other_args))
 
