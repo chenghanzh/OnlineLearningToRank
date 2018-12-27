@@ -69,7 +69,7 @@ class P_MGD_Wrapper(P_DBGD):
         docid = self._last_ranking[i]
         feature = query_feat[docid]
         viewed_list.append(feature)
-      self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm)
+      self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm, self._lambda)
     ###############################################################
     else:
       self.model.update_to_mean_winners(winners)

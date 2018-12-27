@@ -55,12 +55,11 @@ class LinearModel(object):
       if viewed_list:
         gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
         if _lambda: # add L2 Regularization (add back a portion of original weight to gradient)
-          lambda_gradient = self.weights[:, 0] * _lambda
+          lambda_gradient =  _lambda * self.weights[:, 0]
 
       self.weights[:, 0] += self.learning_rate * gradient
       if lambda_gradient is not 0:
-        # print(lambda_gradient)
-        self.weights[:, 0] += lambda_gradient
+        self.weights[:, 0] -= lambda_gradient
       self.learning_rate *= self.learning_rate_decay
 
 
@@ -77,7 +76,7 @@ class LinearModel(object):
 
     self.weights[:, 0] += self.learning_rate * gradient
     if lambda_gradient is not None:
-      self.weights[:, 0] += lambda_gradient
+      self.weights[:, 0] -= lambda_gradient
     self.learning_rate *= self.learning_rate_decay
 ##############################################################
   def project_to_viewed_doc(self, winning_gradient, viewed_list, svd, normalize):

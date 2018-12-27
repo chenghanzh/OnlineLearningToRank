@@ -25,105 +25,59 @@ parser = SimulationArgumentParser(description=description)
 
 rankers = []
 
-# ranker_params = {
-#   'learning_rate_decay': 0.9999977}
-# sim_args, other_args = parser.parse_all_args(ranker_params)
-
-###		DBGD	###
-# ranker_params = {
-#   'learning_rate_decay': 0.9999977,}
-# sim_args, other_args = parser.parse_all_args(ranker_params)
+#######    Normalization and No Increase K     #######
+#######    lambda = 0.05     #######
 
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
-  'project_norm': False,
+  'project_norm': True,
   'k_initial': 3,
   'k_increase': False,
   '_lambda': 0.05}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-# run_name = 'WEB2018/TD_DBGD' 
-# rankers.append((run_name, TD_DBGD, other_args))
-
-# run_name = 'WEB2018/TD_DBGD_Wrapper' 
-# rankers.append((run_name, TD_DBGD_Wrapper, other_args))
-
-# run_name = 'WEB2018/P-DBGD' 
-# rankers.append((run_name, P_DBGD, other_args))
-
-run_name = 'wrapper_k3_std_10/P_DBGD_Wrapper' 
-rankers.append((run_name, P_DBGD_Wrapper, other_args))
-
-# run_name = 'WEB2018/P_DBGD_Wrapper' 
-# rankers.append((run_name, TD_DBGD_Wrapper, other_args))
-
-# run_name = 'CIKM2018/DeepP-DBGD' 
-# rankers.append((run_name, Neural_P_DBGD, other_args))
-
-# run_name = 'speedtest/TD-MGD' 
-# rankers.append((run_name, TD_MGD, other_args))
-# run_name = 'WEB2018/TD_MGD4' 
-# rankers.append((run_name, TD_MGD, other_args))
-
-# run_name = 'WEB2018/TD_MGD4_Wrapper' 
-# rankers.append((run_name, TD_MGD_Wrapper, other_args))
-
-###		MGD9	###
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'n_candidates': 9,
-  'svd': True,
-  'project_norm': False,
-  'k_initial': 3,
-  'k_increase': False}
-# ranker_params = {
-#   'learning_rate_decay': 0.9999977,
-#   'n_candidates': 9,}
-sim_args, other_args = parser.parse_all_args(ranker_params)
-# run_name = 'WEB2018/TD_MGD9' 
-# rankers.append((run_name, TD_MGD, other_args))
-
-# run_name = 'svd_norm/TD_MGD9_Wrapper' 
-# rankers.append((run_name, TD_MGD_Wrapper, other_args))
-
-# run_name = 'CIKM2018/P-MGD' 
-# rankers.append((run_name, P_MGD, other_args))
-
-run_name = 'wrapper_k3_std_10/P_MGD_Wrapper' 
+run_name = 'wrappers/test_lambda/0.05/P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
-# ranker_params = {
-#   'learning_rate_decay': 0.9999977,
-#   'epsilon': 0.8}
-# sim_args, other_args = parser.parse_all_args(ranker_params)
+# run_name = 'wrappers/test_lambda/0.05/P_DBGD_Wrapper' 
+# rankers.append((run_name, P_DBGD_Wrapper, other_args))
 
-# run_name = 'CIKM2018/Pairwise' 
-# rankers.append((run_name, Pairwise, other_args))
 
-###		PDGD	###
-# ranker_params = {
-#   'learning_rate': 0.1,
-#   'learning_rate_decay': 0.9999977,
-# }
-# ranker_params = {
-#   'learning_rate': 0.1,
-#   'learning_rate_decay': 0.9999977,
-#   'svd': True,
-#   'project_norm': False,
-#   'k_initial': 3,
-#   'k_increase': False
-# }
-# sim_args, other_args = parser.parse_all_args(ranker_params)
+#######    Normalization and No Increase K     #######
+#######    lambda = 0.01     #######
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  '_lambda': 0.01}
+sim_args, other_args = parser.parse_all_args(ranker_params)
 
-# # run_name = 'WEB2018/PDGD' 
-# # rankers.append((run_name, PDGD, other_args))
+run_name = 'wrappers/test_lambda/0.01/P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
 
-# run_name = 'WEB2018/PDGD_Wrapper' 
-# rankers.append((run_name, PDGD_Wrapper, other_args))
+# run_name = 'wrappers/test_lambda/0.01/P_DBGD_Wrapper' 
+# rankers.append((run_name, P_DBGD_Wrapper, other_args))
 
-# run_name = 'CIKM2018/DeepPDGD'
-# rankers.append((run_name, DeepPDGD, other_args))
+#######    Normalization and No Increase K     #######
+#######    lambda = 0.005     #######
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  '_lambda': 0.005}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'wrappers/test_lambda/0.005/P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
+# run_name = 'wrappers/test_lambda/0.005/P_DBGD_Wrapper' 
+# rankers.append((run_name, P_DBGD_Wrapper, other_args))
+
 
 sim = DataSimulation(sim_args)
 sim.run(rankers)

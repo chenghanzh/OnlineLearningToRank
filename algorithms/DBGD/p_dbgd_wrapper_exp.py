@@ -78,11 +78,12 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     return gradient_list
 
   def sample_gradient(self, gradient_list):
-    # if self.n_interactions == 800:
+    # if self.n_interactions %10 == 0:
       # print("##### Current weight")
       # print(np.transpose(self.model.weights[:,0]))
 
       # print("##### Gradeint from document features")
+      # print(sum(gradient_list[0]))
       # print(gradient_list[0])
       # print("##### Norm")
       # print(np.linalg.norm(gradient_list[0]))
@@ -166,6 +167,17 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     # if self.n_interactions == 1000:
     #   print("##### Current weight")
     #   print(np.transpose(self.model.weights[:,0]))
+    temp = np.square(query_feat)
+    # print(np.sum(temp, axis=0)) # sum each column: 41
+    # print(np.sum(temp, axis=1)) # sum each row: 40, 50
+    # print(np.linalg.norm(temp ))
+    # print(temp.shape)
+    # print("feat: %s" %(query_feat))
+    # print("feat_sq: %s" %(temp))
+    # print(sum(temp).shape)
+    # print("sum(feat): %s" %(sum(temp)))
+    # print("sum(feat[0]): %s" %(sum(temp, axis=0)))
+    print("##################")
     if self.use_regular_sample:
       self.model.sample_candidates()
       # self.model.weights[:, 1] = abs(self.model.weights[:, 1])

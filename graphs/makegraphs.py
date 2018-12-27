@@ -167,10 +167,14 @@ for data_folder in sorted(folder_structure.keys()):
         labels.append(process_run_name(file_name))
 
       if len(labels) > 0:
+        ### For testing
+        # plt.ylim(.0, .5)
+
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
+
         ### For HP
-        # plt.ylim(.5, 0.9)
+        plt.ylim(.65, 0.9)
         # ### For NP
         # plt.ylim(.5, 0.85)
         # ### For TD
@@ -183,14 +187,12 @@ for data_folder in sorted(folder_structure.keys()):
         # plt.ylim(.5, .75)
         ### For Web10k
         # plt.ylim(.1, .4)
-        ### For testing
-        plt.ylim(.0, .5)
 
 
         # plt.xlim(-5, 5300)
         # plt.xlim(-500, 1000000)
         # plt.xlim(-100, 5100)
-        plt.xlim(-100, 1500)
+        plt.xlim(-100, 5500)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')
         # if click_model == 'informational':
