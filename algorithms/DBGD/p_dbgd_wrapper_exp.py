@@ -167,7 +167,7 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     # if self.n_interactions == 1000:
     #   print("##### Current weight")
     #   print(np.transpose(self.model.weights[:,0]))
-    temp = np.square(query_feat)
+    # temp = np.square(query_feat)
     # print(np.sum(temp, axis=0)) # sum each column: 41
     # print(np.sum(temp, axis=1)) # sum each row: 40, 50
     # print(np.linalg.norm(temp ))
@@ -177,7 +177,7 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     # print(sum(temp).shape)
     # print("sum(feat): %s" %(sum(temp)))
     # print("sum(feat[0]): %s" %(sum(temp, axis=0)))
-    print("##################")
+    # print("##################")
     if self.use_regular_sample:
       self.model.sample_candidates()
       # self.model.weights[:, 1] = abs(self.model.weights[:, 1])

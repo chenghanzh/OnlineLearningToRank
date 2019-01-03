@@ -11,7 +11,7 @@ from models.linearmodel import LinearModel
 # Probabilistic Interleaving Dueling Bandit Gradient Descent
 class P_MGD_Wrapper(P_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_dec=None, *args, **kargs):
     super(P_MGD_Wrapper, self).__init__(*args, **kargs)
     self.n_candidates = n_candidates
     self.model = LinearModel(n_features = self.n_features,
@@ -22,6 +22,8 @@ class P_MGD_Wrapper(P_DBGD):
     self.k_initial = k_initial
     self.k_increase = k_increase
     self._lambda = _lambda
+    self.lambda_intp = lambda_intp
+    self.lambda_intp_dec = lambda_intp_dec
 
 
   @staticmethod
@@ -45,6 +47,8 @@ class P_MGD_Wrapper(P_DBGD):
     return multileaved_list  
 
   def update_to_interaction(self, clicks):
+    if self.lambda_intp_dec:
+      self.lambda_intp -= 0.002 # from 1 to 0 in 5000 iterations
     # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
     winners = self.multileaving.winning_rankers(clicks)
     ###############################################################
@@ -69,7 +73,7 @@ class P_MGD_Wrapper(P_DBGD):
         docid = self._last_ranking[i]
         feature = query_feat[docid]
         viewed_list.append(feature)
-      self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm, self._lambda)
+      self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm, _lambda=self._lambda, lambda_intp=self.lambda_intp)
     ###############################################################
     else:
       self.model.update_to_mean_winners(winners)

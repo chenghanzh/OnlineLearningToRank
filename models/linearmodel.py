@@ -44,7 +44,7 @@ class LinearModel(object):
     # print(self.weights)
     # print("####################")
 
-  def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False, _lambda=None):
+  def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False, _lambda=None, lambda_intp=None):
     assert self.n_models > 1
     if len(winners) > 0:
       # print 'winners:', winners
@@ -53,7 +53,15 @@ class LinearModel(object):
       # added for projection
       lambda_gradient = 0
       if viewed_list:
-        gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
+        if lambda_intp: # add Linear Interpolation (project only partially)
+          # print(lambda_intp)
+          # print(1-lambda_intp)
+          # print(gradient)
+          gradient = (1-lambda_intp)*gradient + (lambda_intp * self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm))
+          # print(gradient)
+          # print("################################################################")
+        else:
+          gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
         if _lambda: # add L2 Regularization (add back a portion of original weight to gradient)
           lambda_gradient =  _lambda * self.weights[:, 0]
 
