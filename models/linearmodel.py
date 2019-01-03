@@ -52,14 +52,10 @@ class LinearModel(object):
 
       # added for projection
       lambda_gradient = 0
-      if viewed_list:
+      if viewed_list is not None:
         if lambda_intp: # add Linear Interpolation (project only partially)
-          # print(lambda_intp)
-          # print(1-lambda_intp)
-          # print(gradient)
           gradient = (1-lambda_intp)*gradient + (lambda_intp * self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm))
-          # print(gradient)
-          # print("################################################################")
+
         else:
           gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
         if _lambda: # add L2 Regularization (add back a portion of original weight to gradient)

@@ -6,12 +6,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from algorithms.DBGD.pdbgd import P_DBGD
 import utils.rankings as rnk
 from models.linearmodel import LinearModel
+import numpy as np
 
 
 # Probabilistic Interleaving Dueling Bandit Gradient Descent
 class P_MGD_Wrapper(P_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_dec=None, *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_dec=None, prev_qeury=None, *args, **kargs):
     super(P_MGD_Wrapper, self).__init__(*args, **kargs)
     self.n_candidates = n_candidates
     self.model = LinearModel(n_features = self.n_features,
@@ -24,6 +25,10 @@ class P_MGD_Wrapper(P_DBGD):
     self._lambda = _lambda
     self.lambda_intp = lambda_intp
     self.lambda_intp_dec = lambda_intp_dec
+    self.prev_qeury = prev_qeury
+
+    if prev_qeury:
+      self.prev_feat_list = []
 
 
   @staticmethod
@@ -48,7 +53,7 @@ class P_MGD_Wrapper(P_DBGD):
 
   def update_to_interaction(self, clicks):
     if self.lambda_intp_dec:
-      self.lambda_intp -= 0.002 # from 1 to 0 in 5000 iterations
+      self.lambda_intp = 0.9996 ** self.n_interactions # 0.9996^t
     # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
     winners = self.multileaving.winning_rankers(clicks)
     ###############################################################
@@ -73,6 +78,28 @@ class P_MGD_Wrapper(P_DBGD):
         docid = self._last_ranking[i]
         feature = query_feat[docid]
         viewed_list.append(feature)
+
+
+
+      ##### Append feature vectors from previous queries
+      if self.prev_qeury:
+        if len(self.prev_feat_list) > 0:
+          # Append feature vectors from previous queries
+          viewed_list = np.append(viewed_list,self.prev_feat_list, axis=0)
+
+        # Add new feature vectors of current query to be used in later iterations
+        # if prev_feat_list is not filled up, add current list
+        click_list = [loc for loc, val in enumerate(clicks) if val == True]
+        for i in click_list:
+          docid_c = self._last_ranking[i]
+          feature_c = query_feat[docid_c]
+
+           # Remove oldest document feature.
+          if len(self.prev_feat_list) >= self.prev_qeury :
+            self.prev_feat_list.pop(0)
+
+          self.prev_feat_list.append(feature_c)
+
       self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm, _lambda=self._lambda, lambda_intp=self.lambda_intp)
     ###############################################################
     else:

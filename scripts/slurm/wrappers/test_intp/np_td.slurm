@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda2
-python scripts/detail_exp/test_intp.py --data_sets NP2003 TD2003 --click_models inf per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 15 --n_proc 25 --n_impr 5000
+python scripts/detail_exp/test_intp2.py --data_sets NP2003 TD2003 --click_models inf per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 15 --n_proc 25 --n_impr 5000

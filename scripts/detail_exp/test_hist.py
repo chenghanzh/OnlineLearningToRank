@@ -30,8 +30,7 @@ parser = SimulationArgumentParser(description=description)
 
 rankers = []
 
-#######    Normalization and No Increase K     #######
-#######    lambda_intp = decrease     #######
+#######    prev_qeury = 5     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
@@ -39,12 +38,68 @@ ranker_params = {
   'k_initial': 3,
   'k_increase': False,
   '_lambda': None,
-  'lambda_intp': 1.0,
-  'lambda_intp_dec': True}
+  'prev_qeury': 5}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrappers/test_intp/dec_P_MGD_Wrapper' 
+run_name = 'wrappers/test_hist/5_P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
+
+#######    prev_qeury = 10     #######
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  '_lambda': None,
+  'prev_qeury': 10}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'wrappers/test_hist/10_P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
+#######    prev_qeury = 15     #######
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  '_lambda': None,
+  'prev_qeury': 15}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'wrappers/test_hist/15_P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
+#######    prev_qeury = 20     #######
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  '_lambda': None,
+  'prev_qeury': 20}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'wrappers/test_hist/20_P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
+#######    prev_qeury = 25     #######
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  '_lambda': None,
+  'prev_qeury': 25}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'wrappers/test_hist/25_P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
 
 
 sim = DataSimulation(sim_args)

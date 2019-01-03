@@ -55,22 +55,8 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     self.selected_docnum = []
     # sample candidates based on label, not clicks
     gradient_list = []
-    # print("_last_query_id: %s" %self._last_query_id)
-    # print(self.query_id)
-    # print(self._train_query_ranges.shape)
-    # print("_train_features: %s" %self._train_features)
-    # print("_train_query_ranges: %s" %self._train_query_ranges)
-    # query_feat = self.get_query_features(self._last_query_id,
-    #                                  self._train_features,
-    #                                  self._train_query_ranges)
-    # # print(self.datafold.train_label_vector.shape)
-    # query_label = self.get_query_label(self._last_query_id,
-    #                                  self._train_label,
-    #                                  self._train_query_ranges)
 
     # Add features to the gradient_list if the label > 0
-    # print("query: %s, label: %s"%(len(query_feat),len(query_label)))
-    # print(len(query_feat))
     for i in range(len(query_feat)):
       if query_label[i] > 0 :
         gradient_list.append(query_feat[i])
@@ -78,18 +64,6 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     return gradient_list
 
   def sample_gradient(self, gradient_list):
-    # if self.n_interactions %10 == 0:
-      # print("##### Current weight")
-      # print(np.transpose(self.model.weights[:,0]))
-
-      # print("##### Gradeint from document features")
-      # print(sum(gradient_list[0]))
-      # print(gradient_list[0])
-      # print("##### Norm")
-      # print(np.linalg.norm(gradient_list[0]))
-      # print("##### Normalized Gradeint")
-      # print(gradient_list[0]/np.linalg.norm(gradient_list[0]))
-      # print("############################################################")
     if (self.loss_count + self.win_count > 0) and self.n_interactions%500 == 0:
       print("###### Win Rate at %s: " %self.n_interactions)
       # print(self.win_count/float(self.loss_count + self.win_count))
@@ -132,21 +106,8 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     # gradient /= np.linalg.norm(gradient)
 
     # Set the candidate ranker's weight
-    # print("#######################")
-    # print(self.model.weights)
-    # print("################")
-    # print(self.model.weights)
-    # print("Gradient: ")
-    # print(gradient)
-    # self.model.learning_rate *
     self.model.weights[:, 1] = self.model.weights[:, 0] + (gradient)
 
-    # print(self.model.learning_rate)
-    # print(self.model.weights)
-    # print(self.model.weights[:, 0])
-    # print(self.model.weights[:, 1])
-    # self.weights[:, 1:] = self.weights[:, 0, None] + vectors
-    # print(self.model.weights)
 
 
 
@@ -184,7 +145,6 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
       # print(self.model.weights)
     else:
       gradient_list = self.get_gradient_list_label(query_feat, query_label) # Based on label
-      # print(len(gradient_list))
       # Sample gradients from the list
       if len(gradient_list) > 0 :
         self.sample_gradient(gradient_list)
@@ -204,38 +164,17 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     self.descending_rankings = rnk.rank_single_query(scores,
                                               inverted=False,
                                               n_results=None)
-    # if self.n_interactions == 10:
-    #   print("### label: %s" %query_label)
-    #   print("### scores: %s" %scores)
-    #   print("### current ranking at queryid %s: %s" %(self.query_id,self.descending_rankings[0]))
-    #   print("### candidate ranking at queryid %s: %s" %(self.query_id,self.descending_rankings[1]))
-    #   print("### rank-label_cur: %s" %query_label[self.descending_rankings[0]])
-    #   print("### rank-label_candidate: %s" %query_label[self.descending_rankings[1]])
-    #   print("########################################################################################################")
 
-    # print(self.descending_rankings[0])
-    # print()
-    # print(self.descending_rankings)
     multileaved_list = self.multileaving.make_multileaving(self.inverted_rankings)
-    # print(multileaved_list)
+
     return multileaved_list
 
-  # Currently 
   # Can be modified for multileaving 
   def update_to_interaction(self, clicks):
-
 
     ##############
     # Dubugging purpose
     if self.n_interactions == 500:
-      weight_optimal_randDoc = [0.41070166, 0.32235245, 0.60673729, 0.35787871, 0.41874058, 0,
- 0,         0,         0, 0,         0.64958118, 0.31862127,
- 0.61739795, 0.32928292, 0.66745723, 0.40198822, 0.51158258, 0.78137051,
- 1.1481822,  0.40262884, 1.68334933, 1.49308809, 1.47623012, 1.43373852,
- 0.46494138, 0.40928871, 0.35126424, 0.38067723, 0.64333191, 0.55038316,
- 0.53057338, 0.52352578, 0.33738541, 0.17311668, 0.17815096, 0.16002226,
- 1.68960847, 1.48025958, 1.47792174, 1.42727124, 0.19851161, 0.29228775,
- 0.42586687, 1.45305203, 1.14103663, 0]
       weight_optimal_dbgd = [0.02832735, 0.01285759, -0.05165583, 0.03138522, -0.03074056, 0.01276765,
       0.03291753, -0.03352945, -0.00616694, -0.05204681,  0.01169881,  0.02033736,
       0.02435693,  0.00357046, -0.01496411, -0.04720677,  0.02733036, -0.01115817,
@@ -248,8 +187,6 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
       self.win_count = 0
       self.loss_count = 0
 
-
-
     # Option #2, directly use NDCG of two lists to determine winner
     if(self.use_NDCG):
       query_label = self.get_query_label(self._last_query_id,
@@ -259,10 +196,7 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
       ndcg_list_inv = evaluate.get_single_ndcg_for_rankers(self.inverted_rankings,query_label,10)
       ndcg_list = evaluate.get_single_ndcg_for_rankers(self.descending_rankings,query_label,10)
       winners = []
-      # if self.n_interactions %50 == 0:
-      #   print(ndcg_list)
-      # #   print(ndcg_list_desc)
-      #   print("########################################################################################################")
+
       if ndcg_list[1] > ndcg_list[0] :
         winners = [1]
         self.win_count += 1
