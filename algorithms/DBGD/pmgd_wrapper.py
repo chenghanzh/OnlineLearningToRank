@@ -12,7 +12,7 @@ import numpy as np
 # Probabilistic Interleaving Dueling Bandit Gradient Descent
 class P_MGD_Wrapper(P_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_dec=None, prev_qeury=None, *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_dec=None, prev_qeury_len=None, viewed=False, *args, **kargs):
     super(P_MGD_Wrapper, self).__init__(*args, **kargs)
     self.n_candidates = n_candidates
     self.model = LinearModel(n_features = self.n_features,
@@ -25,9 +25,10 @@ class P_MGD_Wrapper(P_DBGD):
     self._lambda = _lambda
     self.lambda_intp = lambda_intp
     self.lambda_intp_dec = lambda_intp_dec
-    self.prev_qeury = prev_qeury
+    self.prev_qeury_len = prev_qeury_len
+    self.viewed = viewed
 
-    if prev_qeury:
+    if prev_qeury_len:
       self.prev_feat_list = []
 
 
@@ -78,27 +79,37 @@ class P_MGD_Wrapper(P_DBGD):
         docid = self._last_ranking[i]
         feature = query_feat[docid]
         viewed_list.append(feature)
+      if self.viewed: # Add examined document, depending on config setting
+          add_list = viewed_list
 
 
 
       ##### Append feature vectors from previous queries
-      if self.prev_qeury:
+      if self.prev_qeury_len:
         if len(self.prev_feat_list) > 0:
           # Append feature vectors from previous queries
           viewed_list = np.append(viewed_list,self.prev_feat_list, axis=0)
+  
 
         # Add new feature vectors of current query to be used in later iterations
-        # if prev_feat_list is not filled up, add current list
-        click_list = [loc for loc, val in enumerate(clicks) if val == True]
-        for i in click_list:
-          docid_c = self._last_ranking[i]
-          feature_c = query_feat[docid_c]
+        if self.viewed: # Add examined document, depending on config setting
+          for i in add_list:
+            if len(self.prev_feat_list) >= self.prev_qeury_len :
+              self.prev_feat_list.pop(0)  # Remove oldest document feature.
+            # if prev_feat_list is not filled up, add current list
+            self.prev_feat_list.append(i)
 
-           # Remove oldest document feature.
-          if len(self.prev_feat_list) >= self.prev_qeury :
-            self.prev_feat_list.pop(0)
 
-          self.prev_feat_list.append(feature_c)
+        else: # Add ONLY from clicked document
+          add_list = [loc for loc, val in enumerate(clicks) if val == True]
+          for i in add_list:
+            docid_c = self._last_ranking[i]
+            feature_c = query_feat[docid_c]
+
+            # Remove the oldest document feature.
+            if len(self.prev_feat_list) >= self.prev_qeury_len :
+              self.prev_feat_list.pop(0)
+            self.prev_feat_list.append(feature_c)
 
       self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm, _lambda=self._lambda, lambda_intp=self.lambda_intp)
     ###############################################################

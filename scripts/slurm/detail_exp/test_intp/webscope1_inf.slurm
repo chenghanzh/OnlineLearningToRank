@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda2
-python scripts/detail_exp/test_intp2.py --data_sets MSLR-WEB10K --click_models inf per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 15 --n_proc 25 --n_impr 5000
+python scripts/detail_exp/test_intp.py --data_sets Webscope_C14_Set1 --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 10 --n_proc 10 --n_impr 5000
