@@ -12,7 +12,7 @@ import numpy as np
 # Probabilistic Interleaving Dueling Bandit Gradient Descent
 class P_MGD_Wrapper(P_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_dec=None, prev_qeury_len=None, viewed=False, *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_dec=None, prev_qeury_len=None, viewed=False, docspace=[False,0], *args, **kargs):
     super(P_MGD_Wrapper, self).__init__(*args, **kargs)
     self.n_candidates = n_candidates
     self.model = LinearModel(n_features = self.n_features,
@@ -26,10 +26,10 @@ class P_MGD_Wrapper(P_DBGD):
     self.lambda_intp = lambda_intp
     self.lambda_intp_dec = lambda_intp_dec
     self.prev_qeury_len = prev_qeury_len
-    self.viewed = viewed
-
     if prev_qeury_len:
       self.prev_feat_list = []
+    self.viewed = viewed
+    self.docspace = docspace  # docspace=[False,0]
 
 
   @staticmethod
@@ -52,7 +52,7 @@ class P_MGD_Wrapper(P_DBGD):
     multileaved_list = self.multileaving.make_multileaving(inverted_rankings)
     return multileaved_list  
 
-  def update_to_interaction(self, clicks):
+  def update_to_interaction(self, clicks, stop_index):
     if self.lambda_intp_dec:
       self.lambda_intp = 0.9996 ** self.n_interactions # 0.9996^t
     # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
@@ -70,7 +70,18 @@ class P_MGD_Wrapper(P_DBGD):
         # gradually increast k
         k_current += int(self.n_interactions/1000)
       last_doc_index = min(last_click+k_current, len(self._last_ranking)-1)
+      # print("############################")
       # print(last_doc_index)
+      # print(stop_index)
+
+      if self.docspace[0] and stop_index is not None: # for test document length experiment
+        # create sub/super set of perfect document space user examined. 
+        # user examined documents coming from ccm, where user leaves.
+        last_doc_index = stop_index + self.docspace[1] + 1 # 1 added for stopping document, which has been examined.
+        last_doc_index = max(last_doc_index,1)
+        last_doc_index = min(last_doc_index,10)
+        # print(last_doc_index)
+
 
       query_feat = self.get_query_features(self.query_id,
                                        self._train_features,
@@ -89,7 +100,7 @@ class P_MGD_Wrapper(P_DBGD):
         if len(self.prev_feat_list) > 0:
           # Append feature vectors from previous queries
           viewed_list = np.append(viewed_list,self.prev_feat_list, axis=0)
-  
+
 
         # Add new feature vectors of current query to be used in later iterations
         if self.viewed: # Add examined document, depending on config setting

@@ -41,9 +41,9 @@ class ClickModel(object):
         clicks_before_stop = np.logical_and(clicks, np.arange(ranking.shape[0])
                                             <= np.where(stops)[0][0])
         stopped_clicks[clicks_before_stop] = True
-        return stopped_clicks
+        return stopped_clicks, np.where(stops)[0][0] # stopping point return added temporarily by sak2km
     else:
-        return np.zeros(ranking.shape, dtype=bool) + clicks
+        return np.zeros(ranking.shape, dtype=bool) + clicks, None
 
 class ExamineClickModel(object):
 

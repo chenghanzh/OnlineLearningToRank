@@ -158,11 +158,12 @@ class SingleSimulation(object):
     for impressions in range(self.n_impressions):
       ranking_i, train_ranking = self.sample_and_rank(ranker)
       ranking_labels = self.datafold.train_query_labels(ranking_i)
-      clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
+      # stop_index temporarily added by sak2km
+      clicks, stop_index = self.click_model.generate_clicks(train_ranking, ranking_labels)
       self.timestep_evaluate(run_results, impressions, ranker,
                              ranking_i, train_ranking, ranking_labels)
 
-      ranker.process_clicks(clicks)
+      ranker.process_clicks(clicks, stop_index)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker)
