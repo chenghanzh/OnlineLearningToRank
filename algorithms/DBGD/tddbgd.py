@@ -50,6 +50,6 @@ class TD_DBGD(BasicOnlineRanker):
     multileaved_list = self.multileaving.make_multileaving(rankings)
     return multileaved_list
 
-  def update_to_interaction(self, clicks):
+  def update_to_interaction(self, clicks, impressions=None):
     winners = self.multileaving.winning_rankers(clicks)
     self.model.update_to_mean_winners(winners)

@@ -135,8 +135,13 @@ class SingleSimulation(object):
 
     return results
 
-  def sample_and_rank(self, ranker):
-    ranking_i = np.random.choice(self.datafold.n_train_queries())
+  def sample_and_rank(self, ranker, impressions=None):
+    if impressions == None:
+      ranking_i = np.random.choice(self.datafold.n_train_queries())
+    else:
+      ranking_i = impressions % self.datafold.n_train_queries()
+    # print (impressions)
+    
     train_ranking = ranker.get_train_query_ranking(ranking_i)
 
     assert train_ranking.shape[0] <= self.n_results, 'Shape is %s' % (train_ranking.shape,)
@@ -154,13 +159,14 @@ class SingleSimulation(object):
     run_results = []
     impressions = 0
     for impressions in range(self.n_impressions):
-      ranking_i, train_ranking = self.sample_and_rank(ranker)
+      # ranking_i, train_ranking = self.sample_and_rank(ranker)
+      ranking_i, train_ranking = self.sample_and_rank(ranker, impressions)
       ranking_labels = self.datafold.train_query_labels(ranking_i)
       clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
       self.timestep_evaluate(run_results, impressions, ranker,
                              ranking_i, train_ranking, ranking_labels)
 
-      ranker.process_clicks(clicks)
+      ranker.process_clicks(clicks, impressions)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker)

@@ -39,7 +39,7 @@ class LinearModel(object):
     vectors /= vector_norms[None, :]
     self.weights[:, 1:] = self.weights[:, 0, None] + vectors
 
-  def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False):
+  def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False, impressions=None):
     assert self.n_models > 1
     if len(winners) > 0:
       # print 'winners:', winners
@@ -47,6 +47,9 @@ class LinearModel(object):
       # added for projection
       if viewed_list:
         gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
+      elif impressions is not None:
+        if impressions < 2500:
+          gradient[int(len(gradient/2)):] = 0
 
       self.weights[:, 0] += self.learning_rate * gradient
       self.learning_rate *= self.learning_rate_decay
@@ -127,3 +130,10 @@ class LinearModel(object):
 
     self.gs = np.array(nsVecs[:self.n_models-1])
     self.weights[:, 1:] = self.weights[:, 0, None] + self.gs.T
+
+  def sample_candidates_randdoc(self, docs):
+    assert self.n_models > 1
+    vectors = docs[np.random.randint(len(docs), size=self.n_models-1)].T
+    vector_norms = np.sum(vectors ** 2, axis=0) ** (1. / 2)
+    vectors /= vector_norms[None, :]
+    self.weights[:, 1:] = self.weights[:, 0, None] + vectors
