@@ -62,6 +62,7 @@ else:
 
 to_plot = [
        ('offline', 'heldout'),
+       ('online', 'cumulative-display'),
       ]
 
 for data_folder in sorted(folder_structure.keys()):
@@ -174,7 +175,7 @@ for data_folder in sorted(folder_structure.keys()):
         ### For MQ
         # plt.ylim(.3, .5)
         ### For YahooS1, n_result=100
-        plt.ylim(.65, .9)
+        # plt.ylim(.65, .9)
         ### For Yahoo
         # plt.ylim(.4, .8)
         ### For Web10k

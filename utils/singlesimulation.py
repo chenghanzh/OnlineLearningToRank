@@ -5,6 +5,10 @@ import numpy as np
 from evaluate import get_idcg_list, evaluate, evaluate_ranking
 from clicks import *
 
+from numpy.linalg import norm
+
+def cosine(u, v):
+  return np.dot(u, v) / (norm(u) * norm(v))
 
 class SingleSimulation(object):
 
@@ -43,6 +47,14 @@ class SingleSimulation(object):
     self.online_score = 0.0
     self.cur_online_discount = 1.0
     self.online_discount = 0.9995
+
+    self.eval_gradient = False
+    # Load w^* for simulation data
+    if sim_args.w_star_path is not None:
+        self.eval_gradient = True
+        with open(sim_args.w_star_path, 'r') as f:
+          self.w_star = np.loadtxt(f)
+          print (self.w_star)
 
   def timestep_evaluate(self, results, iteration, ranker, ranking_i,
                         train_ranking, ranking_labels):
@@ -135,6 +147,19 @@ class SingleSimulation(object):
 
     return results
 
+  def evaluate_gradient(self, results, iteration, ranker,):
+    results[-1]['cosine_w'] = cosine(ranker.model.weights[:, 0].T, self.w_star)
+
+    if ranker.model.g_t is not None:      
+      results[-1]['cosine_g'] = cosine(ranker.model.g_t, self.w_star-ranker.model.weights[:, 0].T)
+      results[-1]['cosine_g_diff'] = cosine(ranker.model.g_t-ranker.model.u_t, self.w_star-ranker.model.weights[:, 0].T)
+    else:
+      results[-1]['cosine_g_diff'] = 0 #or np.nan?
+      results[-1]['cosine_g'] = 0 #or np.nan?
+      
+      # print (results[-1]['cosine'])
+
+
   def sample_and_rank(self, ranker, impressions=None):
     if impressions == None:
       ranking_i = np.random.choice(self.datafold.n_train_queries())
@@ -167,6 +192,8 @@ class SingleSimulation(object):
                              ranking_i, train_ranking, ranking_labels)
 
       ranker.process_clicks(clicks, impressions)
+      if self.eval_gradient:
+        self.evaluate_gradient(run_results, impressions, ranker)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker)

@@ -114,8 +114,8 @@ class OutputAverager(object):
       results[name] = cur_results
       for click_model, lists in all_val[name].items():
         stacked = np.stack(lists)
-        cm_mean = np.mean(stacked, axis=0)
-        cm_std = np.std(stacked, axis=0)
+        cm_mean = np.nanmean(stacked, axis=0) #chang to nanmean for cosine statistic
+        cm_std = np.nanstd(stacked, axis=0)
         cur_results[click_model] = {
             'mean': cm_mean.tolist(),
             'std': cm_std.tolist(),          

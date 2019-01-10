@@ -41,15 +41,19 @@ class LinearModel(object):
 
   def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False, impressions=None):
     assert self.n_models > 1
+    self.u_t = None
+    self.g_t = None
     if len(winners) > 0:
       # print 'winners:', winners
       gradient = np.mean(self.weights[:, winners], axis=1) - self.weights[:, 0]
+      self.u_t = gradient
       # added for projection
       if viewed_list:
         gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
-      elif impressions is not None:
-        if impressions < 2500:
-          gradient[int(len(gradient/2)):] = 0
+        self.g_t = gradient
+      # elif impressions is not None:
+      #   if impressions < 2500:
+      #     gradient[int(len(gradient/2)):] = 0
 
       self.weights[:, 0] += self.learning_rate * gradient
       self.learning_rate *= self.learning_rate_decay
