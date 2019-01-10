@@ -69,23 +69,20 @@ class P_MGD_Wrapper(P_DBGD):
       if self.k_increase:
         # gradually increast k
         k_current += int(self.n_interactions/1000)
-      last_doc_index = min(last_click+k_current, len(self._last_ranking)-1)
-      # print("############################")
-      # print(last_doc_index)
-      # print(stop_index)
+      last_doc_index = min(last_click+k_current, len(self._last_ranking))
 
       if self.docspace[0] and stop_index is not None: # for test document length experiment
         # create sub/super set of perfect document space user examined. 
         # user examined documents coming from ccm, where user leaves.
         last_doc_index = stop_index + self.docspace[1] + 1 # 1 added for stopping document, which has been examined.
-        last_doc_index = max(last_doc_index,1)
-        last_doc_index = min(last_doc_index,10)
-        # print(last_doc_index)
+        last_doc_index = max(last_doc_index,1) # At least 1
+        last_doc_index = min(last_doc_index,len(self._last_ranking)) # At most length of current list
 
 
       query_feat = self.get_query_features(self.query_id,
                                        self._train_features,
                                        self._train_query_ranges)
+
       for i in range(last_doc_index):
         docid = self._last_ranking[i]
         feature = query_feat[docid]
@@ -98,7 +95,6 @@ class P_MGD_Wrapper(P_DBGD):
       ##### Append feature vectors from previous queries
       if self.prev_qeury_len:
         if len(self.prev_feat_list) > 0:
-          # Append feature vectors from previous queries
           viewed_list = np.append(viewed_list,self.prev_feat_list, axis=0)
 
 
