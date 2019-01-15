@@ -7,6 +7,7 @@ from algorithms.DBGD.pdbgd import P_DBGD
 import utils.rankings as rnk
 from models.linearmodel import LinearModel
 import numpy as np
+import math
 
 
 # Probabilistic Interleaving Dueling Bandit Gradient Descent
@@ -53,8 +54,10 @@ class P_MGD_Wrapper(P_DBGD):
     return multileaved_list  
 
   def update_to_interaction(self, clicks, stop_index):
-    if self.lambda_intp_dec:
+    if self.lambda_intp_dec == 'dec':
       self.lambda_intp = 0.9996 ** self.n_interactions # 0.9996^t
+    elif self.lambda_intp_dec == 'inc':
+      self.lambda_intp =  1 - math.exp(-0.0006 * self.n_interactions) # 1-e^(-.0006*t)
     # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
     winners = self.multileaving.winning_rankers(clicks)
     ###############################################################
