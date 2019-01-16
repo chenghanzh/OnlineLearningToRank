@@ -18,6 +18,9 @@ class SingleSimulation(object):
 
     self.n_results = sim_args.n_results
     self.click_model = click_model
+    self.switch_click_model = sim_args.switch_click_model
+    self.click_models = [get_click_models(['nav','bin'])[0], get_click_models(['inf','bin'])[0]]
+
     self.datafold = datafold
     if not self.train_only:
       self.test_idcg_vector = get_idcg_list(self.datafold.test_label_vector,
@@ -149,7 +152,7 @@ class SingleSimulation(object):
 
   def evaluate_gradient(self, results, iteration, ranker,):
     results[-1]['cosine_w'] = cosine(ranker.model.weights[:, 0].T, self.w_star)
-
+    results[-1]['l2_w'] = norm(ranker.model.weights[:, 0].T - self.w_star)
     if ranker.model.g_t is not None:      
       results[-1]['cosine_g'] = cosine(ranker.model.g_t, self.w_star-ranker.model.weights[:, 0].T)
       results[-1]['cosine_g_diff'] = cosine(ranker.model.g_t-ranker.model.u_t, self.w_star-ranker.model.weights[:, 0].T)
@@ -187,7 +190,10 @@ class SingleSimulation(object):
       # ranking_i, train_ranking = self.sample_and_rank(ranker)
       ranking_i, train_ranking = self.sample_and_rank(ranker, impressions)
       ranking_labels = self.datafold.train_query_labels(ranking_i)
-      clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
+      if self.switch_click_model:
+        clicks = self.click_models[int(impressions/2500)].generate_clicks(train_ranking, ranking_labels)
+      else:
+        clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
       self.timestep_evaluate(run_results, impressions, ranker,
                              ranking_i, train_ranking, ranking_labels)
 

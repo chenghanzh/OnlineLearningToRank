@@ -51,6 +51,7 @@ class DataSimulation(object):
     self._launched = 0
     self._outputs_found = 0
     datasets = list(get_datasets(self.sim_args))
+    # print ('click models:', self.click_models)
     for dataset in datasets:
       self.max_folds = min(self.max_folds, dataset.max_folds)
       if not dataset.click_model_type in self.click_models:

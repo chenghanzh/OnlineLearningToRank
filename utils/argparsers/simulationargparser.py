@@ -88,6 +88,8 @@ class SimulationArgumentParser(argparse.ArgumentParser):
     self._sim_add_argument('--w_star', dest='w_star_path', type=str, required=False,
                       help='Load w^* for simulation data and compute cosine similarity.')
 
+    self._sim_add_argument('--switch_click_model', dest='switch_click_model', action='store_true',
+                      help='Switch click model between nav and inf.')
     self._arguments_initialized = False
 
   def reset_arguments(self):
