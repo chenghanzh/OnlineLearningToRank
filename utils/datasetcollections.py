@@ -380,10 +380,10 @@ DATASET_COLLECTION['local_single_MNIST'] = DataSet('mnist',
 
 DATASET_COLLECTION['Simu'] = DataSet('Simu',
                                                   '/home/hw7ww/Bandit/Code/lerot/data/Simu/',
-                                                  'long', False, 100)
+                                                  'bin', False, 100)
 DATASET_COLLECTION['Simu_rand'] = DataSet('Simu_rand',
                                                   '/home/hw7ww/Bandit/Code/lerot/data/Simu_rand/',
                                                   'long', False, 100)
 DATASET_COLLECTION['Simu_two_group'] = DataSet('Simu_two_group',
                                                   '/home/hw7ww/Bandit/Code/lerot/data/Simu_two_group/',
-                                                  'long', False, 50)
+                                                  'bin', False, 50)
