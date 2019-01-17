@@ -4,6 +4,7 @@ import numpy as np
 import os
 import traceback
 import json
+import pdb
 
 
 def cumulative(ranking, discount=0.9995):
@@ -84,7 +85,10 @@ class OutputAverager(object):
         cur_val = {}
         for name, val in all_ind.items():
           cur_i[name] = 0
-          cur_val[name] = np.zeros(val.shape)
+          if '_t' in name: # Add array of vectors: u_t, g_t, w_t for each iteration
+            cur_val[name] = np.zeros((len(val),len(events['run_results'][0][name])))
+          else:
+            cur_val[name] = np.zeros(val.shape)
           if cur_click_model not in all_val[name]:
             all_val[name][cur_click_model] = []
           all_val[name][cur_click_model].append(cur_val[name])

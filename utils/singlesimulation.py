@@ -144,6 +144,16 @@ class SingleSimulation(object):
 
     return ranking_i, train_ranking
 
+  # Record gradient info
+  def record_gradient(self, results, iteration, ranker,):
+    if ranker.model.g_t is not None: 
+      results[-1]['u_t'] = ranker.model.u_t.tolist()
+      results[-1]['g_t'] = ranker.model.g_t.tolist()
+    else:
+      results[-1]['u_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+      results[-1]['g_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+    results[-1]['w_t'] = ranker.model.weights[:, 0].T.tolist()
+
 
   def run(self, ranker, output_key):
     starttime = time.time()
@@ -164,6 +174,9 @@ class SingleSimulation(object):
                              ranking_i, train_ranking, ranking_labels)
 
       ranker.process_clicks(clicks, stop_index)
+
+      # Added temporarily to record gradient info
+      self.record_gradient(run_results, impressions, ranker)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker)

@@ -7,6 +7,7 @@ import argparse
 import os
 import json
 import datetime
+import pdb
 
 def create_folders(filename):
   if not os.path.exists(os.path.dirname(filename)):
@@ -34,7 +35,7 @@ def create_folders(filename):
     os.makedirs(os.path.dirname(filename))
 
 def process_run_name(name):
-  name = name.replace('_', '\\_')
+  # name = name.replace('_', '\\_')
   name = name.replace('DeepP-DBGD', 'DBGD (neural)')
   name = name.replace('P-DBGD', 'DBGD')
   name = name.replace('P-MGD', 'MGD')
@@ -152,6 +153,8 @@ for data_folder in sorted(folder_structure.keys()):
             print 'not found', v_name, file_dict.keys()
             continue
         v_dict = file_dict[v_name]
+        # To access gradient vectors:
+        # output['results'][u'u_t'][ u'informational'][u'std']
         ind = np.array(v_dict['indices'])
         if click_model not in v_dict:
           print 'not found', click_model, v_dict.keys()

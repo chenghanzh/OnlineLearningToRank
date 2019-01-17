@@ -46,9 +46,12 @@ class LinearModel(object):
 
   def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False, _lambda=None, lambda_intp=None):
     assert self.n_models > 1
+    self.u_t = None
+    self.g_t = None
     if len(winners) > 0:
       # print 'winners:', winners
       gradient = np.mean(self.weights[:, winners], axis=1) - self.weights[:, 0]
+      self.u_t = gradient
 
       # added for projection
       lambda_gradient = 0
@@ -58,6 +61,7 @@ class LinearModel(object):
 
         else:
           gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
+        self.g_t = gradient
         if _lambda: # add L2 Regularization (add back a portion of original weight to gradient)
           lambda_gradient =  _lambda * self.weights[:, 0]
 
@@ -65,6 +69,7 @@ class LinearModel(object):
       if lambda_gradient is not 0:
         self.weights[:, 0] -= lambda_gradient
       self.learning_rate *= self.learning_rate_decay
+      # print(self.g_t)
 
 
   def update_to_documents(self, doc_ind, doc_weights, viewed_list=None, svd=None, project_norm=None, _lambda=None):

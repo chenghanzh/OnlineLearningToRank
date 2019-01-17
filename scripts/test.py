@@ -25,59 +25,20 @@ parser = SimulationArgumentParser(description=description)
 
 rankers = []
 
-#######    Normalization and No Increase K     #######
-#######    lambda = 0.05     #######
-
+#######    lambda_intp = decrease     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
   'project_norm': True,
   'k_initial': 3,
   'k_increase': False,
-  '_lambda': 0.05}
+  '_lambda': None,
+  'lambda_intp': 1.0,
+  'lambda_intp_dec': 'dec'}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrappers/test_lambda/0.05/P_MGD_Wrapper' 
+run_name = 'test/intp/dec_P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
-
-# run_name = 'wrappers/test_lambda/0.05/P_DBGD_Wrapper' 
-# rankers.append((run_name, P_DBGD_Wrapper, other_args))
-
-
-#######    Normalization and No Increase K     #######
-#######    lambda = 0.01     #######
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False,
-  '_lambda': 0.01}
-sim_args, other_args = parser.parse_all_args(ranker_params)
-
-run_name = 'wrappers/test_lambda/0.01/P_MGD_Wrapper' 
-rankers.append((run_name, P_MGD_Wrapper, other_args))
-
-# run_name = 'wrappers/test_lambda/0.01/P_DBGD_Wrapper' 
-# rankers.append((run_name, P_DBGD_Wrapper, other_args))
-
-#######    Normalization and No Increase K     #######
-#######    lambda = 0.005     #######
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False,
-  '_lambda': 0.005}
-sim_args, other_args = parser.parse_all_args(ranker_params)
-
-run_name = 'wrappers/test_lambda/0.005/P_MGD_Wrapper' 
-rankers.append((run_name, P_MGD_Wrapper, other_args))
-
-# run_name = 'wrappers/test_lambda/0.005/P_DBGD_Wrapper' 
-# rankers.append((run_name, P_DBGD_Wrapper, other_args))
-
 
 sim = DataSimulation(sim_args)
 sim.run(rankers)
