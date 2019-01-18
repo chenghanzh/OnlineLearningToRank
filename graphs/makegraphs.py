@@ -181,7 +181,7 @@ for data_folder in sorted(folder_structure.keys()):
         # ### For NP
         # plt.ylim(.6, 0.85)
         # ### For TD
-        plt.ylim(0.15, 0.45)
+        # plt.ylim(0.15, 0.45)
         ### For MQ07
         # plt.ylim(.3, .5)
         ### For MQ08
@@ -189,7 +189,7 @@ for data_folder in sorted(folder_structure.keys()):
         ### For MQ08
         # plt.ylim(.4, .8)
         ### For WebscopeS1
-        # plt.ylim(.55, .75)
+        plt.ylim(.55, .75)
         ### For Web10k
         # plt.ylim(.25, .45)
 

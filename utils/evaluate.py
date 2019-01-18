@@ -3,7 +3,7 @@
 from numpy import log2
 from random import sample
 import numpy as np
-
+import pdb
 
 def get_dcg(ordered_labels):
     return np.sum((2 ** ordered_labels - 1) / np.log2(np.arange(ordered_labels.shape[0]) + 2))
@@ -54,6 +54,8 @@ def get_dcg_from_matrix(label_matrix, n_vector, max_len):
     label_matrix = label_matrix[:, :max_len]
 
     nominators = 2 ** label_matrix - 1
+    # pdb.set_trace()
+    max_len = min(max_len,label_matrix.shape[1])
     nominators[np.arange(max_len)[None, :] >= n_vector[:, None]] = 0
 
     denominator = np.log2(np.arange(max_len) + 2)

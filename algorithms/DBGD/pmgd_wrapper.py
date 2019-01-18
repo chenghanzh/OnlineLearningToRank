@@ -53,7 +53,7 @@ class P_MGD_Wrapper(P_DBGD):
     multileaved_list = self.multileaving.make_multileaving(inverted_rankings)
     return multileaved_list  
 
-  def update_to_interaction(self, clicks, stop_index):
+  def update_to_interaction(self, clicks, stop_index=None):
     if self.lambda_intp_dec == 'dec':
       self.lambda_intp = 0.9996 ** self.n_interactions # 0.9996^t
     elif self.lambda_intp_dec == 'inc':

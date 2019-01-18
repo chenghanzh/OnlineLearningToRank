@@ -29,8 +29,21 @@ description = 'Run script for testing framework.'
 parser = SimulationArgumentParser(description=description)
 
 rankers = []
+#######    lambda_intp = increase     #######
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  '_lambda': None,
+  'lambda_intp': 0,
+  'lambda_intp_dec': 'inc'}
+sim_args, other_args = parser.parse_all_args(ranker_params)
 
-#######    Normalization and No Increase K     #######
+run_name = 'wrappers/test_intp/inc_P_MGD_Wrapper' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
 #######    lambda_intp = decrease     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
@@ -40,13 +53,12 @@ ranker_params = {
   'k_increase': False,
   '_lambda': None,
   'lambda_intp': 1.0,
-  'lambda_intp_dec': True}
+  'lambda_intp_dec': 'dec'}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'wrappers/test_intp/dec_P_MGD_Wrapper' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
-#######    Normalization and No Increase K     #######
 #######    lambda_intp = 0.1     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
@@ -62,8 +74,6 @@ run_name = 'wrappers/test_intp/1_P_MGD_Wrapper'
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 
-
-#######    Normalization and No Increase K     #######
 #######    lambda_intp = 0.3     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
@@ -79,7 +89,6 @@ run_name = 'wrappers/test_intp/3_P_MGD_Wrapper'
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 
-#######    Normalization and No Increase K     #######
 #######    lambda_intp = 0.5     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
@@ -95,7 +104,6 @@ run_name = 'wrappers/test_intp/5_P_MGD_Wrapper'
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 
-#######    Normalization and No Increase K     #######
 #######    lambda_intp = 0.7     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
@@ -111,7 +119,6 @@ run_name = 'wrappers/test_intp/7_P_MGD_Wrapper'
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 
-#######    Normalization and No Increase K     #######
 #######    lambda_intp = 0.9     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
