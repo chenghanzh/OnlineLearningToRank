@@ -83,7 +83,6 @@ class TD_NSGD_Wrapper(TD_DBGD):
 
   def _create_train_ranking(self, query_id, query_feat, inverted):
     self.query_id = query_id
-    print(query_id)
     assert inverted == False
     #  Get the worst gradients by click
     nums = []

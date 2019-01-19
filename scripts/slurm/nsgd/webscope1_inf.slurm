@@ -9,5 +9,5 @@
 #SBATCH --mail-user=sak2km@virginia.edu
 #SBATCH -A hcdm
 
-module load anaconda2
-python scripts/test_NSGD.py --data_sets Webscope_C14_Set1 --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 25 --n_proc 25 --n_impr 5000
+module load anaconda/5.2.0-py2.7
+python scripts/nsgd.py --data_sets Webscope_C14_Set1 --click_models inf --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 10 --n_proc 10 --n_impr 10000

@@ -74,7 +74,7 @@ class P_MGD_Wrapper(P_DBGD):
         k_current += int(self.n_interactions/1000)
       last_doc_index = min(last_click+k_current, len(self._last_ranking))
 
-      if self.docspace[0] and stop_index is not None: # for test document length experiment
+      if self.docspace[0] and stop_index is not None: # for test document space length experiment
         # create sub/super set of perfect document space user examined. 
         # user examined documents coming from ccm, where user leaves.
         last_doc_index = stop_index + self.docspace[1] + 1 # 1 added for stopping document, which has been examined.

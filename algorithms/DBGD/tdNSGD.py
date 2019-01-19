@@ -51,7 +51,6 @@ class TD_NSGD(TD_DBGD):
 
   def _create_train_ranking(self, query_id, query_feat, inverted):
     assert inverted == False
-    print(query_id)
     #  Get the worst gradients by click
     nums = []
     dif = self.GRAD_SIZE - self.EXP_SIZE

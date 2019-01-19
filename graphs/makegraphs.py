@@ -183,13 +183,13 @@ for data_folder in sorted(folder_structure.keys()):
         # ### For TD
         # plt.ylim(0.15, 0.45)
         ### For MQ07
-        # plt.ylim(.3, .5)
+        plt.ylim(.3, .5)
         ### For MQ08
         # plt.ylim(.55, .75)
         ### For MQ08
         # plt.ylim(.4, .8)
         ### For WebscopeS1
-        plt.ylim(.55, .75)
+        # plt.ylim(.55, .75)
         ### For Web10k
         # plt.ylim(.25, .45)
 

@@ -2,52 +2,53 @@
 
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from utils.datasimulation import DataSimulation
 from utils.argparsers.simulationargparser import SimulationArgumentParser
 from algorithms.PDGD.pdgd import PDGD
 from algorithms.PDGD.deeppdgd import DeepPDGD
+from algorithms.PDGD.pdgd_wrapper import PDGD_Wrapper
 from algorithms.DBGD.tddbgd import TD_DBGD
+from algorithms.DBGD.tddbgd_wrapper import TD_DBGD_Wrapper
 from algorithms.DBGD.pdbgd import P_DBGD
+from algorithms.DBGD.pdbgd_wrapper import P_DBGD_Wrapper
 from algorithms.DBGD.tdmgd import TD_MGD
+from algorithms.DBGD.tdmgd_wrapper import TD_MGD_Wrapper
 from algorithms.DBGD.pmgd import P_MGD
+from algorithms.DBGD.pmgd_wrapper import P_MGD_Wrapper
 from algorithms.baselines.pairwise import Pairwise
 from algorithms.DBGD.neural.pdbgd import Neural_P_DBGD
+from algorithms.DBGD.tdNSGD_wrapper import TD_NSGD_Wrapper
 from algorithms.DBGD.tdNSGD import TD_NSGD
 
-from algorithms.PDGD.pdgd_wrapper import PDGD_Wrapper
-from algorithms.DBGD.tddbgd_wrapper import TD_DBGD_Wrapper
-from algorithms.DBGD.pdbgd_wrapper import P_DBGD_Wrapper
-from algorithms.DBGD.tdmgd_wrapper import TD_MGD_Wrapper
-from algorithms.DBGD.pmgd_wrapper import P_MGD_Wrapper
-from algorithms.DBGD.tdNSGD_wrapper import TD_NSGD_Wrapper
-
-
-# python scripts/CIKM2018.py --data_sets web2018 --click_models inf nav per --log_folder log_folder --average_folder outdir/average --output_folder outdir/fullruns/ --n_runs 50 --n_proc 25 --n_impr 5000
+import pdb
 
 description = 'Run script for testing framework.'
 parser = SimulationArgumentParser(description=description)
 
 rankers = []
 
-# MGD
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'GRAD_SIZE':60,
+  'EXP_SIZE':25}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'baselines/TD_NSGD' 
+rankers.append((run_name, TD_NSGD, other_args))
+
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
   'project_norm': True,
   'k_initial': 3,
-  'k_increase': False}
+  'k_increase': False,
+  'GRAD_SIZE':60,
+  'EXP_SIZE':25}
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'wrappers/norm_NOincK/P_MGD_Wrapper_maxDocL' 
-rankers.append((run_name, P_MGD_Wrapper, other_args))
 
-
-ranker_params = {
-  'learning_rate_decay': 0.9999977}
-sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'baselines/P-MGD_maxDocL' 
-rankers.append((run_name, P_MGD, other_args))
-
+run_name = 'wrappers/norm_NOincK/TD_NSGD_Wrapper' 
+rankers.append((run_name, TD_NSGD_Wrapper, other_args))
 
 sim = DataSimulation(sim_args)
 sim.run(rankers)
