@@ -32,7 +32,7 @@ class TD_NSGD(TD_DBGD):
       })
     return parent_parameters
 
-  def update_to_interaction(self, clicks):
+  def update_to_interaction(self, clicks, stop_index):
     winners, ranker_clicks = self.multileaving.winning_rankers_with_clicks(clicks)
     # print (ranker_clicks)
     self.model.update_to_mean_winners(winners)
