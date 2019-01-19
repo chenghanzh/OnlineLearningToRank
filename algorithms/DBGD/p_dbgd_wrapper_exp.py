@@ -170,7 +170,7 @@ class P_DBGD_Wrapper_exp(TD_DBGD):
     return multileaved_list
 
   # Can be modified for multileaving 
-  def update_to_interaction(self, clicks):
+  def update_to_interaction(self, clicks, stop_index=None):
 
     ##############
     # Dubugging purpose

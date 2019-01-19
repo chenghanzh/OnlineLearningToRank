@@ -46,7 +46,7 @@ class P_DBGD_Wrapper(TD_DBGD):
     return multileaved_list
 
 
-  def update_to_interaction(self, clicks):
+  def update_to_interaction(self, clicks, stop_index=None):
     # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
     winners = self.multileaving.winning_rankers(clicks)
     ###############################################################

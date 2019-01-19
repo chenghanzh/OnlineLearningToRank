@@ -74,7 +74,7 @@ class PDGD(BasicOnlineRanker):
     else:
       return ranking
 
-  def update_to_interaction(self, clicks):
+  def update_to_interaction(self, clicks, stop_index=None):
     if np.any(clicks):
       self._update_to_clicks(clicks)
 

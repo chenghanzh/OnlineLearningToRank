@@ -31,7 +31,7 @@ class TD_MGD_Wrapper(TD_DBGD):
       })
     return parent_parameters
 
-  def update_to_interaction(self, clicks):
+  def update_to_interaction(self, clicks, stop_index=None):
     winners = self.multileaving.winning_rankers(clicks)
     ###############################################################
     if True in clicks:
