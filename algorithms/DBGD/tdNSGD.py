@@ -22,11 +22,11 @@ class TD_NSGD(TD_DBGD):
     self.EXP_SIZE = EXP_SIZE
     self.sample_basis = True
     self.clicklist = np.empty([self.GRAD_SIZE,1], dtype=int) #click array
-    self.grad = np.empty([self.GRAD_SIZE,self.n_features], dtype=float) 
+    self.grad = np.zeros([self.GRAD_SIZE,self.n_features], dtype=float)
     self.gradCol = 0
   @staticmethod
   def default_parameters():
-    parent_parameters = TD_DBGD.default_parameters()  
+    parent_parameters = TD_DBGD.default_parameters()
     parent_parameters.update({
       'n_candidates': 9,
       })
@@ -44,7 +44,7 @@ class TD_NSGD(TD_DBGD):
         if ranker_clicks[i] <= cl_sorted[3] and ranker_clicks[i]<ranker_clicks[0]:
             # print ('update')
             self.clicklist[self.gradCol] = ranker_clicks[i] -ranker_clicks[0]
-            self.grad[self.gradCol] = self.model.gs[i-1] 
+            self.grad[self.gradCol] = self.model.gs[i-1]
             self.gradCol = (self.gradCol + 1) % self.GRAD_SIZE # update to reflect next column to be updaed
 
 
@@ -57,7 +57,7 @@ class TD_NSGD(TD_DBGD):
     for i in range(0, dif):
         max = -maxint-1
         n = 0
-        # Choose 
+        # Choose
         for j in range(0, self.GRAD_SIZE):
             if self.clicklist[j] > max and j not in nums:
                 max = self.clicklist[j] #  The better cl value to be excluded
