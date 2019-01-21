@@ -282,7 +282,7 @@ DATASET_COLLECTION['local_single_NP2003'] = DataSet('2003_np',
                                                [41,42],      #SiteMap
                                                [49,50]       #HITS
                                              ])
-DATASET_COLLECTION['local_NP2003'] = DataSet('2003_np',
+DATASET_COLLECTION['local_NP2003'] = DataSet('NP2003',
                                              '../datasets/NP2003/Fold*/'
                                              , 'bin', True, 59,
                                              multileave_feat=[

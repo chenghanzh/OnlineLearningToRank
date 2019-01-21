@@ -1,0 +1,20 @@
+% !TEX root = ../main.tex
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill} } l  l l l l l  }
+\toprule
+ & { \small \textbf{MQ2007}}  & { \small \textbf{MQ2008}}  & { \small \textbf{MSLR-WEB10K}}  & { \small \textbf{NP2003}}  & { \small \textbf{Yahoo}} \\
+\midrule
+& \multicolumn{5}{|c|}{\textit{perfect}} \\
+\midrule
+DBGD (linear) & 0.478 {\tiny (0.021)} & 0.680 {\tiny (0.023)} & 0.326 {\tiny (0.011)} & 0.730 {\tiny (0.049)} & 0.668 {\tiny (0.019)} \\
+MGD (linear) & 0.484 {\tiny (0.022)} & 0.688 {\tiny (0.018)} & 0.327 {\tiny (0.003)} & 0.740 {\tiny (0.047)} & 0.711 {\tiny (0.003)} \\
+P\_DBGD\_Wrapper & 0.468 {\tiny (0.020)} {\tiny \dubbelneer} {\tiny \dubbelneer} & 0.671 {\tiny (0.026)} {\tiny \dubbelneer} {\tiny \dubbelneer} & 0.327 {\tiny (0.008)} \hphantom{\tiny \dubbelneer} \hphantom{\tiny \dubbelneer} & 0.730 {\tiny (0.060)} \hphantom{\tiny \dubbelneer} \hphantom{\tiny \dubbelneer} & 0.663 {\tiny (0.014)} {\tiny \enkelneer} {\tiny \dubbelneer} \\
+P\_MGD\_Wrapper & \bf 0.490 {\tiny (0.021)} {\tiny \dubbelop} {\tiny \enkelop} & \bf 0.692 {\tiny (0.024)} {\tiny \dubbelop} \hphantom{\tiny \dubbelneer} & \bf 0.388 {\tiny (0.009)} {\tiny \dubbelop} {\tiny \dubbelop} & \bf 0.744 {\tiny (0.055)} {\tiny \enkelop} \hphantom{\tiny \dubbelneer} & \bf 0.716 {\tiny (0.003)} {\tiny \dubbelop} {\tiny \dubbelop} \\
+\midrule
+& \multicolumn{5}{|c|}{\textit{informational}} \\
+\midrule
+DBGD (linear) & 0.389 {\tiny (0.044)} & 0.613 {\tiny (0.039)} & 0.285 {\tiny (0.024)} & 0.683 {\tiny (0.062)} & 0.598 {\tiny (0.036)} \\
+MGD (linear) & 0.399 {\tiny (0.022)} & 0.644 {\tiny (0.022)} & 0.315 {\tiny (0.003)} & 0.724 {\tiny (0.051)} & 0.670 {\tiny (0.043)} \\
+P\_DBGD\_Wrapper & \bf 0.454 {\tiny (0.018)} {\tiny \dubbelop} {\tiny \dubbelop} & 0.644 {\tiny (0.027)} {\tiny \dubbelop} \hphantom{\tiny \dubbelneer} & 0.314 {\tiny (0.006)} {\tiny \dubbelop} \hphantom{\tiny \dubbelneer} & 0.680 {\tiny (0.069)} \hphantom{\tiny \dubbelneer} {\tiny \dubbelneer} & 0.640 {\tiny (0.014)} {\tiny \dubbelop} {\tiny \dubbelneer} \\
+P\_MGD\_Wrapper & 0.453 {\tiny (0.022)} {\tiny \dubbelop} {\tiny \dubbelop} & \bf 0.661 {\tiny (0.020)} {\tiny \dubbelop} {\tiny \dubbelop} & \bf 0.321 {\tiny (0.004)} {\tiny \dubbelop} {\tiny \dubbelop} & \bf 0.735 {\tiny (0.057)} {\tiny \dubbelop} \hphantom{\tiny \dubbelneer} & \bf 0.681 {\tiny (0.011)} {\tiny \dubbelop} {\tiny \dubbelop} \\
+\bottomrule
+\end{tabular*}

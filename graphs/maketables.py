@@ -7,6 +7,7 @@ import argparse
 import os
 import json
 import datetime
+import pdb
 
 description = 'Script for displaying graphs from output files.'
 parser = argparse.ArgumentParser(description=description)
@@ -19,6 +20,8 @@ parser.add_argument('--baselines', dest='baselines', type=str, required=False, d
 
 parser.add_argument('--folder_prefix', dest='folder_prefix', type=str, required=False,
           default=None, help='Prefix for folders of the same dataset.')
+
+parser.add_argument('--offline', dest='offline', type=str, default=False, help='online/offline.')
 
 parser.add_argument('plot_name', type=str, help='Name to save plots under.')
 
@@ -114,6 +117,11 @@ to_table = [
        # ('offline', 'heldout', 10000),
        ('online', 'cumulative-display', 10000),
       ]
+# print(args.offline)
+if args.offline == True:
+  to_table = [
+         ('offline', 'heldout', 10000)
+        ]
 
 baselines = []
 methods = []
@@ -166,7 +174,7 @@ for data_folder in sorted(folder_structure.keys()):
     print name
   print
 
-click_models = ['perfect', 'navigational', 'informational']
+click_models = ['perfect', 'informational'] #, 'navigational'
 
 folder_order = sorted(folder_structure.keys())
 for table_name, table_value, table_ind in to_table:
@@ -193,6 +201,7 @@ for table_name, table_value, table_ind in to_table:
 
         max_v = max(max_v, v_mean)
         c_data[b_name] = (v_mean, v_std, None)
+        # pdb.set_trace()
 
       for m_name in methods:
         m_data = all_data[folder_name][m_name][table_value]
@@ -233,14 +242,18 @@ for table_name, table_value, table_ind in to_table:
       out.write(name)
 
       for folder in folder_order:
-        v_max = round(table_data[folder][click_model]['maximum'], 1)
+        v_max = round(table_data[folder][click_model]['maximum'], 3)
         v_mean, v_std, v_sig = table_data[folder][click_model][name]
         out.write('&')
 
-        if round(v_mean, 1) >= v_max:
+        if round(v_mean, 3) >= v_max:
           out.write('\\bf')
 
-        out.write('%0.01f {\\tiny (%0.01f)}' % (v_mean, v_std))
+        if args.offline == True:
+          out.write('%0.3f {\\tiny (%0.3f)}' % (v_mean, v_std))
+        else:
+          out.write('%0.01f {\\tiny (%0.01f)}' % (v_mean, v_std))
+
         if not (v_sig is None):
           out.write(' '.join(v_sig))
 
