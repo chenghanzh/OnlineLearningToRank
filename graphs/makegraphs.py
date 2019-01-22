@@ -91,6 +91,9 @@ for data_folder in sorted(folder_structure.keys()):
         print '(%d seconds)' % value
       data[file_name] = output['results']
       for v_name in output['results']:
+        if v_name == u'g_t' or v_name == u'u_t' or v_name == u'w_t' :
+          # pdb.set_trace()
+          pass
         if v_name not in value_names:
           value_names.append(v_name)
         for c_m in output['results'][v_name]:
@@ -179,13 +182,13 @@ for data_folder in sorted(folder_structure.keys()):
         # ### For NP
         # plt.ylim(.65, 0.8)
         ### For MQ07
-        plt.ylim(.375, .5)
+        # plt.ylim(.375, .5)
         ### For MQ08
-        # plt.ylim(.63, .75)
+        # plt.ylim(.58, .7)
         ### For MQ08
         # plt.ylim(.4, .8)
         ### For WebscopeS1
-        # plt.ylim(.675, .75)
+        plt.ylim(.6, .7)
         ### For Web10k
         # plt.ylim(.275, .34)
 
@@ -199,7 +202,7 @@ for data_folder in sorted(folder_structure.keys()):
         # plt.xlim(-5, 5300)
         # plt.xlim(-500, 1000000)
         # plt.xlim(-100, 5100)
-        plt.xlim(-100, 5500)
+        plt.xlim(-100, 10500)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')
         # if click_model == 'informational':

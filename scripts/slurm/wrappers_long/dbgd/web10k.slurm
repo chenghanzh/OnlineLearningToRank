@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda/5.2.0-py2.7
-python scripts/wrappers_long/dbgd_p.py --data_sets MSLR-WEB10K --click_models inf nav per --log_folder ~/../../../../scratch/sak2km/l2r_data/log_folder --average_folder ~/../../../../scratch/sak2km/l2r_data/outdir/average --output_folder ~/../../../../scratch/sak2km/l2r_data/outdir/fullruns/ --n_runs 50 --n_proc 10 --n_impr 10000
+python scripts/wrappers_long/dbgd_p.py --data_sets MSLR-WEB10K --click_models inf nav per --log_folder ~/../../../../scratch/sak2km/l2r_data_light/log_folder --average_folder ~/../../../../scratch/sak2km/l2r_data_light/outdir/average --output_folder ~/../../../../scratch/sak2km/l2r_data_light/outdir/fullruns/ --n_runs 50 --n_proc 10 --n_impr 10000
