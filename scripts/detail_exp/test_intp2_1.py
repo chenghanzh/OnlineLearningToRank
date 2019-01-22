@@ -39,7 +39,7 @@ ranker_params = {
   'k_increase': False,
   '_lambda': None,
   'lambda_intp': 0,
-  'lambda_intp_dec': 'inc'}
+  'lambda_intp_rate': 'inc'}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'wrappers/test_intp/inc_P_MGD_Wrapper' 
@@ -53,7 +53,7 @@ ranker_params = {
   'k_increase': False,
   '_lambda': None,
   'lambda_intp': 1.0,
-  'lambda_intp_dec': 'dec_9999'}
+  'lambda_intp_rate': 0.9999}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'wrappers/test_intp/dec_9999_P_MGD_Wrapper' 
@@ -67,7 +67,7 @@ ranker_params = {
   'k_increase': False,
   '_lambda': None,
   'lambda_intp': 1.0,
-  'lambda_intp_dec': 'dec_9998'}
+  'lambda_intp_rate': 0.9998}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'wrappers/test_intp/dec_9998_P_MGD_Wrapper' 

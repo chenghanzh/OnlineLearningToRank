@@ -85,7 +85,7 @@ ranker_params = {
   'k_initial': 3,
   'k_increase': False,
   '_lambda': None,
-  'prev_qeury_len': 5,
+  'prev_qeury_len': 30,
   'viewed': True}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 

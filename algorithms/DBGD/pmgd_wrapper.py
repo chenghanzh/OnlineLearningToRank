@@ -13,7 +13,7 @@ import math
 # Probabilistic Interleaving Dueling Bandit Gradient Descent
 class P_MGD_Wrapper(P_DBGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_dec=None, prev_qeury_len=None, viewed=False, docspace=[False,0], *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, n_candidates, _lambda=None, lambda_intp=None, lambda_intp_rate=None, prev_qeury_len=None, viewed=False, docspace=[False,0], *args, **kargs):
     super(P_MGD_Wrapper, self).__init__(*args, **kargs)
     self.n_candidates = n_candidates
     self.model = LinearModel(n_features = self.n_features,
@@ -24,8 +24,9 @@ class P_MGD_Wrapper(P_DBGD):
     self.k_initial = k_initial
     self.k_increase = k_increase
     self._lambda = _lambda
+    
     self.lambda_intp = lambda_intp
-    self.lambda_intp_dec = lambda_intp_dec
+    self.lambda_intp_rate = lambda_intp_rate
     self.prev_qeury_len = prev_qeury_len
     if prev_qeury_len:
       self.prev_feat_list = []
@@ -54,20 +55,12 @@ class P_MGD_Wrapper(P_DBGD):
     return multileaved_list  
 
   def update_to_interaction(self, clicks, stop_index=None):
-    # print(len(self._last_ranking))
-    if self.lambda_intp_dec == 'dec':
-      self.lambda_intp = 0.9996 ** self.n_interactions # 0.9996^t
-    if self.lambda_intp_dec == 'dec_9999':
-      self.lambda_intp = 0.9999 ** self.n_interactions # 0.9998^t
-    if self.lambda_intp_dec == 'dec_9998':
-      self.lambda_intp = 0.9998 ** self.n_interactions # 0.9998^t
-    if self.lambda_intp_dec == 'dec_9994':
-      self.lambda_intp = 0.9994 ** self.n_interactions # 0.9994^t
-    if self.lambda_intp_dec == 'dec_9992':
-      self.lambda_intp = 0.9992 ** self.n_interactions # 0.9994^t
-    elif self.lambda_intp_dec == 'inc':
+
+    if self.lambda_intp_rate == "inc":
       self.lambda_intp =  1 - math.exp(-0.0006 * self.n_interactions) # 1-e^(-.0006*t)
-    # print("svd: %s, project_norm: %s " %(self.svd,self.project_norm))
+    elif self.lambda_intp_rate:
+       self.lambda_intp *= self.lambda_intp_rate # 0.9996^t
+
     winners = self.multileaving.winning_rankers(clicks)
     ###############################################################
     if True in clicks:
