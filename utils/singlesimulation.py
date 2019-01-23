@@ -184,7 +184,7 @@ class SingleSimulation(object):
       results[-1]['cosine-u-trueg'] = np.nan
       results[-1]['l2-g-trueg'] = np.nan
       results[-1]['l2-u-trueg'] = np.nan
-      results[-1]['trueg'] = [np.nan]*50 #dimension
+      results[-1]['trueg'] =  np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
 
   def logging_click(self, results, clicks):
     pos = np.where(clicks == True)[0]
