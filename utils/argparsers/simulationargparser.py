@@ -90,6 +90,14 @@ class SimulationArgumentParser(argparse.ArgumentParser):
 
     self._sim_add_argument('--switch_click_model', dest='switch_click_model', action='store_true',
                       help='Switch click model between nav and inf.')
+    self._sim_add_argument('--log_click', dest='log_click', default=False, action='store_true',
+                      help='log last click position')
+    self._sim_add_argument('--log_true_gradient', dest='log_true_gradient', default=False, action='store_true',
+                      help='log last click position') 
+    self._sim_add_argument('--repeat_gradient_sampling', dest='repeat_gradient_sampling', default=20, type=int,
+                      help='Repeat run same query multiple times. Averaged gradient is true gradient approximation.')                         
+    # self._sim_add_argument('--prev_query', dest='prev_query', default=False, action='store_true',
+    #                   help='User previous query')    
     self._arguments_initialized = False
 
   def reset_arguments(self):

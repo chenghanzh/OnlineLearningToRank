@@ -19,6 +19,10 @@ class SingleSimulation(object):
     self.n_results = sim_args.n_results
     self.click_model = click_model
     self.switch_click_model = sim_args.switch_click_model
+    self.log_click =sim_args.log_click
+    self.log_true_gradient =sim_args.log_true_gradient
+    if self.log_true_gradient ==True:
+      self.repeat_gradient_sampling = sim_args.repeat_gradient_sampling
     self.click_models = [get_click_models(['nav','bin'])[0], get_click_models(['inf','bin'])[0]]
 
     self.datafold = datafold
@@ -153,30 +157,66 @@ class SingleSimulation(object):
   def evaluate_gradient(self, results, iteration, ranker,):
     results[-1]['cosine_w'] = cosine(ranker.model.weights[:, 0].T, self.w_star)
     results[-1]['l2_w'] = norm(ranker.model.weights[:, 0].T - self.w_star)
-    if ranker.model.g_t is not None:      
+    if ranker.model.g_t is not None:  
+      results[-1]['g_t']=norm(ranker.model.g_t)    
+      results[-1]['u_t']=norm(ranker.model.u_t)
       results[-1]['cosine_g'] = cosine(ranker.model.g_t, self.w_star-ranker.model.weights[:, 0].T)
       results[-1]['cosine_g_diff'] = cosine(ranker.model.g_t-ranker.model.u_t, self.w_star-ranker.model.weights[:, 0].T)
     else:
       results[-1]['cosine_g_diff'] = 0 #or np.nan?
       results[-1]['cosine_g'] = 0 #or np.nan?
+      results[-1]['g_t'] = 0
+      results[-1]['u_t'] = 0
       
       # print (results[-1]['cosine'])
+  def logging_true_gradient(self, results, winning_g, iteration, ranker,):
+    results[-1]['win_ratio'] = len(winning_g)/self.repeat_gradient_sampling
+    if ranker.model.g_t is not None and len(winning_g) > 0: 
+      true_gradient = np.mean(winning_g, axis=0)
 
+      results[-1]['cosine-g-trueg'] = cosine(ranker.model.g_t, true_gradient)
+      results[-1]['cosine-u-trueg'] = cosine(ranker.model.u_t, true_gradient)
+      results[-1]['l2-g-trueg'] = norm(ranker.model.g_t- true_gradient.T)
+      results[-1]['l2-u-trueg'] = norm(ranker.model.u_t- true_gradient.T)
+      results[-1]['trueg'] = true_gradient.tolist()
+    else:
+      results[-1]['cosine-g-trueg'] = np.nan
+      results[-1]['cosine-u-trueg'] = np.nan
+      results[-1]['l2-g-trueg'] = np.nan
+      results[-1]['l2-u-trueg'] = np.nan
+      results[-1]['trueg'] = [np.nan]*50 #dimension
+
+  def logging_click(self, results, clicks):
+    pos = np.where(clicks == True)[0]
+    results[-1]['last_click'] = pos[-1] if (len(pos)>0) else 0
+
+
+  def sample_query(self, impressions=None):
+    if impressions == None:
+      ranking_i = np.random.choice(self.datafold.n_train_queries())
+    else:
+      ranking_i = impressions % self.datafold.n_train_queries()
+    return ranking_i
+    # print (impressions)
+  def rank_query(self, ranking_i, ranker, impressions=None):
+    train_ranking = ranker.get_train_query_ranking(ranking_i)
+
+    assert train_ranking.shape[0] <= self.n_results, 'Shape is %s' % (train_ranking.shape,)
+    assert len(train_ranking.shape) == 1, 'Shape is %s' % (train_ranking.shape,)
+
+    return train_ranking
 
   def sample_and_rank(self, ranker, impressions=None):
     if impressions == None:
       ranking_i = np.random.choice(self.datafold.n_train_queries())
     else:
       ranking_i = impressions % self.datafold.n_train_queries()
-    # print (impressions)
-    
     train_ranking = ranker.get_train_query_ranking(ranking_i)
 
     assert train_ranking.shape[0] <= self.n_results, 'Shape is %s' % (train_ranking.shape,)
     assert len(train_ranking.shape) == 1, 'Shape is %s' % (train_ranking.shape,)
 
     return ranking_i, train_ranking
-
 
   def run(self, ranker, output_key):
     starttime = time.time()
@@ -188,18 +228,32 @@ class SingleSimulation(object):
     impressions = 0
     for impressions in range(self.n_impressions):
       # ranking_i, train_ranking = self.sample_and_rank(ranker)
-      ranking_i, train_ranking = self.sample_and_rank(ranker, impressions)
+      ranking_i = self.sample_query(impressions)
       ranking_labels = self.datafold.train_query_labels(ranking_i)
-      if self.switch_click_model:
-        clicks = self.click_models[int(impressions/2500)].generate_clicks(train_ranking, ranking_labels)
-      else:
-        clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
+      winning_g = []
+      for i in range(self.repeat_gradient_sampling):
+        train_ranking = self.rank_query(ranking_i, ranker, impressions)
+        if self.switch_click_model:
+          clicks = self.click_models[int(impressions/2500)].generate_clicks(train_ranking, ranking_labels)
+        else:
+          clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
+        winners = ranker.multileaving.winning_rankers(clicks)
+        if len(winners>0):
+          gradient = np.mean(ranker.model.weights[:, winners], axis=1) - ranker.model.weights[:, 0]
+          # print (gradient.shape)
+          winning_g.append(gradient.T)
+
       self.timestep_evaluate(run_results, impressions, ranker,
                              ranking_i, train_ranking, ranking_labels)
 
       ranker.process_clicks(clicks, impressions)
       if self.eval_gradient:
         self.evaluate_gradient(run_results, impressions, ranker)
+      if self.log_click:
+        self.logging_click(run_results, clicks)
+      if self.log_true_gradient:
+        self.logging_true_gradient(run_results, winning_g, impressions, ranker)
+
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker)
