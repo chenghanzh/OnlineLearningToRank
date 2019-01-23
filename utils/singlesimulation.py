@@ -252,7 +252,7 @@ class SingleSimulation(object):
       if self.log_click:
         self.logging_click(run_results, clicks)
       if self.log_true_gradient:
-        self.logging_true_gradient(run_results, winning_g, impressions, ranker)
+        self.logging_true_gradient(run_results, winning_g[:-1], impressions, ranker)
 
 
     # evaluate after final iteration
