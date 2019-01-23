@@ -130,6 +130,9 @@ for data_folder in sorted(folder_structure.keys()):
     'purple',
     'pink',
     'gray',
+    'm',
+    'steelblue',
+    'olive'
     ] * 30
 
   for plot_name, v_name in to_plot:
@@ -180,17 +183,23 @@ for data_folder in sorted(folder_structure.keys()):
           # plt.ylim(.6,.8)
 
         # ### For NP
-        # plt.ylim(.65, 0.8)
+        # plt.ylim(.7, 0.8)
+        plt.ylim(.65, 0.76)
         ### For MQ07
-        # plt.ylim(.375, .5)
+        # plt.ylim(.44, .51)
+        # plt.ylim(.37, .48)
         ### For MQ08
-        # plt.ylim(.58, .7)
+        # plt.ylim(.66, .7)
+        # plt.ylim(.62, .685)
+
         ### For MQ08
         # plt.ylim(.4, .8)
         ### For WebscopeS1
-        plt.ylim(.6, .7)
+        # plt.ylim(.58, .7)
+        # plt.ylim(.6, .71)
         ### For Web10k
-        # plt.ylim(.275, .34)
+        # plt.ylim(.29, .42)
+        # plt.ylim(.29, .34)
 
 
         # ### For TD

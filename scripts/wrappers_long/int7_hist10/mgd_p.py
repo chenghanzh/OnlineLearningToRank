@@ -30,7 +30,7 @@ parser = SimulationArgumentParser(description=description)
 
 rankers = []
 
-#######    interpolation = 0.7,  prev_qeury_len = 5     #######
+#######    interpolation = 0.7,  prev_qeury_len = 10     #######
 ranker_params = {
   'learning_rate_decay': 0.9999977,
   'svd': True,
@@ -39,13 +39,12 @@ ranker_params = {
   'k_increase': False,
   '_lambda': None,
   'lambda_intp': 0.7,
-  'prev_qeury_len': 5,
+  'prev_qeury_len': 10,
   'viewed': True}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrappers_long/int7_hist5/P_DBGD_int7_hist5' 
-rankers.append((run_name, P_DBGD_Wrapper, other_args))
-
+run_name = 'wrappers_long/int7_hist10/P_MGD_int7_hist10' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 sim = DataSimulation(sim_args)
 sim.run(rankers)

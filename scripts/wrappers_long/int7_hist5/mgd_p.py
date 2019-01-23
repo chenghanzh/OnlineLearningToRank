@@ -43,9 +43,8 @@ ranker_params = {
   'viewed': True}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrappers_long/int7_hist5/P_MGD_Wrapper' 
+run_name = 'wrappers_long/int7_hist5/P_MGD_int7_hist5' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
-
 
 sim = DataSimulation(sim_args)
 sim.run(rankers)
