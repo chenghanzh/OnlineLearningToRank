@@ -94,10 +94,11 @@ class P_MGD_Wrapper(P_DBGD):
         docid = self._last_ranking[i]
         feature = query_feat[docid]
         viewed_list.append(feature)
+        
+#######################################################
+      # Historical Queries technique
       if self.viewed: # Add examined document, depending on config setting
           add_list = viewed_list
-
-
 
       ##### Append feature vectors from previous queries
       if self.prev_qeury_len:
@@ -112,7 +113,6 @@ class P_MGD_Wrapper(P_DBGD):
               self.prev_feat_list.pop(0)  # Remove oldest document feature.
             # if prev_feat_list is not filled up, add current list
             self.prev_feat_list.append(i)
-
 
         else: # Add ONLY from clicked document
           add_list = [loc for loc, val in enumerate(clicks) if val == True]

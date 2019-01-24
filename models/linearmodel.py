@@ -72,21 +72,28 @@ class LinearModel(object):
       # print(self.g_t)
 
 
-  def update_to_documents(self, doc_ind, doc_weights, viewed_list=None, svd=None, project_norm=None, _lambda=None):
+  def update_to_documents(self, doc_ind, doc_weights, viewed_list=None, svd=None, project_norm=None, _lambda=None, lambda_intp=None):
     print("svd: %s, project_norm: %s " %(svd,project_norm))
     weighted_docs = self._last_features[doc_ind, :] * doc_weights[:, None]
 
     # added for projection
     gradient = np.sum(weighted_docs, axis=0)
-    if viewed_list:
-      gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
+    if viewed_list: is not None and len(viewed_list)>0:
+      if lambda_intp: # add Linear Interpolation (project only partially)
+        gradient = (1-lambda_intp)*gradient + (lambda_intp * self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm))
+
+      else:
+        gradient = self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm)
+      self.g_t = gradient
       if _lambda: # add L2 Regularization (add back a portion of original weight to gradient)
         lambda_gradient = self.weights[:, 0] * _lambda
 
     self.weights[:, 0] += self.learning_rate * gradient
     if lambda_gradient is not None:
-      self.weights[:, 0] -= lambda_gradient
+      self.weights[:, 0] -= 0
     self.learning_rate *= self.learning_rate_decay
+
+
 ##############################################################
   def project_to_viewed_doc(self, winning_gradient, viewed_list, svd, normalize):
     # print("svd: %s, normalize: %s " %(svd,normalize))
