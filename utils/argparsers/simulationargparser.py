@@ -84,6 +84,15 @@ class SimulationArgumentParser(argparse.ArgumentParser):
 
     self._sim_add_argument('--nonrel_test', dest='purge_test_set', action='store_false',
                       help='Include non-relevant queries in evaluation on test-set.')
+    # For w_star experiment #
+    self._sim_add_argument('--log_click', dest='log_click', default=False, action='store_true',
+                      help='log last click position')
+    self._sim_add_argument('--log_true_gradient', dest='log_true_gradient', default=False, action='store_true',
+                      help='log last click position') 
+    self._sim_add_argument('--repeat_gradient_sampling', dest='repeat_gradient_sampling', default=20, type=int,
+                      help='Repeat run same query multiple times. Averaged gradient is true gradient approximation.')                         
+    # self._sim_add_argument('--prev_query', dest='prev_query', default=False, action='store_true',
+    #                   help='User previous query')   
 
     self._arguments_initialized = False
 

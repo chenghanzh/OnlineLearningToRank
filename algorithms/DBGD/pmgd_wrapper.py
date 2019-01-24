@@ -31,8 +31,10 @@ class P_MGD_Wrapper(P_DBGD):
     if prev_qeury_len:
       self.prev_feat_list = []
     self.viewed = viewed
-    self.docspace = docspace  # docspace=[False,0]
 
+    # parameter for experiment using variation of document space size
+    # if True, actual user stop-index will be used.
+    self.docspace = docspace  # docspace=[False,0]
 
   @staticmethod
   def default_parameters():

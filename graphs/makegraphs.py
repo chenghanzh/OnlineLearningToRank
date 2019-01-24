@@ -184,10 +184,10 @@ for data_folder in sorted(folder_structure.keys()):
 
         # ### For NP
         # plt.ylim(.7, 0.8)
-        plt.ylim(.65, 0.76)
+        # plt.ylim(.65, 0.76)
         ### For MQ07
         # plt.ylim(.44, .51)
-        # plt.ylim(.37, .48)
+        plt.ylim(.37, .48)
         ### For MQ08
         # plt.ylim(.66, .7)
         # plt.ylim(.62, .685)
