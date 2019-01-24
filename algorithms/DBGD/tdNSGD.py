@@ -27,9 +27,7 @@ class TD_NSGD(TD_DBGD):
         self.grad = np.zeros([self.GRAD_SIZE,self.n_features], dtype=float)
         self.gradCol = 0
 
-        # if self.TB_QUEUE_SIZE > 0:
         # DQ tie-break related lists
-        self.clicklist = np.empty([self.GRAD_SIZE,1], dtype=int) #click array
         self.difficult_NDCG =[]
         self.difficult_queries =[]
         self.difficult_document =[]

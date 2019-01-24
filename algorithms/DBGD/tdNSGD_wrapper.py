@@ -13,23 +13,40 @@ import utils.rankings as rnk
 # Dueling Bandit Gradient Descent
 class TD_NSGD_Wrapper(TD_DBGD):
 
-  def __init__(self, n_candidates, GRAD_SIZE, EXP_SIZE, svd, project_norm, k_initial, k_increase, _lambda=None, *args, **kargs):
+  def __init__(self, n_candidates, GRAD_SIZE, EXP_SIZE, svd, project_norm, k_initial, k_increase, TB_QUEUE_SIZE=None, TB_WINDOW_SIZE=None, _lambda=None, lambda_intp=None, lambda_intp_rate=None, prev_qeury_len=None, viewed=False, *args, **kargs):
     super(TD_NSGD_Wrapper, self).__init__(*args, **kargs)
     self.model = LinearModel(n_features = self.n_features,
                              learning_rate = self.learning_rate,
                              n_candidates = n_candidates)
     self.GRAD_SIZE = GRAD_SIZE
     self.EXP_SIZE = EXP_SIZE
+    self.TB_QUEUE_SIZE = TB_QUEUE_SIZE
+    self.TB_WINDOW_SIZE = TB_WINDOW_SIZE
     self.sample_basis = True
     self.clicklist = np.empty([self.GRAD_SIZE,1], dtype=int) #click array
     self.grad = np.zeros([self.GRAD_SIZE,self.n_features], dtype=float)
     self.gradCol = 0
 
+    # DQ tie-break related lists
+    self.difficult_NDCG =[]
+    self.difficult_queries =[]
+    self.difficult_document =[]
+    self.difficult_time =[]
+    self.query_id = 0
+
     self.svd = svd
     self.project_norm = project_norm
     self.k_initial = k_initial
     self.k_increase = k_increase
-    self._lambda = _lambda
+    self._lambda = _lambda # For L2 Normalization
+
+    # Secondary techniques
+    self.lambda_intp = lambda_intp
+    self.lambda_intp_rate = lambda_intp_rate
+    self.prev_qeury_len = prev_qeury_len
+    if prev_qeury_len:
+      self.prev_feat_list = []
+    self.viewed = viewed
 
   @staticmethod
   def default_parameters():
@@ -40,7 +57,21 @@ class TD_NSGD_Wrapper(TD_DBGD):
     return parent_parameters
 
   def update_to_interaction(self, clicks, stop_index=None):
+    if self.lambda_intp_rate == "inc":
+      self.lambda_intp =  1 - math.exp(-0.0006 * self.n_interactions) # 1-e^(-.0006*t)
+    elif self.lambda_intp_rate:
+       self.lambda_intp *= self.lambda_intp_rate # 0.9996^t
+
     winners, ranker_clicks = self.multileaving.winning_rankers_with_clicks(clicks)
+
+    # Fill out recent difficult query queues.
+    if self.TB_QUEUE_SIZE > 0:   
+        self.fill_difficult_query(clicks)
+    # Trigger difficult-query tie-break strategy
+    if len(self.difficult_queries) < self.TB_QUEUE_SIZE and len(winners) > 1:
+        winners = self.tieBreak_difficultQuery(winners)
+
+
     # print (ranker_clicks)
     ###############################################################
     if True in clicks:
@@ -64,7 +95,7 @@ class TD_NSGD_Wrapper(TD_DBGD):
         docid = self._last_ranking[i]
         feature = query_feat[docid]
         viewed_list.append(feature)
-      self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm)
+      self.model.update_to_mean_winners(winners,viewed_list,self.svd,self.project_norm, _lambda=self._lambda, lambda_intp=self.lambda_intp)
     ###############################################################
     else:
       self.model.update_to_mean_winners(winners)
@@ -111,3 +142,77 @@ class TD_NSGD_Wrapper(TD_DBGD):
     rankings = rnk.rank_single_query(scores, inverted=False, n_results=self.n_results)
     multileaved_list = self.multileaving.make_multileaving(rankings)
     return multileaved_list
+
+  def fill_difficult_query(self, clicks):
+      #  Set up for tie breaker- keep track of difficult queries
+      #  Find the rank of first clicked document
+      # print("hi")
+      ndcg_current = 0
+      clickedList = []
+      for count, elem in enumerate(clicks):
+          if elem == 1: # if clicked
+              ndcg_current += 1 / (count + 1.0)
+              # Keep track of clicked documents of current query
+              clickedList.append(self._last_ranking[count])
+
+      # If difficult queries for tie breaking is not filled up, add current query
+      if len(self.difficult_NDCG) < self.TB_QUEUE_SIZE and ndcg_current > 0:
+          self.difficult_NDCG.append(ndcg_current)
+          self.difficult_queries.append(self.query_id)
+          self.difficult_document.append(clickedList)  # first clicked doc to follow
+          self.difficult_time.append(self.n_interactions)
+      else:
+          # If already filled up, check if current query is more difficult than any saved query.
+          if len(self.difficult_NDCG) > 0:
+              flag = False
+              for i in range(len(self.difficult_NDCG)):
+                  if self.n_interactions - self.difficult_time[i] > self.TB_WINDOW_SIZE:
+                  # Maintain queries winthin the window size
+                      flag = True
+                      index = i
+                      break
+              if not flag and max(self.difficult_NDCG) > ndcg_current and ndcg_current > 0:
+                  # Current query is more difficult than one of queued ones
+                  flag = True
+                  index = self.difficult_NDCG.index(max(self.difficult_NDCG))
+              if flag:
+                  self.difficult_NDCG[index] = ndcg_current
+                  self.difficult_queries[index] = self.query_id
+                  self.difficult_document[index] = clickedList
+                  self.difficult_time[index] = self.n_interactions
+
+  def tieBreak_difficultQuery(self, winners):
+      # CcoreList keeps track of ranks each tied candidate perform in tie breaking
+      # print(self.model.n_models)
+      scoreList = np.zeros(self.model.n_models)
+      # Iterate through 10 stored difficult queries
+      for count_q, diff_query in enumerate(self.difficult_queries):
+          query_feat = self.get_query_features(diff_query,
+                                     self._train_features,
+                                     self._train_query_ranges)
+          scores = self.model.candidate_score(query_feat)
+          rankings = rnk.rank_single_query(scores, inverted=False, n_results=self.n_results)
+          # print(rankings)
+
+          # Iterate through tied candidates
+          for winner in winners:
+              # ranker = self.candidate_ranker[winner]
+              # ranker.init_ranking(diff_query)
+              candidate_NDCG = 0.0
+              for count_d, doc in enumerate(self.difficult_document[count_q]):
+                  # Calculate NDCG performance in current difficult query
+                  # diff_doc_rank = ranker.docids.index(self.difficult_document[count_q][count_d])
+                  diff_doc_rank = np.where(rankings[winner] == self.difficult_document[count_q][count_d])[0][0]
+                  # print(diff_doc_rank[0])
+                  # print(diff_doc_rank[0][0])
+                  # rankings[winner].index(self.difficult_document[count_q][count_d])
+                  temp = 1 / (diff_doc_rank + 1.0)
+                  # print(temp)
+                  candidate_NDCG += 1 / (diff_doc_rank + 1.0)
+
+              # Add the NDCG value of diff. query
+              scoreList[winner] += candidate_NDCG
+      # Ranker with the least sum of NDCGs is the winner
+      maxRank_score = np.max(scoreList[np.nonzero(scoreList)])
+      winner = scoreList.tolist().index(maxRank_score)
+      return [winner]
