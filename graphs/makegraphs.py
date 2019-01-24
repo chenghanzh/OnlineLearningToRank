@@ -94,6 +94,10 @@ for data_folder in sorted(folder_structure.keys()):
         if v_name == u'g_t' or v_name == u'u_t' or v_name == u'w_t' :
           # pdb.set_trace()
           pass
+        # if v_name == u'l2-u-trueg':
+        #   print("hi")
+        #   # output['results'][u'l2-u-trueg'][ u'informational'][u'std']
+        #   pdb.set_trace()
         if v_name not in value_names:
           value_names.append(v_name)
         for c_m in output['results'][v_name]:

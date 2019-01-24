@@ -4,6 +4,11 @@ import time
 import numpy as np
 from evaluate import get_idcg_list, evaluate, evaluate_ranking
 from clicks import *
+from numpy.linalg import norm
+
+def cosine(u, v):
+  return np.dot(u, v) / (norm(u) * norm(v))
+
 
 
 class SingleSimulation(object):
@@ -15,6 +20,15 @@ class SingleSimulation(object):
     self.n_results = sim_args.n_results
     self.click_model = click_model
     self.datafold = datafold
+
+    # Added for w_star exp.
+    self.log_click =sim_args.log_click
+    self.log_true_gradient = False
+    self.repeat_gradient_sampling = 1
+    self.log_true_gradient = sim_args.log_true_gradient
+    if self.log_true_gradient == True:
+      self.repeat_gradient_sampling = sim_args.repeat_gradient_sampling
+
     if not self.train_only:
       self.test_idcg_vector = get_idcg_list(self.datafold.test_label_vector,
                                             self.datafold.test_doclist_ranges,
@@ -43,6 +57,14 @@ class SingleSimulation(object):
     self.online_score = 0.0
     self.cur_online_discount = 1.0
     self.online_discount = 0.9995
+
+    self.eval_gradient = False
+    # Load w^* for simulation data
+    # if sim_args.w_star_path is not None:
+    #     self.eval_gradient = True
+    #     with open(sim_args.w_star_path, 'r') as f:
+    #       self.w_star = np.loadtxt(f)
+    #       print (self.w_star)
 
   def timestep_evaluate(self, results, iteration, ranker, ranking_i,
                         train_ranking, ranking_labels):
@@ -135,8 +157,63 @@ class SingleSimulation(object):
 
     return results
 
-  def sample_and_rank(self, ranker):
-    ranking_i = np.random.choice(self.datafold.n_train_queries())
+  # Record gradient info
+  def record_gradient(self, results, iteration, ranker,):
+    results[-1]['cosine_w'] = cosine(ranker.model.weights[:, 0].T, self.w_star)
+    results[-1]['l2_w'] = norm(ranker.model.weights[:, 0].T - self.w_star)
+    if ranker.model.g_t is not None: 
+      results[-1]['u_t'] = norm(ranker.model.u_t.tolist())
+      results[-1]['g_t'] = norm(ranker.model.g_t.tolist())
+    else:
+      results[-1]['u_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+      results[-1]['g_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+    results[-1]['w_t'] = ranker.model.weights[:, 0].T.tolist()
+
+  def logging_true_gradient(self, results, winning_g, iteration, ranker,):
+    results[-1]['win_ratio'] = len(winning_g)/self.repeat_gradient_sampling
+    if ranker.model.g_t is not None and len(winning_g) > 0: 
+      true_gradient = np.mean(winning_g, axis=0)
+
+      results[-1]['cosine-g-trueg'] = cosine(ranker.model.g_t, true_gradient)
+      results[-1]['cosine-u-trueg'] = cosine(ranker.model.u_t, true_gradient)
+      results[-1]['l2-g-trueg'] = norm(ranker.model.g_t- true_gradient.T)
+      results[-1]['l2-u-trueg'] = norm(ranker.model.u_t- true_gradient.T)
+      # results[-1]['trueg'] = true_gradient.tolist()
+    else:
+      results[-1]['cosine-g-trueg'] = np.nan
+      results[-1]['cosine-u-trueg'] = np.nan
+      results[-1]['l2-g-trueg'] = np.nan
+      results[-1]['l2-u-trueg'] = np.nan
+      # results[-1]['trueg'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+
+
+  def logging_click(self, results, clicks):
+    pos = np.where(clicks == True)[0]
+    results[-1]['last_click'] = pos[-1] if (len(pos)>0) else 0
+
+
+  def sample_query(self, impressions=None):
+    if impressions == None:
+      ranking_i = np.random.choice(self.datafold.n_train_queries())
+    else:
+      ranking_i = impressions % self.datafold.n_train_queries()
+    return ranking_i
+
+  def rank_query(self, ranking_i, ranker, impressions=None):
+    train_ranking = ranker.get_train_query_ranking(ranking_i)
+
+    assert train_ranking.shape[0] <= self.n_results, 'Shape is %s' % (train_ranking.shape,)
+    assert len(train_ranking.shape) == 1, 'Shape is %s' % (train_ranking.shape,)
+
+    return train_ranking
+
+###############################################################
+  # For w_star experiment Run() method
+  def sample_and_rank(self, ranker, impressions=None):
+    if impressions == None:
+      ranking_i = np.random.choice(self.datafold.n_train_queries())
+    else:
+      ranking_i = impressions % self.datafold.n_train_queries()
     train_ranking = ranker.get_train_query_ranking(ranking_i)
 
     assert train_ranking.shape[0] <= self.n_results, 'Shape is %s' % (train_ranking.shape,)
@@ -144,39 +221,43 @@ class SingleSimulation(object):
 
     return ranking_i, train_ranking
 
-  # Record gradient info
-  def record_gradient(self, results, iteration, ranker,):
-    if ranker.model.g_t is not None: 
-      results[-1]['u_t'] = ranker.model.u_t.tolist()
-      results[-1]['g_t'] = ranker.model.g_t.tolist()
-    else:
-      results[-1]['u_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
-      results[-1]['g_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
-    results[-1]['w_t'] = ranker.model.weights[:, 0].T.tolist()
-
 
   def run(self, ranker, output_key):
     starttime = time.time()
 
     ranker.setup(train_features = self.datafold.train_feature_matrix,
                  train_query_ranges = self.datafold.train_doclist_ranges)
-    # Added for ranker to access label directly
-    ranker._train_label = self.datafold.train_label_vector
 
     run_results = []
     impressions = 0
     for impressions in range(self.n_impressions):
-      ranking_i, train_ranking = self.sample_and_rank(ranker)
+      # ranking_i, train_ranking = self.sample_and_rank(ranker)
+      ranking_i = self.sample_query(impressions)
       ranking_labels = self.datafold.train_query_labels(ranking_i)
-      # stop_index temporarily added by sak2km
-      clicks, stop_index = self.click_model.generate_clicks(train_ranking, ranking_labels)
+      winning_g = []
+      for i in range(self.repeat_gradient_sampling):
+        train_ranking = self.rank_query(ranking_i, ranker, impressions)
+        # if self.switch_click_model:
+        #   clicks = self.click_models[int(impressions/2500)].generate_clicks(train_ranking, ranking_labels)
+        # else:
+        clicks, stop_index = self.click_model.generate_clicks(train_ranking, ranking_labels)
+        winners = ranker.multileaving.winning_rankers(clicks)
+        if len(winners>0):
+          gradient = np.mean(ranker.model.weights[:, winners], axis=1) - ranker.model.weights[:, 0]
+          # print (gradient.shape)
+          winning_g.append(gradient.T)
+
       self.timestep_evaluate(run_results, impressions, ranker,
                              ranking_i, train_ranking, ranking_labels)
 
       ranker.process_clicks(clicks, stop_index)
+      if self.eval_gradient:
+        self.evaluate_gradient(run_results, impressions, ranker)
+      if self.log_click:
+        self.logging_click(run_results, clicks)
+      if self.log_true_gradient:
+        self.logging_true_gradient(run_results, winning_g[:-1], impressions, ranker)
 
-      # Added temporarily to record gradient info
-      # self.record_gradient(run_results, impressions, ranker)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker)
@@ -193,3 +274,57 @@ class SingleSimulation(object):
               'run_results': run_results}
 
     self.output_queue.put((output_key, output))
+
+  ###############################################################
+  # Original Run() method  
+
+  # def sample_and_rank(self, ranker):
+  #   ranking_i = np.random.choice(self.datafold.n_train_queries())
+  #   train_ranking = ranker.get_train_query_ranking(ranking_i)
+
+  #   assert train_ranking.shape[0] <= self.n_results, 'Shape is %s' % (train_ranking.shape,)
+  #   assert len(train_ranking.shape) == 1, 'Shape is %s' % (train_ranking.shape,)
+
+  #   return ranking_i, train_ranking  
+
+  # def run(self, ranker, output_key):
+  #   starttime = time.time()
+
+  #   ranker.setup(train_features = self.datafold.train_feature_matrix,
+  #                train_query_ranges = self.datafold.train_doclist_ranges)
+  #   # Added for ranker to access label directly
+  #   ranker._train_label = self.datafold.train_label_vector
+
+  #   run_results = []
+  #   impressions = 0
+  #   for impressions in range(self.n_impressions):
+  #     ranking_i, train_ranking = self.sample_and_rank(ranker)
+  #     ranking_labels = self.datafold.train_query_labels(ranking_i)
+  #     # stop_index temporarily added by sak2km
+  #     clicks, stop_index = self.click_model.generate_clicks(train_ranking, ranking_labels)
+  #     self.timestep_evaluate(run_results, impressions, ranker,
+  #                            ranking_i, train_ranking, ranking_labels)
+
+  #     ranker.process_clicks(clicks, stop_index)
+
+  #     # Added temporarily to record gradient info
+  #     # self.record_gradient(run_results, impressions, ranker)
+
+  #   # evaluate after final iteration
+  #   ranking_i, train_ranking = self.sample_and_rank(ranker)
+  #   ranking_labels =  self.datafold.train_query_labels(ranking_i)
+  #   impressions += 1
+  #   self.timestep_evaluate(run_results, impressions, ranker,
+  #                          ranking_i, train_ranking, ranking_labels)
+
+  #   ranker.clean()
+
+  #   self.run_details['runtime'] = time.time() - starttime
+
+  #   output = {'run_details': self.run_details,
+  #             'run_results': run_results}
+
+  #   self.output_queue.put((output_key, output))
+
+
+
