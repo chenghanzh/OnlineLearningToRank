@@ -73,11 +73,13 @@ class LinearModel(object):
 
 
   def update_to_documents(self, doc_ind, doc_weights, viewed_list=None, svd=None, project_norm=None, _lambda=None, lambda_intp=None):
-    print("svd: %s, project_norm: %s " %(svd,project_norm))
+    # print("svd: %s, project_norm: %s " %(svd,project_norm))
     weighted_docs = self._last_features[doc_ind, :] * doc_weights[:, None]
 
     # added for projection
     gradient = np.sum(weighted_docs, axis=0)
+    # added for projection
+    lambda_gradient = 0
     if viewed_list is not None and len(viewed_list)>0:
       if lambda_intp: # add Linear Interpolation (project only partially)
         gradient = (1-lambda_intp)*gradient + (lambda_intp * self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm))

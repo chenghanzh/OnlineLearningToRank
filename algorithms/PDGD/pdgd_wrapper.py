@@ -11,12 +11,13 @@ import pdb
 # Pairwise Differentiable Gradient Descent
 class PDGD_Wrapper(PDGD):
 
-  def __init__(self, svd, project_norm, k_initial, k_increase, *args, **kargs):
+  def __init__(self, svd, project_norm, k_initial, k_increase, _lambda=None, lambda_intp=None, lambda_intp_rate=None, prev_qeury_len=None, viewed=False, *args, **kargs):
     super(PDGD_Wrapper, self).__init__(*args, **kargs)
     self.svd = svd
     self.project_norm = project_norm
     self.k_initial = k_initial
     self.k_increase = k_increase
+    self._lambda = _lambda
     
     self.lambda_intp = lambda_intp
     self.lambda_intp_rate = lambda_intp_rate

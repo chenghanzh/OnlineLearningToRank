@@ -131,8 +131,11 @@ for data_folder in sorted(folder_structure.keys()):
     'pink',
     'gray',
     'm',
-    'steelblue',
-    'olive'
+    'teal',
+    'olive',
+    'slateblue',
+    'fuchsia',
+    'saddlebrown'
     ] * 30
 
   for plot_name, v_name in to_plot:
@@ -182,24 +185,45 @@ for data_folder in sorted(folder_structure.keys()):
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
 
-        # ### For NP
-        # plt.ylim(.7, 0.8)
-        # plt.ylim(.65, 0.76)
-        ### For MQ07
-        # plt.ylim(.44, .51)
-        plt.ylim(.37, .48)
-        ### For MQ08
-        # plt.ylim(.66, .7)
-        # plt.ylim(.62, .685)
+        # ### For MQ07
+        # if click_model == "perfect":
+        #   plt.ylim(.44, 0.51)
+        # elif click_model == "navigational":
+        #   plt.ylim(.37, .48)
+        # else: 
+        #   plt.ylim(.37, .48)
 
         ### For MQ08
-        # plt.ylim(.4, .8)
+        # if click_model == "perfect":
+        #   plt.ylim(.65, .71)
+        # elif click_model == "navigational":
+        #   plt.ylim(.62, .69)
+        # else: 
+        #   plt.ylim(.61, .68)
+
+        # ### For NP
+        # if click_model == "perfect":
+        #   plt.ylim(.7, 0.78)
+        # elif click_model == "navigational":
+        #   plt.ylim(.68, 0.76)
+        # else: 
+        #   plt.ylim(.65, 0.76)
+
+        ## For Web10k
+        # if click_model == "perfect":
+        #   plt.ylim(.29, .42)
+        # elif click_model == "navigational":
+        #   plt.ylim(.29, .34)
+        # else: 
+        #   plt.ylim(.29, .34)
+
         ### For WebscopeS1
-        # plt.ylim(.58, .7)
-        # plt.ylim(.6, .71)
-        ### For Web10k
-        # plt.ylim(.29, .42)
-        # plt.ylim(.29, .34)
+        if click_model == "perfect":
+          plt.ylim(.68, .74)
+        elif click_model == "navigational":
+          plt.ylim(.65, .74)
+        else: 
+          plt.ylim(.62, .71)
 
 
         # ### For TD
