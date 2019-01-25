@@ -78,7 +78,7 @@ class LinearModel(object):
 
     # added for projection
     gradient = np.sum(weighted_docs, axis=0)
-    if viewed_list: is not None and len(viewed_list)>0:
+    if viewed_list is not None and len(viewed_list)>0:
       if lambda_intp: # add Linear Interpolation (project only partially)
         gradient = (1-lambda_intp)*gradient + (lambda_intp * self.project_to_viewed_doc(gradient,viewed_list,svd,project_norm))
 
