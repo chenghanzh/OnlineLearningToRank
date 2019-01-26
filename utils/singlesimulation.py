@@ -44,6 +44,12 @@ class SingleSimulation(object):
     self.cur_online_discount = 1.0
     self.online_discount = 0.9995
 
+    # For Ordered queries experiment
+    self.ordered_queries = None
+    if sim_args.ordered_queries:
+      self.ordered_queries = [line.strip() for line in open(sim_args.ordered_queries)]
+
+
   def timestep_evaluate(self, results, iteration, ranker, ranking_i,
                         train_ranking, ranking_labels):
 
@@ -135,8 +141,15 @@ class SingleSimulation(object):
 
     return results
 
-  def sample_and_rank(self, ranker):
-    ranking_i = np.random.choice(self.datafold.n_train_queries())
+  def sample_and_rank(self, ranker, impressions=None):
+    # print(self.datafold.n_train_queries())
+    # print(impressions)
+    if self.ordered_queries and impressions:
+      assert self.n_impressions < self.datafold.n_train_queries()
+      ranking_i = int(self.ordered_queries[impressions])
+    else:
+      ranking_i = np.random.choice(self.datafold.n_train_queries())
+    # print(ranking_i)
     train_ranking = ranker.get_train_query_ranking(ranking_i)
 
     assert train_ranking.shape[0] <= self.n_results, 'Shape is %s' % (train_ranking.shape,)
@@ -166,7 +179,7 @@ class SingleSimulation(object):
     run_results = []
     impressions = 0
     for impressions in range(self.n_impressions):
-      ranking_i, train_ranking = self.sample_and_rank(ranker)
+      ranking_i, train_ranking = self.sample_and_rank(ranker, impressions)
       ranking_labels = self.datafold.train_query_labels(ranking_i)
       # stop_index temporarily added by sak2km
       clicks, stop_index = self.click_model.generate_clicks(train_ranking, ranking_labels)
@@ -179,7 +192,7 @@ class SingleSimulation(object):
       # self.record_gradient(run_results, impressions, ranker)
 
     # evaluate after final iteration
-    ranking_i, train_ranking = self.sample_and_rank(ranker)
+    ranking_i, train_ranking = self.sample_and_rank(ranker, impressions)
     ranking_labels =  self.datafold.train_query_labels(ranking_i)
     impressions += 1
     self.timestep_evaluate(run_results, impressions, ranker,

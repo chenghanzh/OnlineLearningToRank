@@ -93,6 +93,9 @@ class SimulationArgumentParser(argparse.ArgumentParser):
                       help='Repeat run same query multiple times. Averaged gradient is true gradient approximation.')                         
     # self._sim_add_argument('--prev_query', dest='prev_query', default=False, action='store_true',
     #                   help='User previous query')   
+    # Ordered quries experiment
+    self._sim_add_argument('--ordered_queries', dest='ordered_queries', default=None, type=str,
+                      help='Directory for the query_id list ordered by sum of all variances of feature vectors of associated documents')    
 
     self._arguments_initialized = False
 

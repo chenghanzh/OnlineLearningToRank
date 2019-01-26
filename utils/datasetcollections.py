@@ -323,6 +323,25 @@ DATASET_COLLECTION['local_TD2003'] = DataSet('TD2003', '../datasets/TD2003/Fold*
                                                [41,42],      #SiteMap
                                                [49,50]       #HITS
                                              ])
+DATASET_COLLECTION['local_MQ2007_F1'] = DataSet('MQ2007',
+                                '../datasets/MQ2007_F1/Fold*/',
+                                'short',
+                                       True, 41,
+                                       multileave_feat=[
+                                               range(11,16), #TF-IDF
+                                               range(21,26), #BM25
+                                               range(26,41)  #LMIR
+                                             ])
+
+DATASET_COLLECTION['local_MSLR_WEB10K_F1'] = DataSet('MSLR-WEB10K',
+                                            '../datasets/MSLR_WEB10K_F1/Fold*/', 'long',
+                                            False, 136,
+                                            multileave_feat=[
+                                               range(71,91), #TF-IDF
+                                               range(106,111), #BM25
+                                               range(111,126), #LMIR # 40 total
+                                               # range(96,106), #Boolean Model, Vector Space Model
+                                             ])
 # Yahoo documents that set 1 has 519 features, while set 2 has 596
 # https://webscope.sandbox.yahoo.com/catalog.php?datatype=c&did=64
 # Not sure 'multileave_feat' contains every feature id in the dataset. (have seen feature #22, but not in the list below)

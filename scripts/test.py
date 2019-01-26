@@ -58,7 +58,7 @@ ranker_params = {
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'test_mgd/P_MGD_Wrapper_7_10' 
-rankers.append((run_name, P_MGD_Wrapper, other_args))
+# rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 ranker_params = {
   'learning_rate_decay': 0.9999977,
@@ -69,7 +69,7 @@ ranker_params = {
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'test_mgd/P_MGD_Wrapper' 
-rankers.append((run_name, P_MGD_Wrapper, other_args))
+# rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 
 ranker_params = {
@@ -78,7 +78,7 @@ ranker_params = {
   'EXP_SIZE':25,
   'TB_QUEUE_SIZE':10,
   'TB_WINDOW_SIZE':50}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+# sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'baselines/TD_NSGD_tb' 
 # rankers.append((run_name, TD_NSGD, other_args))
@@ -88,7 +88,7 @@ ranker_params = {
   'learning_rate_decay': 0.9999977,
   'GRAD_SIZE':60,
   'EXP_SIZE':25}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+# sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'baselines/TD_NSGD' 
 # rankers.append((run_name, TD_NSGD, other_args))
@@ -103,7 +103,7 @@ ranker_params = {
   'k_increase': False,
   'GRAD_SIZE':60,
   'EXP_SIZE':25}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+# sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'wrappers/norm_NOincK/TD_NSGD_Wrapper' 
 # rankers.append((run_name, TD_NSGD_Wrapper, other_args))
