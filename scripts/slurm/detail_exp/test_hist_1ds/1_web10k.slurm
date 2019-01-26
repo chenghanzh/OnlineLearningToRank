@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --time=48:00:00
-#SBATCH -p largemem
+#SBATCH --cpus-per-task=28
+#SBATCH --time=120:00:00
+#SBATCH -p standard
 #SBATCH --output=job_output/out
 #SBATCH --error=job_output/error
 #SBATCH --mail-type=ALL

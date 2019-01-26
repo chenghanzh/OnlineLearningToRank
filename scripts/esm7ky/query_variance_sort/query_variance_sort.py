@@ -17,26 +17,22 @@ def main():
         tokens = line.split(" ")
         if tokens[1] == current_qid or current_qid == None:
             current_qid = tokens[1]
-            # pdb.set_trace()
             feature_vector = np.zeros(701)
-            for token in tokens[2:48]: # 48 added for MQ. depends on dataset format
-                # pdb.set_trace()
+            for token in tokens[2:]: # 48 added for MQ. depends on dataset format
                 f_id, f_val = token.split(":")
                 feature_vector[int(f_id)] = float(f_val)
             feature_matrix.append(feature_vector)
         else:
             net_var_for_query = np.sum(np.var(np.mat(feature_matrix), axis=0))
-            # pdb.set_trace()
             qids_and_variances.append((query_count, net_var_for_query))
             # qids_and_variances.append((int(current_qid.split(":")[1]), net_var_for_query))
             print("Finished", current_qid)
             current_qid = tokens[1]
             feature_matrix = []
             query_count += 1
-            # print(query_count)
     qids_and_variances.sort(key=lambda tup: tup[1])
 
-    with open("MSLR-WEB10K_F1_qid_inc_var.txt", "w") as outfile:
+    with open("Webscope_Set2_qid_inc_var.txt", "w") as outfile:
         for tup in qids_and_variances:
             outfile.write(str(tup[0]) + "\n")
 

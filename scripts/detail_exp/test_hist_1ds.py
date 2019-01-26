@@ -49,19 +49,19 @@ run_name = 'wrappers/test_hist_1ds/5_MGD_DSP'
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 #######    prev_qeury_len = 10     #######
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False,
-  '_lambda': None,
-  'prev_qeury_len': 10,
-  'viewed': True}
-sim_args, other_args = parser.parse_all_args(ranker_params)
+# ranker_params = {
+#   'learning_rate_decay': 0.9999977,
+#   'svd': True,
+#   'project_norm': True,
+#   'k_initial': 3,
+#   'k_increase': False,
+#   '_lambda': None,
+#   'prev_qeury_len': 10,
+#   'viewed': True}
+# sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrappers/test_hist_1ds/10_MGD_DSP' 
-rankers.append((run_name, P_MGD_Wrapper, other_args))
+# run_name = 'wrappers/test_hist_1ds/10_MGD_DSP' 
+# rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 #######    prev_qeury_len = 20     #######
 ranker_params = {
@@ -76,6 +76,21 @@ ranker_params = {
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'wrappers/test_hist_1ds/20_MGD_DSP' 
+rankers.append((run_name, P_MGD_Wrapper, other_args))
+
+#######    prev_qeury_len = 30     #######
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'svd': True,
+  'project_norm': True,
+  'k_initial': 3,
+  'k_increase': False,
+  '_lambda': None,
+  'prev_qeury_len': 30,
+  'viewed': True}
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'wrappers/test_hist_1ds/30_MGD_DSP' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 
