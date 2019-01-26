@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda/5.2.0-py2.7
-python scripts/baselines_long/nsgd_tb.py --data_sets Webscope_C14_Set1 --click_models inf nav per --log_folder ~/../../../../scratch/sak2km/l2r_data/log_folder --average_folder ~/../../../../scratch/sak2km/l2r_data/outdir/average --output_folder ~/../../../../scratch/sak2km/l2r_data/outdir/fullruns/ --n_runs 10 --n_proc 10 --n_impr 10000
+python scripts/baselines_long/nsgd_tb.py --data_sets Webscope_C14_Set1 --click_models inf nav per --log_folder ~/../../../../scratch/sak2km/l2r_data/log_folder --average_folder ~/../../../../scratch/sak2km/l2r_data/outdir/average --output_folder ~/../../../../scratch/sak2km/l2r_data/outdir/fullruns/ --n_runs 5 --n_proc 5 --n_impr 10000

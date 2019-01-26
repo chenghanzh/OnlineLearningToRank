@@ -2,7 +2,7 @@
 
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from utils.datasimulation import DataSimulation
 from utils.argparsers.simulationargparser import SimulationArgumentParser
 from algorithms.PDGD.pdgd import PDGD
@@ -27,47 +27,17 @@ description = 'Run script for testing framework.'
 parser = SimulationArgumentParser(description=description)
 
 rankers = []
-#######    interpolation = 0.7,  prev_qeury_len = 10     #######
+
 ranker_params = {
   'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False,
-  '_lambda': None,
-  'prev_qeury_len': 10,
-  'viewed': True}
+  'GRAD_SIZE':60,
+  'EXP_SIZE':25,
+  'TB_QUEUE_SIZE':10,
+  'TB_WINDOW_SIZE':50}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'test_ordered_q/P_DBGD_Wrapper' 
-# rankers.append((run_name, P_DBGD_Wrapper, other_args))
-
-#######    interpolation = 0.7,  prev_qeury_len = 10     #######
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'svd': True,
-  'project_norm': True,
-  'k_initial': 3,
-  'k_increase': False,
-  '_lambda': None,
-  'prev_qeury_len': 10,
-  'viewed': True}
-sim_args, other_args = parser.parse_all_args(ranker_params)
-
-run_name = 'test_ordered_q/P_MGD_Wrapper' 
-# rankers.append((run_name, P_MGD_Wrapper, other_args))
-
-
-ranker_params = {
-  'learning_rate_decay': 0.9999977}
-sim_args, other_args = parser.parse_all_args(ranker_params)
-
-run_name = 'test_ordered_q/P_DBGD' 
-rankers.append((run_name, P_DBGD, other_args))
-
-run_name = 'test_ordered_q/P_MGD' 
-rankers.append((run_name, P_MGD, other_args))
-
+run_name = 'baselines_long/TD_NSGD_tb_full' 
+rankers.append((run_name, TD_NSGD, other_args))
 
 
 sim = DataSimulation(sim_args)
