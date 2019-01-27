@@ -186,12 +186,12 @@ for data_folder in sorted(folder_structure.keys()):
           # plt.ylim(.6,.8)
 
         # ### For MQ07
-        if click_model == "perfect":
-          plt.ylim(.44, 0.51)
-        elif click_model == "navigational":
-          plt.ylim(.37, .48)
-        else: 
-          plt.ylim(.37, .48)
+        # if click_model == "perfect":
+        #   plt.ylim(.44, 0.51)
+        # elif click_model == "navigational":
+        #   plt.ylim(.37, .48)
+        # else: 
+        #   plt.ylim(.37, .48)
 
         ### For MQ08
         # if click_model == "perfect":
@@ -210,37 +210,32 @@ for data_folder in sorted(folder_structure.keys()):
         #   plt.ylim(.65, 0.76)
 
         ## For Web10k
-        if click_model == "perfect":
-          plt.ylim(.29, .42)
-        elif click_model == "navigational":
-          # plt.ylim(.29, .34)
-          plt.ylim(.26, .34)
-        else: 
-          # plt.ylim(.26, .33)
-          plt.ylim(.18, .33)
+        # if click_model == "perfect":
+        #   plt.ylim(.29, .42)
+        # elif click_model == "navigational":
+        #   plt.ylim(.29, .34)
+        # else: 
+        #   plt.ylim(.26, .33)
 
         ### For WebscopeS1
-        # if click_model == "perfect":
-        #   plt.ylim(.63, .73)
-        # elif click_model == "navigational":
-        #   plt.ylim(.63, .71)
-        # else: 
-        #   plt.ylim(.59, .71)
+        if click_model == "perfect":
+          plt.ylim(.63, .73)
+        elif click_model == "navigational":
+          plt.ylim(.63, .71)
+        else: 
+          plt.ylim(.59, .71)
 
 
         # ### For TD
         # plt.ylim(0.15, 0.45)
         ### For HP
         # plt.ylim(.65, 0.9)
-        # plt.ylim(0.2, 0.45)
 
 
         # plt.xlim(-5, 5300)
         # plt.xlim(-500, 1000000)
         # plt.xlim(-100, 5100)
-        # plt.xlim(-10, 6500)
-        # plt.ylim(.2, .4)
-        plt.xlim(-100, 6500)
+        plt.xlim(-100, 10500)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')
         # if click_model == 'informational':
