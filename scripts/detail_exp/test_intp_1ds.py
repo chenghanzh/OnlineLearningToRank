@@ -56,7 +56,7 @@ ranker_params = {
   'lambda_intp': 0.2}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrappers/test_intp_1ds/2_P_MGD_DSP' 
+run_name = 'wrappers/test_intp_1ds/2_MGD_DSP' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 

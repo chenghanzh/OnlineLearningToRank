@@ -187,43 +187,49 @@ for data_folder in sorted(folder_structure.keys()):
 
         # ### For MQ07
         # if click_model == "perfect":
-        #   plt.ylim(.44, 0.51)
+        #   plt.ylim(.43, 0.51)
         # elif click_model == "navigational":
-        #   plt.ylim(.37, .48)
+        #   plt.ylim(.39, .49)
         # else: 
-        #   plt.ylim(.37, .48)
+        #   plt.ylim(.34, .48)
 
         ### For MQ08
         # if click_model == "perfect":
-        #   plt.ylim(.65, .71)
+        #   # plt.ylim(.65, .71)
+        #   plt.ylim(0.45, .71)
         # elif click_model == "navigational":
-        #   plt.ylim(.62, .69)
+        #   # plt.ylim(.62, .69)
+        #   plt.ylim(0.42, .69)
         # else: 
-        #   plt.ylim(.61, .68)
+        #   # plt.ylim(.56, .68)
+        #   plt.ylim(0.4, .68)
 
         # ### For NP
         # if click_model == "perfect":
-        #   plt.ylim(.7, 0.78)
+        #   # plt.ylim(.7, 0.78)
+        #   plt.ylim(.4, 0.78)
         # elif click_model == "navigational":
-        #   plt.ylim(.68, 0.76)
+        #   # plt.ylim(.63, 0.76)
+        #   plt.ylim(.4, 0.76)
         # else: 
-        #   plt.ylim(.65, 0.76)
+        #   # plt.ylim(.63, 0.76)
+        #   plt.ylim(.4, 0.76)
 
-        ## For Web10k
-        # if click_model == "perfect":
-        #   plt.ylim(.29, .42)
-        # elif click_model == "navigational":
-        #   plt.ylim(.29, .34)
-        # else: 
-        #   plt.ylim(.26, .33)
+        # For Web10k
+        if click_model == "perfect":
+          plt.ylim(.29, .42)
+        elif click_model == "navigational":
+          plt.ylim(.29, .4)
+        else: 
+          plt.ylim(.24, .37)
 
         ### For WebscopeS1
-        if click_model == "perfect":
-          plt.ylim(.63, .73)
-        elif click_model == "navigational":
-          plt.ylim(.63, .71)
-        else: 
-          plt.ylim(.59, .71)
+        # if click_model == "perfect":
+        #   plt.ylim(.63, .73)
+        # elif click_model == "navigational":
+        #   plt.ylim(.6, .73)
+        # else: 
+        #   plt.ylim(.57, .71)
 
 
         # ### For TD

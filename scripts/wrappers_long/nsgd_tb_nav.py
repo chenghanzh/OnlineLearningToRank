@@ -40,7 +40,7 @@ ranker_params = {
   'TB_WINDOW_SIZE':50}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'wrappers_long/norm_NOincK/NSGD_DSP' 
+run_name = 'wrappers_long/norm_NOincK/NSGD_DSP_nav' 
 rankers.append((run_name, TD_NSGD_Wrapper, other_args))
 
 sim = DataSimulation(sim_args)
