@@ -36,6 +36,15 @@ def create_folders(filename):
 
 def process_run_name(name):
   # name = name.replace('_', '\\_')
+  # name = name.replace('P_MGD_wrapper', '0_MGD_DSP')
+  # name = name.replace('P_MGD_hist10', '10_MGD_DSP')
+  name = name.replace('_per', '')
+  name = name.replace('_nav', '')
+  name = name.replace('_inf', '')
+  name = name.replace('P_', '')
+  name = name.replace('TD_', '')
+  name = name.replace('_tb', '')
+  name = name.replace('hist10', 'DSP_hist10')
   name = name.replace('DeepP-DBGD', 'DBGD (neural)')
   name = name.replace('P-DBGD', 'DBGD')
   name = name.replace('P-MGD', 'MGD')
@@ -124,10 +133,10 @@ for data_folder in sorted(folder_structure.keys()):
     'r',
     'b',
     'g',
-    'y',
     'c',
     'orange',
     'purple',
+    'saddlebrown',
     'pink',
     'gray',
     'm',
@@ -135,7 +144,8 @@ for data_folder in sorted(folder_structure.keys()):
     'olive',
     'slateblue',
     'fuchsia',
-    'saddlebrown'
+    'saddlebrown',
+    'y'
     ] * 30
 
   for plot_name, v_name in to_plot:
@@ -149,9 +159,10 @@ for data_folder in sorted(folder_structure.keys()):
 
       labels = []
       max_ind = np.NINF
+      color_counter = 0 # use separate counter for separate .out files for each ccm
       for i, file_name in enumerate(file_names):
         file_dict = data[file_name]
-        colour = colours[i]
+        # colour = colours[i]
 
         if v_name not in file_dict:
           if v_name == 'heldout' and 'held-out' in file_dict:
@@ -174,6 +185,9 @@ for data_folder in sorted(folder_structure.keys()):
         mean = np.array(c_dict['mean'])
         std = np.array(c_dict['std'])
 
+        colour = colours[color_counter]
+        color_counter += 1
+        # print color_counter, colour
         plt.fill_between(ind, mean-std, mean+std, color=colour, alpha=0.2)
         plt.plot(ind, mean, color=colour)
         labels.append(process_run_name(file_name))
@@ -185,7 +199,7 @@ for data_folder in sorted(folder_structure.keys()):
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
 
-        # ### For MQ07
+        ### For MQ07
         # if click_model == "perfect":
         #   plt.ylim(.43, 0.51)
         # elif click_model == "navigational":
@@ -196,33 +210,36 @@ for data_folder in sorted(folder_structure.keys()):
         ### For MQ08
         # if click_model == "perfect":
         #   # plt.ylim(.65, .71)
-        #   plt.ylim(0.45, .71)
+        #   plt.ylim(0.64, .71)
         # elif click_model == "navigational":
         #   # plt.ylim(.62, .69)
-        #   plt.ylim(0.42, .69)
+        #   plt.ylim(0.63, .69)
         # else: 
         #   # plt.ylim(.56, .68)
-        #   plt.ylim(0.4, .68)
+        #   plt.ylim(0.5, .7)
 
         # ### For NP
         # if click_model == "perfect":
-        #   # plt.ylim(.7, 0.78)
-        #   plt.ylim(.4, 0.78)
+        #   plt.ylim(.7, 0.78)
+        #   # plt.ylim(.4, 0.78)
         # elif click_model == "navigational":
-        #   # plt.ylim(.63, 0.76)
-        #   plt.ylim(.4, 0.76)
+        #   plt.ylim(.69, 0.8)
+        #   # plt.ylim(.4, 0.76)
         # else: 
-        #   # plt.ylim(.63, 0.76)
-        #   plt.ylim(.4, 0.76)
+        #   plt.ylim(.63, 0.82)
+          # plt.ylim(.4, 0.76)
 
         # For Web10k
         # if click_model == "perfect":
-        #   plt.ylim(.3, .41)
+        #   # plt.ylim(.3, .42) # for hist study
+        #   plt.ylim(.3, .42)
         # elif click_model == "navigational":
         #   # plt.ylim(.3, .335) # for intpl study
+        #   # plt.ylim(.305, .34) # for hist study
         #   plt.ylim(.29, .4)
         # else: 
         #   # plt.ylim(.3, .335) # for intpl study
+        #   # plt.ylim(.29, .33) # for hist study
         #   plt.ylim(.24, .37)
 
         ### For WebscopeS1

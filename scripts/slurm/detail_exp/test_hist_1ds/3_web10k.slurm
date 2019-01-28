@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda/5.2.0-py2.7
-python scripts/detail_exp/test_hist_1ds3.py --data_sets MSLR-WEB10K --click_models inf nav per --log_folder ~/../../../../scratch/sak2km/l2r_data/log_folder --average_folder ~/../../../../scratch/sak2km/l2r_data_light/outdir/average --output_folder ~/../../../../scratch/sak2km/l2r_data/outdir/fullruns/ --n_runs 25 --n_proc 10 --n_impr 15000
+python scripts/detail_exp/test_hist_1ds3.py --data_sets MQ2007 --click_models inf nav per --log_folder ~/../../../../scratch/sak2km/l2r_data/log_folder --average_folder ~/../../../../scratch/sak2km/l2r_data_light/outdir/average --output_folder ~/../../../../scratch/sak2km/l2r_data/outdir/fullruns/ --n_runs 20 --n_proc 10 --n_impr 10000

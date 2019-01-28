@@ -21,7 +21,7 @@ parser.add_argument('--baselines', dest='baselines', type=str, required=False, d
 parser.add_argument('--folder_prefix', dest='folder_prefix', type=str, required=False,
           default=None, help='Prefix for folders of the same dataset.')
 
-parser.add_argument('--offline', dest='offline', type=str, default=False, help='online/offline.')
+parser.add_argument('--offline', dest='offline', type=str, default=True, help='online/offline.')
 
 parser.add_argument('plot_name', type=str, help='Name to save plots under.')
 
@@ -81,7 +81,7 @@ class OutputTable(object):
         print 'Finished writing to and closed:', self.output_path
 
 def process_run_name(name):
-  name = name.replace('_', '\\_')
+  # name = name.replace('_', '\\_')
   name = name.replace('DeepP-DBGD', 'DBGD (neural)')
   name = name.replace('P-DBGD', 'DBGD (linear)')
   name = name.replace('P-MGD', 'MGD (linear)')
@@ -101,6 +101,7 @@ folder_structure = {}
 if args.folder_prefix:
   for output_file in args.output_files + args.baselines:
     prefix = args.folder_prefix
+    # pdb.set_trace()
     assert prefix in output_file
     average_file_name = output_file[output_file.find(prefix) + len(prefix):]
     while average_file_name[0] == '/':
@@ -174,7 +175,7 @@ for data_folder in sorted(folder_structure.keys()):
     print name
   print
 
-click_models = ['perfect', 'informational'] #, 'navigational'
+click_models = ['perfect','navigational', 'informational'] #, 'navigational'
 
 folder_order = sorted(folder_structure.keys())
 for table_name, table_value, table_ind in to_table:
@@ -189,35 +190,57 @@ for table_name, table_value, table_ind in to_table:
       max_v = np.NINF
       f_data[c_m] = c_data
       for b_name in baselines:
-        b_data = all_data[folder_name][b_name][table_value]
-        b_ind = np.array(b_data['indices'])
-        if np.any(b_ind == table_ind):
-          v_i = np.where(b_ind == table_ind)[0][0]
-        else:
-          diff = b_ind - table_ind
-          v_i = np.argmax(diff[diff<=0])
-        v_mean = b_data[c_m]['mean'][v_i]
-        v_std = b_data[c_m]['std'][v_i]
+        # pdb.set_trace()
+        if b_name in all_data[folder_name]:
+          b_data = all_data[folder_name][b_name][table_value]
+          b_ind = np.array(b_data['indices'])
+          if np.any(b_ind == table_ind):
+            v_i = np.where(b_ind == table_ind)[0][0]
+          else:
+            diff = b_ind - table_ind
+            v_i = np.argmax(diff[diff<=0])
+          if c_m in b_data:
+            v_mean = b_data[c_m]['mean'][v_i]
+            v_std = b_data[c_m]['std'][v_i]
+          else: 
+            v_mean = 0
+            v_std = 0
 
-        max_v = max(max_v, v_mean)
-        c_data[b_name] = (v_mean, v_std, None)
+          max_v = max(max_v, v_mean)
+          c_data[b_name] = (v_mean, v_std, None)
+        else:
+          c_data[b_name] = (0, 0, None)
         # pdb.set_trace()
 
       for m_name in methods:
-        m_data = all_data[folder_name][m_name][table_value]
-        m_ind = np.array(m_data['indices'])
-        if np.any(m_ind == table_ind):
-          v_i = np.where(m_ind == table_ind)[0][0]
-        else:
-          diff = b=m_ind - table_ind
-          v_i = np.argmax(diff[diff<=0])
-        v_mean = m_data[c_m]['mean'][v_i]
-        v_std = m_data[c_m]['std'][v_i]
+        if m_name in all_data[folder_name]:
+          m_data = all_data[folder_name][m_name][table_value]
+          m_ind = np.array(m_data['indices'])
+          if np.any(m_ind == table_ind):
+            v_i = np.where(m_ind == table_ind)[0][0]
+          else:
+            diff = b=m_ind - table_ind
+            v_i = np.argmax(diff[diff<=0])
+          if c_m in m_data:
+            v_mean = m_data[c_m]['mean'][v_i]
+            v_std = m_data[c_m]['std'][v_i]
+          else:
+            v_mean = 0
+            v_std = 0
 
-        sig = []
-        for b_name in baselines:
-          b_mean, b_std, _ = c_data[b_name]
-          sig.append(get_significance(b_mean, v_mean, b_std, v_std, 125))
+
+          sig = []
+          for b_name in baselines:
+            b_mean, b_std, _ = c_data[b_name]
+            sig.append('\\hphantom{\\tiny \\dubbelneer}')
+            # sig.append(get_significance(b_mean, v_mean, b_std, v_std, 125))
+        else:
+          v_mean = 0
+          v_std = 0
+          sig = []
+          for b_name in baselines:
+            sig.append(0)
+
 
         max_v = max(max_v, v_mean)
         c_data[m_name] = (v_mean, v_std, sig)
@@ -254,8 +277,8 @@ for table_name, table_value, table_ind in to_table:
         else:
           out.write('%0.01f {\\tiny (%0.01f)}' % (v_mean, v_std))
 
-        if not (v_sig is None):
-          out.write(' '.join(v_sig))
+        if not (v_sig is None) and not (v_sig is 0):
+          out.write(' '.join(str(v_sig)))
 
       out.writeline('\\\\')
 
@@ -269,7 +292,6 @@ for table_name, table_value, table_ind in to_table:
   print
   print
   print
-
 
 
 
