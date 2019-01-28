@@ -196,7 +196,7 @@ class SingleSimulation(object):
       ranker.process_clicks(clicks, stop_index)
 
       # Added temporarily to record gradient info
-      # self.record_gradient(run_results, impressions, ranker)
+      self.record_gradient(run_results, impressions, ranker)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker) # , impressions
