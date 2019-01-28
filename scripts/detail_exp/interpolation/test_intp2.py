@@ -57,7 +57,7 @@ ranker_params = {
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'wrappers/interpolation/7_MGD_DSP' 
-rankers.append((run_name, P_MGD_Wrapper, other_args))
+# rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 
 #######    lambda_intp = 0.9     #######
@@ -72,7 +72,7 @@ ranker_params = {
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
 run_name = 'wrappers/interpolation/9_MGD_DSP' 
-rankers.append((run_name, P_MGD_Wrapper, other_args))
+# rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 
 

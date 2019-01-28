@@ -36,12 +36,12 @@ ranker_params = {
   'k_initial': 3,
   'k_increase': False,
   '_lambda': None,
-  'lambda_intp': 0.7,
-  'prev_qeury_len': 20,
+  # 'lambda_intp': 0.7,
+  'prev_qeury_len': 10,
   'viewed': True}
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'test_mgd/P_MGD_Wrapper_7_20' 
+run_name = 'test_mgd/test/P_MGD_Wrapper_7_20' 
 rankers.append((run_name, P_MGD_Wrapper, other_args))
 
 #######    interpolation = 0.7,  prev_qeury_len = 10     #######

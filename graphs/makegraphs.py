@@ -216,20 +216,22 @@ for data_folder in sorted(folder_structure.keys()):
         #   plt.ylim(.4, 0.76)
 
         # For Web10k
-        if click_model == "perfect":
-          plt.ylim(.29, .42)
-        elif click_model == "navigational":
-          plt.ylim(.29, .4)
-        else: 
-          plt.ylim(.24, .37)
+        # if click_model == "perfect":
+        #   plt.ylim(.3, .41)
+        # elif click_model == "navigational":
+        #   # plt.ylim(.3, .335) # for intpl study
+        #   plt.ylim(.29, .4)
+        # else: 
+        #   # plt.ylim(.3, .335) # for intpl study
+        #   plt.ylim(.24, .37)
 
         ### For WebscopeS1
-        # if click_model == "perfect":
-        #   plt.ylim(.63, .73)
-        # elif click_model == "navigational":
-        #   plt.ylim(.6, .73)
-        # else: 
-        #   plt.ylim(.57, .71)
+        if click_model == "perfect":
+          plt.ylim(.63, .73)
+        elif click_model == "navigational":
+          plt.ylim(.6, .73)
+        else: 
+          plt.ylim(.57, .71)
 
 
         # ### For TD
