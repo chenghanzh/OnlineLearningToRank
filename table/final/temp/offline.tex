@@ -1,0 +1,30 @@
+% !TEX root = ../main.tex
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill} } l  l l l l l  }
+\toprule
+ & { \small \textbf{MQ2007}}  & { \small \textbf{MQ2008}}  & { \small \textbf{MSLR-WEB10K}}  & { \small \textbf{NP2003}}  & { \small \textbf{Yahoo}} \\
+\midrule
+& \multicolumn{5}{|c|}{\textit{perfect}} \\
+\midrule
+DBGD (linear) & 0.484 {\tiny (0.023)} & 0.683 {\tiny (0.023)} & 0.331 {\tiny (0.009)} & 0.737 {\tiny (0.056)} & 0.688 {\tiny (0.011)} \\
+MGD (linear) & 0.495 {\tiny (0.022)} & 0.691 {\tiny (0.020)} & 0.334 {\tiny (0.003)} & 0.746 {\tiny (0.048)} & 0.715 {\tiny (0.002)} \\
+TD\_NSGD\_tb & 0.488 {\tiny (0.019)} & 0.689 {\tiny (0.024)} & 0.000 {\tiny (0.000)} & 0.743 {\tiny (0.050)} & 0.000 {\tiny (0.000)} \\
+P\_DBGD\_hist10 & 0.480 {\tiny (0.020)} & 0.685 {\tiny (0.024)} & 0.333 {\tiny (0.011)} & 0.738 {\tiny (0.059)} & 0.681 {\tiny (0.013)} \\
+P\_MGD\_hist10 & \bf 0.501 {\tiny (0.021)} & \bf 0.695 {\tiny (0.022)} & \bf 0.409 {\tiny (0.006)} & \bf 0.748 {\tiny (0.055)} & \bf 0.725 {\tiny (0.003)} \\
+\midrule
+& \multicolumn{5}{|c|}{\textit{navigational}} \\
+\midrule
+DBGD (linear) & 0.463 {\tiny (0.028)} & 0.667 {\tiny (0.021)} & 0.320 {\tiny (0.012)} & 0.728 {\tiny (0.054)} & 0.663 {\tiny (0.020)} \\
+MGD (linear) & 0.426 {\tiny (0.019)} & 0.664 {\tiny (0.016)} & 0.321 {\tiny (0.003)} & 0.740 {\tiny (0.048)} & 0.703 {\tiny (0.010)} \\
+TD\_NSGD\_tb & \bf 0.473 {\tiny (0.022)} & 0.676 {\tiny (0.024)} & 0.000 {\tiny (0.000)} & 0.732 {\tiny (0.053)} & 0.000 {\tiny (0.000)} \\
+P\_DBGD\_hist10 & 0.465 {\tiny (0.024)} & 0.668 {\tiny (0.023)} & 0.327 {\tiny (0.011)} & 0.734 {\tiny (0.052)} & 0.656 {\tiny (0.013)} \\
+P\_MGD\_hist10 & 0.467 {\tiny (0.021)} & \bf 0.684 {\tiny (0.017)} & \bf 0.331 {\tiny (0.005)} & \bf 0.744 {\tiny (0.053)} & \bf 0.714 {\tiny (0.006)} \\
+\midrule
+& \multicolumn{5}{|c|}{\textit{informational}} \\
+\midrule
+DBGD (linear) & 0.410 {\tiny (0.034)} & 0.641 {\tiny (0.031)} & 0.294 {\tiny (0.022)} & 0.699 {\tiny (0.063)} & 0.623 {\tiny (0.037)} \\
+MGD (linear) & 0.406 {\tiny (0.020)} & 0.651 {\tiny (0.020)} & 0.317 {\tiny (0.003)} & 0.726 {\tiny (0.050)} & 0.668 {\tiny (0.044)} \\
+TD\_NSGD\_tb & \bf 0.469 {\tiny (0.018)} & \bf 0.674 {\tiny (0.023)} & 0.000 {\tiny (0.000)} & 0.733 {\tiny (0.056)} & 0.000 {\tiny (0.000)} \\
+P\_DBGD\_hist10 & 0.427 {\tiny (0.027)} & 0.632 {\tiny (0.031)} & 0.309 {\tiny (0.011)} & 0.692 {\tiny (0.062)} & 0.630 {\tiny (0.030)} \\
+P\_MGD\_hist10 & 0.444 {\tiny (0.025)} & 0.669 {\tiny (0.018)} & \bf 0.325 {\tiny (0.004)} & \bf 0.738 {\tiny (0.054)} & \bf 0.701 {\tiny (0.005)} \\
+\bottomrule
+\end{tabular*}

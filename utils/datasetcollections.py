@@ -326,7 +326,7 @@ DATASET_COLLECTION['local_TD2003'] = DataSet('TD2003', '../datasets/TD2003/Fold*
 DATASET_COLLECTION['local_MQ2007_F1'] = DataSet('MQ2007',
                                 '../datasets/MQ2007_F1/Fold*/',
                                 'short',
-                                       True, 41,
+                                       True, 46,
                                        multileave_feat=[
                                                range(11,16), #TF-IDF
                                                range(21,26), #BM25

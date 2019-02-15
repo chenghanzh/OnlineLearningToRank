@@ -150,6 +150,7 @@ class DataFold(object):
         Read letor file and returns dict for qid to indices, labels for queries
         and list of doclists of features per doc per query.
         '''
+        filter_non_uniq = False # added temproary for w_star experiment
         current_qid = None
         queries = {}
         queryIndex = 0

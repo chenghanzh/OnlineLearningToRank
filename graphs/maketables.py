@@ -81,7 +81,7 @@ class OutputTable(object):
         print 'Finished writing to and closed:', self.output_path
 
 def process_run_name(name):
-  # name = name.replace('_', '\\_')
+  name = name.replace('_', '\_')
   name = name.replace('DeepP-DBGD', 'DBGD (neural)')
   name = name.replace('P-DBGD', 'DBGD (linear)')
   name = name.replace('P-MGD', 'MGD (linear)')

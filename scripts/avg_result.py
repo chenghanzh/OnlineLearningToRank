@@ -113,13 +113,15 @@ def average_results(output_path):
 
 def main():
   # For history
-  directory = "average_rivanna_1_27_full_hist_1ds/"
-  for i in [5,10,20,30,40,50,70]:
+  # directory = "../average_rivanna_1_27_full_hist_1ds/"
+  directory = "../average_rivanna_1_27_full_intp_1ds/"
+  # for i in [5,10,20,30,50,70,100]:
+  for i in [7,9]:
     name = str(i) + "_MGD_DSP.out"
     full_output_path = directory + name
     print "opening %s" % full_output_path
     output = average_results(full_output_path)
-    avg_output_path = directory + "test_hist_1ds/" + name
+    avg_output_path = directory + "test_intp_1ds/" + name
 
   # For Interpolation
 

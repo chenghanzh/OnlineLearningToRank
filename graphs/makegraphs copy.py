@@ -35,14 +35,12 @@ def create_folders(filename):
     os.makedirs(os.path.dirname(filename))
 
 def process_run_name(name):
+  # name = name.replace('_', '\\_')
   # name = name.replace('P_MGD_wrapper', '0_MGD_DSP')
   # name = name.replace('P_MGD_hist10', '10_MGD_DSP')
-  # name = name.replace('-per', '')
   name = name.replace('_per', '')
-  name = name.replace('-per', '')
   name = name.replace('_nav', '')
   name = name.replace('_inf', '')
-  name = name.replace('_hist10', '-DSP')
   name = name.replace('P_', '')
   name = name.replace('TD_', '')
   name = name.replace('_tb', '')
@@ -51,7 +49,6 @@ def process_run_name(name):
   name = name.replace('P-DBGD', 'DBGD')
   name = name.replace('P-MGD', 'MGD')
   name = name.replace('DeepPDGD', 'PDGD (neural)')
-  name = name.replace('_', '-')
   return name
 
 
@@ -74,7 +71,7 @@ else:
   folder_structure[None] = args.output_files
 
 to_plot = [
-       ('offline','cosine_w'), #, 'heldout' 'cosine_w' 
+       ('offline', 'heldout'),
       ]
 
 for data_folder in sorted(folder_structure.keys()):
@@ -156,9 +153,8 @@ for data_folder in sorted(folder_structure.keys()):
       fig = plt.figure(figsize=(10.5, 6), linewidth=0.1)
       # fig = plt.figure(figsize=(10.5, 4), linewidth=0.1)
       plt.ioff()
-      # plt.ylabel('NDCG', fontsize=16)
-      plt.ylabel('Cosine Similarity to w*', fontsize=20)
-      plt.xlabel('Impressions', fontsize=16)
+      plt.ylabel('NDCG')
+      plt.xlabel('impressions')
       plt.gca().yaxis.set_ticks_position('both')
 
       labels = []
@@ -178,8 +174,7 @@ for data_folder in sorted(folder_structure.keys()):
             continue
         v_dict = file_dict[v_name]
         # To access gradient vectors:
-        # output['results'][u'cosine_w'][ u'informational'][u'mean']
-
+        # output['results'][u'u_t'][ u'informational'][u'std']
         ind = np.array(v_dict['indices'])
         if click_model not in v_dict:
           print 'not found', click_model, v_dict.keys()
@@ -192,11 +187,9 @@ for data_folder in sorted(folder_structure.keys()):
 
         colour = colours[color_counter]
         color_counter += 1
-        # pdb.set_trace()
         # print color_counter, colour
-        # plt.fill_between(ind, mean-std, mean+std, color=colour, alpha=0.2)
+        plt.fill_between(ind, mean-std, mean+std, color=colour, alpha=0.2)
         plt.plot(ind, mean, color=colour)
-        # plt.plot(ind, cosine, color=colour)
         labels.append(process_run_name(file_name))
 
       if len(labels) > 0:
@@ -206,14 +199,13 @@ for data_folder in sorted(folder_structure.keys()):
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
 
-        ## For MQ07
-        if click_model == "perfect":
-          plt.ylim(.43, 0.51)
-        elif click_model == "navigational":
-          plt.ylim(.39, .49)
-        else: 
-          plt.ylim(.34, .48)
-        plt.ylim(.0, .52)
+        ### For MQ07
+        # if click_model == "perfect":
+        #   plt.ylim(.43, 0.51)
+        # elif click_model == "navigational":
+        #   plt.ylim(.39, .49)
+        # else: 
+        #   plt.ylim(.34, .48)
 
         ### For MQ08
         # if click_model == "perfect":
@@ -250,13 +242,13 @@ for data_folder in sorted(folder_structure.keys()):
         #   # plt.ylim(.29, .33) # for hist study
         #   plt.ylim(.24, .37)
 
-        ## For WebscopeS1
-        # if click_model == "perfect":
-        #   plt.ylim(.61, .73)
-        # elif click_model == "navigational":
-        #   plt.ylim(.58, .73)
-        # else: 
-        #   plt.ylim(.55, .71)
+        ### For WebscopeS1
+        if click_model == "perfect":
+          plt.ylim(.63, .73)
+        elif click_model == "navigational":
+          plt.ylim(.6, .73)
+        else: 
+          plt.ylim(.57, .71)
 
 
         # ### For TD
@@ -265,17 +257,14 @@ for data_folder in sorted(folder_structure.keys()):
         # plt.ylim(.65, 0.9)
 
 
-        # plt.show()
         # plt.xlim(-5, 5300)
         # plt.xlim(-500, 1000000)
-        plt.xlim(-100, 5000)
-        # plt.xlim(-100, 10500)
+        # plt.xlim(-100, 5100)
+        plt.xlim(-100, 10500)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')
         # if click_model == 'informational':
         plt.legend(labels, loc=4, fontsize=16, frameon=False, ncol=1)
-        if click_model == "perfect":
-          plt.legend(labels, loc=4, fontsize=16, frameon=False, ncol=1)
         # plt.legend(labels, loc=0, fontsize=26, frameon=False, ncol=1)
 
         if not pdf_folder:
@@ -287,6 +276,5 @@ for data_folder in sorted(folder_structure.keys()):
             create_folders(os.path.join(pdf_folder, plot_file_name))
           plt.savefig(os.path.join(pdf_folder, plot_file_name), bbox_inches='tight')
           print 'saved', plot_file_name
-      plt.show()
       plt.close(fig)
     print

@@ -4,7 +4,11 @@ import time
 import numpy as np
 from evaluate import get_idcg_list, evaluate, evaluate_ranking
 from clicks import *
+from numpy.linalg import norm
 
+
+def cosine(u, v):
+  return np.dot(u, v) / (norm(u) * norm(v))
 
 class SingleSimulation(object):
 
@@ -44,6 +48,27 @@ class SingleSimulation(object):
     self.cur_online_discount = 1.0
     self.online_discount = 0.9995
 
+    self.wstar = np.array([0.090921813,-0.11485128,0.044372544,-0.087539188,
+0.009004562,-0.072301656,-0.0688373,-0.06482818,0.096968994,-0.046205021,-0.081590528,-0.062295628,
+-0.096978417,0.051877838,0.049993948,0.105052165,-0.115473766,
+0.093215119,0.034444575,0.098947574,-0.106032557,0.007000408,-0.122599149,-0.163043936,-0.132420002,
+0.008172192,-0.025648746,0.024661343,-0.060795502,0.049398335,-0.043957122,-0.073410604,0.01488797,
+-0.04552856,-0.011800254,-0.016397403,-0.040835005,-0.025397195,-0.04686599,-0.13255839,0.02296312,0.00791,-0.105128702,0.120163274,
+0.116768347,0.036304662])
+
+
+
+
+    self.wstar2 = np.array([0.05487592855960689,-0.16177660823499504,-0.1326441616464022,-0.025244180904836714,0.0608957589996712,
+0.03565139323472977,-0.08807320147752762,-0.052409082651138306,-0.017523562535643578,0.04421379417181015,
+-0.11383271436743246, -0.05965518118458506, -0.1642389763390179, -0.01770502037805504, -0.0020050693877653896,
+0.01625400976524229, -0.012986437299060776, 0.001044217962890701, -0.05650360734995826, -0.09585559186965918,
+-0.11594187169150313, -0.01945667628924064, -0.09069662303376838, -0.10249463908900396, -0.19089999340880087,
+-0.16589926061760352, -0.2057328359134015, -0.09014762644324936, -0.08652332692572763, -0.17825847630106761,
+-0.1028191429653127, -0.17696874180478117, 0.043575013356484345, 0.012777915201885627, -0.061118497356137044,
+ 0.031164346680439256, -0.0014622776294397632, -0.14564148008167005, -0.11557535752333076, -0.15106161690020906,
+ -0.05217807212105205, -0.0842433198861431, -0.05336505571525466, -0.0555042398092651, -7.019967011790595E-4,
+ 0.0540026950094062])
     # # For Ordered queries experiment
     # self.ordered_queries = None
     # if sim_args.ordered_queries:
@@ -166,13 +191,17 @@ class SingleSimulation(object):
 
   # Record gradient info
   def record_gradient(self, results, iteration, ranker,):
-    if ranker.model.g_t is not None: 
-      results[-1]['u_t'] = ranker.model.u_t.tolist()
-      results[-1]['g_t'] = ranker.model.g_t.tolist()
-    else:
-      results[-1]['u_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
-      results[-1]['g_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+    # if ranker.model.g_t is not None: 
+    #   results[-1]['u_t'] = ranker.model.u_t.tolist()
+    #   results[-1]['g_t'] = ranker.model.g_t.tolist()
+    # else:
+    #   results[-1]['u_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+    #   results[-1]['g_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
     results[-1]['w_t'] = ranker.model.weights[:, 0].T.tolist()
+    conine_wstar = cosine(self.wstar2, ranker.model.weights[:, 0].T)
+    results[-1]['cosine_w'] = conine_wstar
+    if iteration%100 ==0:
+      print iteration, conine_wstar
 
 
   def run(self, ranker, output_key):
@@ -196,7 +225,7 @@ class SingleSimulation(object):
       ranker.process_clicks(clicks, stop_index)
 
       # Added temporarily to record gradient info
-      # self.record_gradient(run_results, impressions, ranker)
+      self.record_gradient(run_results, impressions, ranker)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker) # , impressions
