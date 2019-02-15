@@ -11,12 +11,17 @@ def sample_with_basis(M):
 
 class LinearModel(object):
   def __init__(self, n_features, learning_rate,
-               n_candidates=0, learning_rate_decay=1.0):
+               n_candidates=0, learning_rate_decay=1.0, n_impressions=None):
     self.n_features = n_features
     self.learning_rate = learning_rate
     self.n_models = n_candidates + 1
     self.weights = np.zeros((n_features, self.n_models))
     self.learning_rate_decay = learning_rate_decay
+    self.n_impressions = n_impressions
+
+    # needed for differenctial privacy
+    self.gradient_cum = np.zeros(self.n_features)
+
 
   def copy(self):
     copy = LinearModel(n_features = self.n_features,
@@ -44,7 +49,7 @@ class LinearModel(object):
     # print(self.weights)
     # print("####################")
 
-  def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False, _lambda=None, lambda_intp=None):
+  def update_to_mean_winners(self, winners, viewed_list=None, svd=None, project_norm=False, _lambda=None, lambda_intp=None, noise_method=None, eta=None, n_impressions=None, n_interactions=None):
     assert self.n_models > 1
     self.u_t = None
     self.g_t = None
@@ -65,11 +70,90 @@ class LinearModel(object):
         if _lambda: # add L2 Regularization (add back a portion of original weight to gradient)
           lambda_gradient =  _lambda * self.weights[:, 0]
 
-      self.weights[:, 0] += self.learning_rate * gradient
+      if noise_method==None:
+        self.weights[:, 0] += self.learning_rate * gradient
+      #####################################################################
+      # For differential privacy
+      # n_impressions: total # of iterations/queries, like 5000
+      # n_interactions : current iteration num., 0,1,2,3....
+
+      #1: Add noise every iteration separately
+      elif noise_method == 0: 
+        noise = np.random.laplace(1/eta, 1, self.n_features)
+        # initial weight was set to 0.
+        self.weights[:, 0] += (self.learning_rate * gradient) + noise
+
+
+      #2: Add noise in the end at once
+      elif noise_method == 1:
+        # Cumulation of gradients from 0 to current iterations
+        self.gradient_cum += self.learning_rate * gradient
+        # sum of noise terms from 0 to current iterations
+        noise_total = np.random.laplace(n_interactions/eta, 1, self.n_features)
+        self.weights[:, 0] = self.gradient_cum + noise_total
+
+
+      #3: Add noise by smaller bins
+      elif noise_method == 2:
+        bin_size = 10 # arbitrary
+        # cumutative gradients only, without noises
+        self.gradient_cum += self.learning_rate * gradient
+        noise_total = np.zeros(self.n_features)
+
+        noise_counter = n_interactions
+        noise_bin = np.random.laplace(bin_size/eta, 1, self.n_features)
+
+        while noise_counter >= bin_size:
+          noise_total += noise_bin
+          noise_counter -= bin_size
+        # individual noise for remianing iterations outside bins
+        noise_ind = np.random.laplace(1/eta, 1, self.n_features)
+        for i in range(noise_counter):
+          noise_total += noise_ind
+
+        self.weights[:, 0] = self.gradient_cum + noise_total
+
+
+      #4: Bins, formed by TREE method
+      elif noise_method == 3:
+        self.gradient_cum += self.learning_rate * gradient
+        noise_total = np.zeros(self.n_features)
+        noise_counter = n_interactions
+
+        iteration_binary = np.binary_repr(n_interactions)
+        # print("%s: %s" %(n_interactions, iteration_binary))
+        # 7 would become = '111'
+        bin_sizes = []
+
+        for count,i in enumerate(iteration_binary):
+          if i =='1':
+            decimal = 2**(len(iteration_binary)-1 -count)
+            bin_sizes.append(decimal)
+            # For iteration 7, bin_sizes = [4,2,1]
+
+        # print("%s: %s" %(n_interactions, bin_sizes))
+        for bin_size in bin_sizes:
+          noise_bin = np.random.laplace(bin_size/eta, 1, self.n_features)
+
+          if noise_counter >= bin_size:
+            noise_total += noise_bin
+            noise_counter -= bin_size
+        # individual noise for remianing iterations outside bins
+        noise_ind = np.random.laplace(1/eta, 1, self.n_features)
+        for i in range(noise_counter):
+          noise_total += noise_ind
+
+        self.weights[:, 0] = self.gradient_cum + noise_total
+          
+      #####################################################################
+
+
+
+
       if lambda_gradient is not 0:
         self.weights[:, 0] -= lambda_gradient
       self.learning_rate *= self.learning_rate_decay
-      # print(self.g_t)
+
 
 
   def update_to_documents(self, doc_ind, doc_weights, viewed_list=None, svd=None, project_norm=None, _lambda=None, lambda_intp=None):

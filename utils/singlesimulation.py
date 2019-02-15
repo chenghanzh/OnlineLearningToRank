@@ -222,10 +222,10 @@ class SingleSimulation(object):
       self.timestep_evaluate(run_results, impressions, ranker,
                              ranking_i, train_ranking, ranking_labels)
 
-      ranker.process_clicks(clicks, stop_index)
+      ranker.process_clicks(clicks, stop_index, self.n_impressions)
 
       # Added temporarily to record gradient info
-      self.record_gradient(run_results, impressions, ranker)
+      # self.record_gradient(run_results, impressions, ranker)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker) # , impressions
