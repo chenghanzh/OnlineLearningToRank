@@ -93,12 +93,13 @@ class BasicOnlineRanker(object):
                     n_results=self.n_results)[:self.n_results]
 
   def process_clicks(self, clicks, stop_index, n_impressions=None):
-    if n_impressions:
-      self.update_to_interaction(clicks, stop_index, n_impressions)
-    else:
-      self.update_to_interaction(clicks, stop_index)
-      
+    self.update_to_interaction(clicks, stop_index)
+    # if n_impressions:
+    #   self.update_to_interaction(clicks, stop_index, n_impressions)
+    # else:
+    #   self.update_to_interaction(clicks, stop_index)
+
     self.n_interactions += 1
 
-  def update_to_interaction(self, clicks, stop_index):
+  def update_to_interaction(self, clicks, stop_index, n_impressions=None):
       pass
