@@ -30,9 +30,9 @@ parser.add_argument('output_files', type=str, help='Output files to be parsed.',
 args = parser.parse_args()
 
 
-def create_folders(filename):
-  if not os.path.exists(os.path.dirname(filename)):
-    os.makedirs(os.path.dirname(filename))
+# def create_folders(filename):
+#   if not os.path.exists(os.path.dirname(filename)):
+#     os.makedirs(os.path.dirname(filename))
 
 def process_run_name(name):
   # name = name.replace('P_MGD_wrapper', '0_MGD_DSP')
@@ -54,8 +54,9 @@ def process_run_name(name):
   name = name.replace('_', '-')
   return name
 
-
 pdf_folder = args.pdf_folder
+if not os.path.exists(pdf_folder):
+    os.makedirs(pdf_folder)
 prefix_plot_name = args.plot_name
 
 folder_structure = {}
@@ -74,7 +75,7 @@ else:
   folder_structure[None] = args.output_files
 
 to_plot = [
-       ('offline','cosine_w'), #, 'heldout' 'cosine_w' 
+       ('offline','heldout'), #, 'heldout' 'cosine_w' 
       ]
 
 for data_folder in sorted(folder_structure.keys()):
@@ -156,8 +157,8 @@ for data_folder in sorted(folder_structure.keys()):
       fig = plt.figure(figsize=(10.5, 6), linewidth=0.1)
       # fig = plt.figure(figsize=(10.5, 4), linewidth=0.1)
       plt.ioff()
-      # plt.ylabel('NDCG', fontsize=16)
-      plt.ylabel('Cosine Similarity to w*', fontsize=20)
+      plt.ylabel('NDCG', fontsize=16)
+      # plt.ylabel('Cosine Similarity to w*', fontsize=20)
       plt.xlabel('Impressions', fontsize=16)
       plt.gca().yaxis.set_ticks_position('both')
 
@@ -213,7 +214,7 @@ for data_folder in sorted(folder_structure.keys()):
           plt.ylim(.39, .49)
         else: 
           plt.ylim(.34, .48)
-        plt.ylim(.0, .52)
+        plt.ylim(.0, .4)
 
         ### For MQ08
         # if click_model == "perfect":
@@ -268,8 +269,8 @@ for data_folder in sorted(folder_structure.keys()):
         # plt.show()
         # plt.xlim(-5, 5300)
         # plt.xlim(-500, 1000000)
-        plt.xlim(-100, 5000)
-        # plt.xlim(-100, 10500)
+        # plt.xlim(-100, 5000)
+        plt.xlim(-100, 10500)
         # plt.xlim(-5, 100000)
         plt.annotate(click_model, xy=(0.02, 0.90), xycoords='axes fraction')
         # if click_model == 'informational':
@@ -287,6 +288,6 @@ for data_folder in sorted(folder_structure.keys()):
             create_folders(os.path.join(pdf_folder, plot_file_name))
           plt.savefig(os.path.join(pdf_folder, plot_file_name), bbox_inches='tight')
           print 'saved', plot_file_name
-      plt.show()
+      # plt.show()
       plt.close(fig)
     print
