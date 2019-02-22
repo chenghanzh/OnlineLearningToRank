@@ -90,7 +90,7 @@ class LinearModel(object):
         self.gradient_cum += self.learning_rate * gradient
         # sum of noise terms from 0 to current iterations
         noise_total = np.random.laplace(n_interactions/eta, 1, self.n_features)
-        self.weights[:, 0] = self.gradient_cum + noise_total
+        self.weights[:, 0] = self.learning_rate *(self.gradient_cum + noise_total)
 
 
       #3: Add noise by smaller bins
@@ -111,7 +111,7 @@ class LinearModel(object):
         for i in range(noise_counter):
           noise_total += noise_ind
 
-        self.weights[:, 0] = self.gradient_cum + noise_total
+        self.weights[:, 0] = self.learning_rate * (self.gradient_cum + noise_total)
 
 
       #4: Bins, formed by TREE method
@@ -143,7 +143,7 @@ class LinearModel(object):
         for i in range(noise_counter):
           noise_total += noise_ind
 
-        self.weights[:, 0] = self.gradient_cum + noise_total
+        self.weights[:, 0] = self.learning_rate * (self.gradient_cum + noise_total)
           
       #####################################################################
 

@@ -28,7 +28,17 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'differential_privacy/MGD_3/eta01' 
+run_name = 'differential_privacy/MGD_3_lr/eta01' 
+# rankers.append((run_name, P_MGD_dp, other_args))
+
+ranker_params = {
+  'learning_rate_decay': 0.9999977,
+  'noise_method': 3,
+  'eta': 1.0,
+  }
+sim_args, other_args = parser.parse_all_args(ranker_params)
+
+run_name = 'differential_privacy/MGD_3_lr/eta1' 
 # rankers.append((run_name, P_MGD_dp, other_args))
 
 ranker_params = {
@@ -38,7 +48,7 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'differential_privacy/MGD_3/eta5' 
+run_name = 'differential_privacy/MGD_3_lr/eta5' 
 rankers.append((run_name, P_MGD_dp, other_args))
 
 ranker_params = {
@@ -48,17 +58,7 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'differential_privacy/MGD_3/eta10' 
-rankers.append((run_name, P_MGD_dp, other_args))
-
-ranker_params = {
-  'learning_rate_decay': 0.9999977,
-  'noise_method': 3,
-  'eta': 1.0,
-  }
-sim_args, other_args = parser.parse_all_args(ranker_params)
-
-run_name = 'differential_privacy/MGD_3/eta1' 
+run_name = 'differential_privacy/MGD_3_lr/eta10' 
 rankers.append((run_name, P_MGD_dp, other_args))
 
 
