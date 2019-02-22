@@ -79,7 +79,7 @@ class LinearModel(object):
 
       #1: Add noise every iteration separately
       elif noise_method == 0: 
-        noise = np.random.laplace(1/eta, 1, self.n_features)
+        noise = np.random.laplace(0, 1/eta, self.n_features)
         # initial weight was set to 0.
         self.weights[:, 0] += (self.learning_rate * gradient) + noise
 
@@ -89,7 +89,7 @@ class LinearModel(object):
         # Cumulation of gradients from 0 to current iterations
         self.gradient_cum += self.learning_rate * gradient
         # sum of noise terms from 0 to current iterations
-        noise_total = np.random.laplace(n_interactions/eta, 1, self.n_features)
+        noise_total = np.random.laplace(0, n_interactions/eta, self.n_features)
         self.weights[:, 0] = self.learning_rate *(self.gradient_cum + noise_total)
 
 
@@ -101,13 +101,13 @@ class LinearModel(object):
         noise_total = np.zeros(self.n_features)
 
         noise_counter = n_interactions
-        noise_bin = np.random.laplace(bin_size/eta, 1, self.n_features)
+        noise_bin = np.random.laplace(0, bin_size/eta, self.n_features)
 
         while noise_counter >= bin_size:
           noise_total += noise_bin
           noise_counter -= bin_size
         # individual noise for remianing iterations outside bins
-        noise_ind = np.random.laplace(1/eta, 1, self.n_features)
+        noise_ind = np.random.laplace(0 ,1/eta, self.n_features)
         for i in range(noise_counter):
           noise_total += noise_ind
 
@@ -133,13 +133,13 @@ class LinearModel(object):
 
         # print("%s: %s" %(n_interactions, bin_sizes))
         for bin_size in bin_sizes:
-          noise_bin = np.random.laplace(bin_size/eta, 1, self.n_features)
+          noise_bin = np.random.laplace(0, np.log2(bin_size)/eta, self.n_features)
 
           if noise_counter >= bin_size:
             noise_total += noise_bin
             noise_counter -= bin_size
         # individual noise for remianing iterations outside bins
-        noise_ind = np.random.laplace(1/eta, 1, self.n_features)
+        noise_ind = np.random.laplace(0, 1/eta, self.n_features)
         for i in range(noise_counter):
           noise_total += noise_ind
 

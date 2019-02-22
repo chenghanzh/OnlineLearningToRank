@@ -28,7 +28,7 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'differential_privacy/MGD_1_lr/eta01' 
+run_name = 'differential_privacy/MGD_1/eta01' 
 # rankers.append((run_name, P_MGD_dp, other_args))
 
 ranker_params = {
@@ -38,7 +38,7 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'differential_privacy/MGD_1_lr/eta1' 
+run_name = 'differential_privacy/MGD_1/eta1' 
 # rankers.append((run_name, P_MGD_dp, other_args))
 
 ranker_params = {
@@ -48,7 +48,7 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'differential_privacy/MGD_1_lr/eta5' 
+run_name = 'differential_privacy/MGD_1/eta5' 
 rankers.append((run_name, P_MGD_dp, other_args))
 
 ranker_params = {
@@ -58,7 +58,7 @@ ranker_params = {
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
 
-run_name = 'differential_privacy/MGD_1_lr/eta10' 
+run_name = 'differential_privacy/MGD_1/eta10' 
 rankers.append((run_name, P_MGD_dp, other_args))
 
 
