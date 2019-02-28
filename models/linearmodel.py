@@ -80,7 +80,7 @@ class LinearModel(object):
 
       #1: Add noise every iteration separately
       elif noise_method == 0: 
-        noise = np.random.laplace(0, 1/epsilon, self.n_features)
+        noise = np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
         # initial weight was set to 0.
         self.weights[:, 0] += (self.learning_rate * gradient) + noise
 
@@ -91,7 +91,7 @@ class LinearModel(object):
         self.gradient_cum += self.learning_rate * gradient
         # sum of noise terms from 0 to current iterations
         noise_total = np.random.laplace(0, self.learning_rate*n_impressions/epsilon, self.n_features)
-        self.weights[:, 0] = self.learning_rate *(self.gradient_cum + noise_total)
+        self.weights[:, 0] = self.gradient_cum + noise_total
 
 
       #3: Add noise by smaller bins
@@ -102,17 +102,17 @@ class LinearModel(object):
         noise_total = np.zeros(self.n_features)
 
         noise_counter = n_interactions
-        noise_bin = np.random.laplace(0, 1/epsilon, self.n_features)
+        noise_bin = np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
 
         while noise_counter >= bin_size:
           noise_total += noise_bin
           noise_counter -= bin_size
         # individual noise for remianing iterations outside bins
-        noise_ind = np.random.laplace(0 ,1/epsilon, self.n_features)
+        noise_ind = np.random.laplace(0 ,self.learning_rate/epsilon, self.n_features)
         for i in range(noise_counter):
           noise_total += noise_ind
 
-        self.weights[:, 0] = self.learning_rate * (self.gradient_cum + noise_total)
+        self.weights[:, 0] = self.gradient_cum + noise_total
 
 
       #4: Bins, formed by TREE method
@@ -140,7 +140,7 @@ class LinearModel(object):
           if noise_item:
             noise_bin = noise_item["noise"]
           else:
-            noise_bin = np.random.laplace(0, np.log2(n_impressions)/epsilon, self.n_features)
+            noise_bin = np.random.laplace(0, self.learning_rate*np.log2(n_impressions)/epsilon, self.n_features)
             self.noise_treebin_list.append({"bin_size" : str(bin_size), "noise": noise_bin})
 
           # To avoid this, you can just use:
@@ -150,7 +150,7 @@ class LinearModel(object):
             noise_total += noise_bin
             noise_counter -= bin_size
 
-        self.weights[:, 0] = self.learning_rate * (self.gradient_cum + noise_total)
+        self.weights[:, 0] = self.gradient_cum + noise_total
           
       #####################################################################
 
