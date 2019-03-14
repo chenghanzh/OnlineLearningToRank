@@ -91,18 +91,26 @@ for data_folder in sorted(folder_structure.keys()):
   for output_file in output_files:
     print 'reading', output_file
     file_name = output_file.split('/')[-1]
-    if file_name[-4:] == '.out':
-      file_name = file_name[:-4]
-    assert file_name not in data
-    data[file_name] = {}
-    file_names.append(file_name)
+    file_name_display = file_name
+
+
+    if file_name_display[-4:] == '.out':
+    #   file_name = file_name[:-4]
+      file_name_display = file_name_display[:-4]
+    if file_name_display in data:
+      file_name_display = output_file.split('/')[-2]
+    # pdb.set_trace()
+    # assert file_name not in data
+
+    data[file_name_display] = {}
+    file_names.append(file_name_display)
     with open(output_file) as f:
       output = json.load(f)
       for name, value in output['runtimes'].items():
         print name,
         print datetime.timedelta(seconds=value),
         print '(%d seconds)' % value
-      data[file_name] = output['results']
+      data[file_name_display] = output['results']
       for v_name in output['results']:
         if v_name == u'g_t' or v_name == u'u_t' or v_name == u'w_t' :
           # pdb.set_trace()
@@ -207,16 +215,40 @@ for data_folder in sorted(folder_structure.keys()):
         # if v_ind == "TEST INDICES":
           # plt.ylim(.6,.8)
 
-        ## For MQ07
+        # For MQ07
         # if click_model == "perfect":
         #   plt.ylim(0.2, .51)
-
         # #   plt.ylim(.43, 0.51)
         # elif click_model == "navigational":
         #   plt.ylim(.39, .49)
         # else: 
         # #   plt.ylim(.34, .48)
         #   plt.ylim(.22, .42)
+
+        ## For WebscopeS1
+        # if click_model == "perfect":
+        #    plt.ylim(.5, .75)
+        #   # plt.ylim(.61, .73)
+        # elif click_model == "navigational":
+        #   plt.ylim(.58, .73)
+        #   # plt.ylim(.58, .73)
+        # else: 
+        #   plt.ylim(.5, .68)
+        #   # plt.ylim(.61, .73)
+
+        # # For Web10k
+        if click_model == "perfect":
+          plt.ylim(.18, .335) # for hist study
+          # plt.ylim(.3, .42)
+        elif click_model == "navigational":
+          plt.ylim(.3, .335) # for intpl study
+          # plt.ylim(.305, .34) # for hist study
+          # plt.ylim(.29, .4)
+        else: 
+          plt.ylim(.18, .32) # for intpl study
+          # plt.ylim(.29, .33) # for hist study
+          # plt.ylim(.24, .37)
+
 
         ### For MQ08
         # if click_model == "perfect":
@@ -239,30 +271,6 @@ for data_folder in sorted(folder_structure.keys()):
         # else: 
         #   plt.ylim(.63, 0.82)
           # plt.ylim(.4, 0.76)
-
-        # For Web10k
-        if click_model == "perfect":
-          plt.ylim(.3, .35) # for hist study
-          # plt.ylim(.3, .42)
-        elif click_model == "navigational":
-          plt.ylim(.3, .335) # for intpl study
-          # plt.ylim(.305, .34) # for hist study
-          # plt.ylim(.29, .4)
-        else: 
-          plt.ylim(.29, .33) # for intpl study
-          # plt.ylim(.29, .33) # for hist study
-          # plt.ylim(.24, .37)
-
-        ## For WebscopeS1
-        # if click_model == "perfect":
-        #    plt.ylim(.5, .75)
-        #   # plt.ylim(.61, .73)
-        # elif click_model == "navigational":
-        #   plt.ylim(.58, .73)
-        #   # plt.ylim(.58, .73)
-        # else: 
-        #   plt.ylim(.5, .68)
-        #   # plt.ylim(.61, .73)
 
 
         # ### For TD

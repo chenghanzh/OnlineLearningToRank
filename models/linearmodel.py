@@ -96,7 +96,7 @@ class LinearModel(object):
 
       #3: Add noise by smaller bins
       elif noise_method == 2:
-        bin_size = 10 # arbitrary
+        bin_size = int(np.sqrt(n_impressions)) # arbitrary
         # cumutative gradients only, without noises
         self.gradient_cum += self.learning_rate * gradient
         noise_total = np.zeros(self.n_features)
