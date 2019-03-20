@@ -22,6 +22,10 @@ class LinearModel(object):
     # needed for differenctial privacy
     self.gradient_cum = np.zeros(self.n_features)
     self.noise_treebin_list = []
+    self.big_t = 0
+    self.noise_L = np.zeros(self.n_features)
+    self.noise_norm = 0
+    self.noise_norm_cum = 0
 
 
   def copy(self):
@@ -83,6 +87,8 @@ class LinearModel(object):
         noise = np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
         # initial weight was set to 0.
         self.weights[:, 0] += (self.learning_rate * gradient) + noise
+        self.noise_norm = norm(noise)
+        self.noise_norm_cum += norm(noise)
 
 
       #2: Add noise in the end at once
@@ -92,6 +98,8 @@ class LinearModel(object):
         # sum of noise terms from 0 to current iterations
         noise_total = np.random.laplace(0, self.learning_rate*n_impressions/epsilon, self.n_features)
         self.weights[:, 0] = self.gradient_cum + noise_total
+        self.noise_norm = norm(noise_total)
+        self.noise_norm_cum += norm(noise_total)
 
 
       #3: Add noise by smaller bins
@@ -102,7 +110,7 @@ class LinearModel(object):
         noise_total = np.zeros(self.n_features)
 
         noise_counter = n_interactions
-        noise_bin = np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
+        noise_bin = np.random.laplace(0, 2*self.learning_rate/epsilon, self.n_features)
 
         while noise_counter >= bin_size:
           noise_total += noise_bin
@@ -113,6 +121,8 @@ class LinearModel(object):
           noise_total += noise_ind
 
         self.weights[:, 0] = self.gradient_cum + noise_total
+        self.noise_norm = norm(noise_total)
+        self.noise_norm_cum += norm(noise_total)
 
 
       #4: Bins, formed by TREE method
@@ -149,19 +159,44 @@ class LinearModel(object):
           if noise_counter >= bin_size:
             noise_total += noise_bin
             noise_counter -= bin_size
+        self.weights[:, 0] = self.gradient_cum + noise_total
+        self.noise_norm = norm(noise_total)
+        self.noise_norm_cum += norm(noise_total)
+
+
+      #5: "Hybrid" method
+      elif noise_method == 4:
+        self.gradient_cum += self.learning_rate * gradient
+        noise_total = np.zeros(self.n_features)
+
+        if self.is_power2(n_interactions):
+          self.big_t = n_interactions
+          # logarithmic mechanism
+          self.noise_L += np.random.laplace(0, self.learning_rate/epsilon, self.n_features) # *np.log2(n_interactions) taken out from numerator
+          noise_total = self.noise_L
+
+        else:
+          tau = n_interactions - self.big_t
+          noise_M = np.zeros(self.n_features)
+          # time-bound mechanism
+          for i in range(tau):
+            noise_M += np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
+          noise_total = self.noise_L + noise_M
 
         self.weights[:, 0] = self.gradient_cum + noise_total
+        self.noise_norm = norm(noise_total)
+        self.noise_norm_cum += norm(noise_total)
           
       #####################################################################
-
-
-
 
       if lambda_gradient is not 0:
         self.weights[:, 0] -= lambda_gradient
       self.learning_rate *= self.learning_rate_decay
 
 
+  def is_power2(self, num):
+    # states if a number is a power of two
+    return num != 0 and ((num & (num - 1)) == 0)
 
   def update_to_documents(self, doc_ind, doc_weights, viewed_list=None, svd=None, project_norm=None, _lambda=None, lambda_intp=None):
     # print("svd: %s, project_norm: %s " %(svd,project_norm))

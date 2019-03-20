@@ -197,11 +197,13 @@ class SingleSimulation(object):
     # else:
     #   results[-1]['u_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
     #   results[-1]['g_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
-    results[-1]['w_t'] = ranker.model.weights[:, 0].T.tolist()
-    conine_wstar = cosine(self.wstar2, ranker.model.weights[:, 0].T)
-    results[-1]['cosine_w'] = conine_wstar
-    if iteration%100 ==0:
-      print iteration, conine_wstar
+    # results[-1]['w_t'] = ranker.model.weights[:, 0].T.tolist()
+    # conine_wstar = cosine(self.wstar2, ranker.model.weights[:, 0].T)
+    # results[-1]['cosine_w'] = conine_wstar
+    # if iteration%100 ==0:
+    #   print iteration, conine_wstar
+    results[-1]['noise_norm'] = ranker.model.noise_norm
+    results[-1]['noise_norm_cum'] = ranker.model.noise_norm_cum
 
 
   def run(self, ranker, output_key):
@@ -225,7 +227,8 @@ class SingleSimulation(object):
       ranker.process_clicks(clicks, stop_index, self.n_impressions)
 
       # Added temporarily to record gradient info
-      # self.record_gradient(run_results, impressions, ranker)
+      if ranker.model.noise_norm is not None: 
+        self.record_gradient(run_results, impressions, ranker)
 
     # evaluate after final iteration
     ranking_i, train_ranking = self.sample_and_rank(ranker) # , impressions

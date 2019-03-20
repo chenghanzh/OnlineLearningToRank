@@ -75,7 +75,7 @@ else:
   folder_structure[None] = args.output_files
 
 to_plot = [
-       ('offline','heldout'), #, 'heldout' 'cosine_w' 
+       ('offline','heldout'), #, 'heldout' 'cosine_w' 'noise_norm'
       ]
 
 for data_folder in sorted(folder_structure.keys()):
