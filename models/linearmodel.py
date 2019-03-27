@@ -86,9 +86,12 @@ class LinearModel(object):
       elif noise_method == 0: 
         noise = np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
         # initial weight was set to 0.
+        self.gradient_cum += self.learning_rate * gradient
         self.weights[:, 0] += (self.learning_rate * gradient) + noise
-        self.noise_norm = norm(noise)
-        self.noise_norm_cum += norm(noise)
+
+        noise_t = self.weights[:, 0] - gradient_cum
+        self.noise_norm = norm(noise_t)
+        self.noise_norm_cum += norm(noise_t)
 
 
       #2: Add noise in the end at once
