@@ -129,36 +129,11 @@ class LinearModel(object):
       elif noise_method == 3:
         self.gradient_cum += self.learning_rate * gradient
         noise_total = np.zeros(self.n_features)
-        noise_counter = n_interactions
+        # noise_counter = n_interactions
 
-        iteration_binary = np.binary_repr(n_interactions)
-        # print("%s: %s" %(n_interactions, iteration_binary))
-        # 7 would become = '111'
-        bin_sizes = []
+        bin_sizes = self.binary_bins(n_interactions)
+        noise_total = self.tree_bin_noise(bin_sizes, n_impressions, epsilon)
 
-        for count,i in enumerate(iteration_binary):
-          if i =='1':
-            decimal = 2**(len(iteration_binary)-1 -count)
-            bin_sizes.append(decimal)
-            # For iteration 7, bin_sizes = [4,2,1]
-
-        # print("%s: %s" %(n_interactions, bin_sizes))
-        # print(self.noise_treebin_list)
-        for bin_size in bin_sizes:
-          # Maintain a dictionary of noise for each bin, to avoid redundant sampling.
-          noise_item = next((item for item in self.noise_treebin_list if item["bin_size"] == str(bin_size)), None)
-          if noise_item:
-            noise_bin = noise_item["noise"]
-          else:
-            noise_bin = np.random.laplace(0, self.learning_rate*np.log2(n_impressions)/epsilon, self.n_features)
-            self.noise_treebin_list.append({"bin_size" : str(bin_size), "noise": noise_bin})
-
-          # To avoid this, you can just use:
-          # noise_bin = np.random.laplace(0, np.log2(n_impressions)/epsilon, self.n_features)
-
-          if noise_counter >= bin_size:
-            noise_total += noise_bin
-            noise_counter -= bin_size
         self.weights[:, 0] = self.gradient_cum + noise_total
         self.noise_norm = norm(noise_total)
         self.noise_norm_cum += norm(noise_total)
@@ -170,17 +145,18 @@ class LinearModel(object):
         noise_total = np.zeros(self.n_features)
 
         if self.is_power2(n_interactions):
-          self.big_t = n_interactions
           # logarithmic mechanism
+          self.big_t = n_interactions
           self.noise_L += np.random.laplace(0, self.learning_rate/epsilon, self.n_features) # *np.log2(n_interactions) taken out from numerator
           noise_total = self.noise_L
 
         else:
+          # time-bound, tree/logarithmic mechanism
           tau = n_interactions - self.big_t
-          noise_M = np.zeros(self.n_features)
-          # time-bound mechanism
-          for i in range(tau):
-            noise_M += np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
+          bin_sizes = self.binary_bins(tau)
+          noise_M = self.tree_bin_noise(bin_sizes, tau, epsilon)
+          # for i in range(tau):
+          #   noise_M += np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
           noise_total = self.noise_L + noise_M
 
         self.weights[:, 0] = self.gradient_cum + noise_total
@@ -197,6 +173,30 @@ class LinearModel(object):
   def is_power2(self, num):
     # states if a number is a power of two
     return num != 0 and ((num & (num - 1)) == 0)
+
+  def binary_bins(self, num):
+    # For iteration 7, return bins = [4,2,1]
+    bins = []
+    num_binary = np.binary_repr(num)
+    for count,i in enumerate(num_binary):
+      if i =='1':
+        decimal = 2**(len(num_binary)-1-count)
+        bins.append(decimal)
+    return bins
+
+  def tree_bin_noise(self, bin_sizes, T, epsilon):
+    noise_tree_total = np.zeros(self.n_features)
+    for bin_size in bin_sizes:
+      # Maintain a dictionary of noise for each bin, to avoid redundant sampling.
+      noise_item = next((item for item in self.noise_treebin_list if item["bin_size"] == str(bin_size)), None)
+      if noise_item:
+        noise_bin = noise_item["noise"]
+      else:
+        noise_bin = np.random.laplace(0, self.learning_rate*np.log2(T)/epsilon, self.n_features)
+        self.noise_treebin_list.append({"bin_size" : str(bin_size), "noise": noise_bin})
+      noise_tree_total += noise_bin
+    return noise_tree_total
+
 
   def update_to_documents(self, doc_ind, doc_weights, viewed_list=None, svd=None, project_norm=None, _lambda=None, lambda_intp=None):
     # print("svd: %s, project_norm: %s " %(svd,project_norm))
