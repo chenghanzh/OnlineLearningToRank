@@ -150,14 +150,14 @@ class LinearModel(object):
         if self.is_power2(n_interactions):
           # logarithmic mechanism
           self.big_t = n_interactions
-          self.noise_L += np.random.laplace(0, self.learning_rate/epsilon, self.n_features) # *np.log2(n_interactions) taken out from numerator
+          self.noise_L += np.random.laplace(0, self.learning_rate*2/epsilon, self.n_features) # *np.log2(n_interactions) taken out from numerator
           noise_total = self.noise_L
 
         else:
           # time-bound, tree/logarithmic mechanism
           tau = n_interactions - self.big_t
           bin_sizes = self.binary_bins(tau)
-          noise_M = self.tree_bin_noise(bin_sizes, tau, epsilon)
+          noise_M = self.tree_bin_noise(bin_sizes, tau, epsilon/2)
           # for i in range(tau):
           #   noise_M += np.random.laplace(0, self.learning_rate/epsilon, self.n_features)
           noise_total = self.noise_L + noise_M
