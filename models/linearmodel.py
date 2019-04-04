@@ -89,7 +89,7 @@ class LinearModel(object):
         self.gradient_cum += self.learning_rate * gradient
         self.weights[:, 0] += (self.learning_rate * gradient) + noise
 
-        noise_t = self.weights[:, 0] - gradient_cum
+        noise_t = self.weights[:, 0] - self.gradient_cum
         self.noise_norm = norm(noise_t)
         self.noise_norm_cum += norm(noise_t)
 
