@@ -75,8 +75,8 @@ else:
   folder_structure[None] = args.output_files
 
 to_plot = [
-       ('offline','heldout'), #, 'heldout' 'cosine_w' 'noise_norm'
-      ]
+       ('online','cumulative-display'), #, 'heldout' 'cosine_w' 'noise_norm' 'cumulative-display'
+]
 
 for data_folder in sorted(folder_structure.keys()):
   output_files = folder_structure[data_folder]
@@ -97,8 +97,12 @@ for data_folder in sorted(folder_structure.keys()):
     if file_name_display[-4:] == '.out':
     #   file_name = file_name[:-4]
       file_name_display = file_name_display[:-4]
-    if file_name_display in data:
-      file_name_display = output_file.split('/')[-2]
+
+    ###########################################
+    # label after directory name, not .out file name.
+    file_name_display = output_file.split('/')[-2]
+    # if file_name_display in data:
+    #   file_name_display = output_file.split('/')[-2]
     # pdb.set_trace()
     # assert file_name not in data
 
@@ -216,38 +220,63 @@ for data_folder in sorted(folder_structure.keys()):
           # plt.ylim(.6,.8)
 
         # For MQ07
-        # if click_model == "perfect":
-        #   plt.ylim(0.2, .51)
-        # #   plt.ylim(.43, 0.51)
-        # elif click_model == "navigational":
-        #   plt.ylim(.39, .49)
-        # else: 
-        # #   plt.ylim(.34, .48)
-        #   plt.ylim(.22, .42)
+        if prefix_plot_name == 'MQ2007':
+          if click_model == "perfect":
+            plt.ylim(0.2, .51)
+          #   plt.ylim(.43, 0.51)
+          elif click_model == "navigational":
+            plt.ylim(.39, .49)
+          else: 
+          #   plt.ylim(.34, .48)
+            plt.ylim(.22, .44)
+          if plot_name == 'online':
+            if click_model == "perfect":
+              plt.ylim(0, 750)
+            elif click_model == "navigational":
+              plt.ylim(0, 750)
+            else: 
+              plt.ylim(0, 750)
+
 
         ## For WebscopeS1
-        # if click_model == "perfect":
-        #    plt.ylim(.5, .75)
-        #   # plt.ylim(.61, .73)
-        # elif click_model == "navigational":
-        #   plt.ylim(.58, .73)
-        #   # plt.ylim(.58, .73)
-        # else: 
-        #   plt.ylim(.5, .68)
-        #   # plt.ylim(.61, .73)
+        if prefix_plot_name == 'Webscope_C14_Set1': 
+          if click_model == "perfect":
+             plt.ylim(.5, .75)
+            # plt.ylim(.61, .73)
+          elif click_model == "navigational":
+            plt.ylim(.58, .73)
+            # plt.ylim(.58, .73)
+          else: 
+            # plt.ylim(.5, .68)
+            plt.ylim(.61, .73)
+          if plot_name == 'online':
+            if click_model == "perfect":
+              plt.ylim(0, 1250)
+            elif click_model == "navigational":
+              plt.ylim(0, 1250)
+            else: 
+              plt.ylim(0, 1250)
 
-        # # For Web10k
-        if click_model == "perfect":
-          plt.ylim(.18, .335) # for hist study
-          # plt.ylim(.3, .42)
-        elif click_model == "navigational":
-          plt.ylim(.3, .335) # for intpl study
-          # plt.ylim(.305, .34) # for hist study
-          # plt.ylim(.29, .4)
-        else: 
-          plt.ylim(.18, .32) # for intpl study
-          # plt.ylim(.29, .33) # for hist study
-          # plt.ylim(.24, .37)
+        # # # # For Web10k
+        if prefix_plot_name == 'MSLR-WEB10K': 
+          if click_model == "perfect":
+            plt.ylim(.18, .335) # for hist study
+            # plt.ylim(.3, .42)
+          elif click_model == "navigational":
+            plt.ylim(.3, .335) # for intpl study
+            # plt.ylim(.305, .34) # for hist study
+            # plt.ylim(.29, .4)
+          else: 
+            plt.ylim(.18, .32) # for intpl study
+            # plt.ylim(.29, .33) # for hist study
+            # plt.ylim(.24, .37)
+          if plot_name == 'online':
+            if click_model == "perfect":
+              plt.ylim(0, 750)
+            elif click_model == "navigational":
+              plt.ylim(0, 750)
+            else: 
+              plt.ylim(0, 750)
 
 
         ### For MQ08
@@ -295,6 +324,7 @@ for data_folder in sorted(folder_structure.keys()):
         if not pdf_folder:
           plt.show()
         else:
+          # pdb.set_trace()
           plot_file_name = '%s_%s_%s.pdf' % (prefix_plot_name, plot_name, click_model)
           if not data_folder is None:
             plot_file_name = os.path.join(data_folder, plot_file_name)

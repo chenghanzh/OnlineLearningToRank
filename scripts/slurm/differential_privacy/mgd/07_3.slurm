@@ -10,4 +10,4 @@
 #SBATCH -A hcdm
 
 module load anaconda/5.2.0-py2.7
-python scripts/differential_privacy/mgd_3.py --data_sets MQ2007 --click_models inf per --log_folder ~/../../../../scratch/sak2km/l2r_data/log_folder --average_folder ~/../../../../scratch/sak2km/l2r_data/outdir/average --output_folder ~/../../../../scratch/sak2km/l2r_data/outdir/fullruns/ --n_runs 10 --n_proc 10 --n_impr 10000
+python scripts/differential_privacy/mgd_3_005.py --data_sets MQ2007 --click_models inf per --log_folder ~/../../../../scratch/sak2km/l2r_data/log_folder --average_folder ~/../../../../scratch/sak2km/l2r_data/outdir/average --output_folder ~/../../../../scratch/sak2km/l2r_data/outdir/fullruns/ --n_runs 10 --n_proc 10 --n_impr 10000
