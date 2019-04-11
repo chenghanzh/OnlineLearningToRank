@@ -22,28 +22,56 @@ parser = SimulationArgumentParser(description=description)
 
 rankers = []
 
+
 ranker_params = {
   'learning_rate_decay': 1.0,
   'learning_rate': 0.01,
-  'noise_method': 1,
+  'noise_method': 5,
   'epsilon': 5,
-  'noise_interleaving':True
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'differential_privacy/MGD_1/epsilon5_lr01_int' 
-rankers.append((run_name, P_MGD_dp, other_args))
+run_name = 'differential_privacy/DBGD_5/epsilon5_lr01' 
+rankers.append((run_name, P_DBGD_dp, other_args))
 
 ranker_params = {
   'learning_rate_decay': 1.0,
   'learning_rate': 0.01,
-  'noise_method': 1,
+  'noise_method': 5,
   'epsilon': 10,
-  'noise_interleaving':True
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'differential_privacy/MGD_1/epsilon10_lr01_int' 
-rankers.append((run_name, P_MGD_dp, other_args))
+run_name = 'differential_privacy/DBGD_5/epsilon10_lr01' 
+rankers.append((run_name, P_DBGD_dp, other_args))
 
+ranker_params = {
+  'learning_rate_decay': 1.0,
+  'learning_rate': 0.01,
+  'noise_method': 5,
+  'epsilon': 0.5,
+  }
+sim_args, other_args = parser.parse_all_args(ranker_params)
+run_name = 'differential_privacy/DBGD_5/epsilon05_lr01' 
+rankers.append((run_name, P_DBGD_dp, other_args))
+
+ranker_params = {
+  'learning_rate_decay': 1.0,
+  'learning_rate': 0.01,
+  'noise_method': 5,
+  'epsilon': 0.1,
+  }
+sim_args, other_args = parser.parse_all_args(ranker_params)
+run_name = 'differential_privacy/DBGD_5/epsilon01_lr01' 
+rankers.append((run_name, P_DBGD_dp, other_args))
+
+ranker_params = {
+  'learning_rate_decay': 1.0,
+  'learning_rate': 0.01,
+  'noise_method': 5,
+  'epsilon': 1.0,
+  }
+sim_args, other_args = parser.parse_all_args(ranker_params)
+run_name = 'differential_privacy/DBGD_5/epsilon1_lr01' 
+rankers.append((run_name, P_DBGD_dp, other_args))
 
 
 sim = DataSimulation(sim_args)

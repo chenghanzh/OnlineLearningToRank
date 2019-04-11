@@ -172,6 +172,19 @@ class LinearModel(object):
         self.weights[:, 0] = self.gradient_cum + noise_total
         self.noise_norm = norm(noise_total)
         self.noise_norm_cum += norm(noise_total)
+
+
+      #6: sanity check: add one Lap(T/eps)
+      elif noise_method == 5:
+        # Cumulation of gradients from 0 to current iterations
+        self.gradient_cum += self.learning_rate * gradient
+        noise = np.zeros(self.n_features)
+        if n_interactions == 0:
+          noise = np.random.laplace(0, self.learning_rate*n_impressions/epsilon, self.n_features)
+
+        self.weights[:, 0] = self.gradient_cum + noise
+        self.noise_norm = norm(noise)
+        self.noise_norm_cum += norm(noise)
           
       #####################################################################
 

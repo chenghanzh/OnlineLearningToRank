@@ -2,7 +2,7 @@
 
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 from utils.datasimulation import DataSimulation
 from utils.argparsers.simulationargparser import SimulationArgumentParser
 from algorithms.PDGD.pdgd import PDGD
@@ -25,24 +25,24 @@ rankers = []
 ranker_params = {
   'learning_rate_decay': 1.0,
   'learning_rate': 0.01,
-  'noise_method': 3,
+  'noise_method': None,
   'epsilon': 5,
   'noise_interleaving':True
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'differential_privacy/MGD_3/epsilon5_lr01_int' 
-rankers.append((run_name, P_MGD_dp, other_args))
+run_name = 'differential_privacy/int/epsilon5_lr01' 
+rankers.append((run_name, P_DBGD_dp, other_args))
 
 ranker_params = {
   'learning_rate_decay': 1.0,
   'learning_rate': 0.01,
-  'noise_method': 3,
+  'noise_method': None,
   'epsilon': 10,
   'noise_interleaving':True
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'differential_privacy/MGD_3/epsilon10_lr01_int' 
-rankers.append((run_name, P_MGD_dp, other_args))
+run_name = 'differential_privacy/int/epsilon10_lr01' 
+rankers.append((run_name, P_DBGD_dp, other_args))
 
 
 
