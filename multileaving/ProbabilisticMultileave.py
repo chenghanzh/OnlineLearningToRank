@@ -56,7 +56,16 @@ class ProbabilisticMultileave(object):
     else:
       return np.zeros((self._last_n_rankers, self._last_n_rankers))
 
-  def winning_rankers(self, clicked_docs):
+  def winning_rankers(self, clicked_docs, noise=0):
+    if noise > 0: # if noise added for interleaving
+        rand = np.random.random_sample()
+        if rand < noise: # for rate of noice, throw dice to select winning ranker
+            choice = np.random.choice(self._last_n_rankers, 1)
+            if choice == [0]:
+                return []
+            else:
+                return choice
+
     match = self.infer_preferences(clicked_docs)
     return np.where(match[:, 0] > 0)[0]
 

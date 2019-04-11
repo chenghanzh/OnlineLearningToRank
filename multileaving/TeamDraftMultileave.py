@@ -64,7 +64,16 @@ class TeamDraftMultileave(object):
     assigned_clicks = np.sum(np.arange(self.n_rankers)[:,None] == self.teams[clicked_docs][None,:],axis=1)
     return np.sign(assigned_clicks[:,None] - assigned_clicks[None,:])
 
-  def winning_rankers(self, clicked_docs):
+  def winning_rankers(self, clicked_docs, noise=0):
+    if noise > 0: # if noise added for interleaving
+        rand = np.random.random_sample()
+        if rand < noise: # for rate of noice, throw dice to select winning ranker
+            choice = np.random.choice(self.n_rankers, 1)
+            if choice == [0]:
+                return []
+            else:
+                return choice
+
     ranker_range = np.arange(self.n_rankers)
     match_matrix = ranker_range[:,None] == self.teams[clicked_docs][None,:]
     ranker_clicks = np.sum(match_matrix.astype(np.int32), axis=1)
