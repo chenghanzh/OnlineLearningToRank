@@ -22,6 +22,8 @@ class LinearModel(object):
     # needed for differenctial privacy
     self.gradient_cum = np.zeros(self.n_features)
     self.noise_treebin_list = []
+    self.noise_bin_list = []
+    self.noise_ind_list = []
     self.big_t = 0
     self.noise_L = np.zeros(self.n_features)
     self.noise_norm = 0
@@ -110,22 +112,27 @@ class LinearModel(object):
         bin_size = int(np.sqrt(n_impressions)) # arbitrary
         # cumutative gradients only, without noises
         self.gradient_cum += self.learning_rate * gradient
-        noise_total = np.zeros(self.n_features)
+        noise_total = np.zeros(self.n_features) # initialize total noise vector
 
-        noise_counter = n_interactions
-        noise_bin = np.random.laplace(0, 2*self.learning_rate/epsilon, self.n_features)
+        # individual noise newly added for current t
+        noise_current = np.random.laplace(0 ,self.learning_rate/epsilon, self.n_features)
+        self.noise_ind_list.append(noise_current) # save it in a list for outside bins
 
-        while noise_counter >= bin_size:
+        if len(self.noise_ind_list) == bin_size: # if outside-bin list fills up
+          self.noise_bin_list.append(np.sum(self.noise_ind_list,axis=0)) # add the sum of outside-bin noise as a new bin
+          self.noise_ind_list = [] # renew outside-bin noise list
+
+        # Add noise from inside and outside bins
+        for noise_bin in self.noise_bin_list:
           noise_total += noise_bin
-          noise_counter -= bin_size
-        # individual noise for remianing iterations outside bins
-        noise_ind = np.random.laplace(0 ,self.learning_rate/epsilon, self.n_features)
-        for i in range(noise_counter):
+
+        for noise_ind in self.noise_ind_list:
           noise_total += noise_ind
 
         self.weights[:, 0] = self.gradient_cum + noise_total
         self.noise_norm = norm(noise_total)
         self.noise_norm_cum += norm(noise_total)
+
 
 
       #4: Bins, formed by TREE method

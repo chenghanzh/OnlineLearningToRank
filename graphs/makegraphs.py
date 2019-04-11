@@ -75,6 +75,7 @@ else:
   folder_structure[None] = args.output_files
 
 to_plot = [
+       ('offline','heldout'),
        ('online','cumulative-display'), #, 'heldout' 'cosine_w' 'noise_norm' 'cumulative-display'
 ]
 
