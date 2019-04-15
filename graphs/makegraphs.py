@@ -248,8 +248,8 @@ for data_folder in sorted(folder_structure.keys()):
             plt.ylim(.58, .73)
             # plt.ylim(.58, .73)
           else: 
-            # plt.ylim(.5, .68)
-            plt.ylim(.61, .73)
+            plt.ylim(.5, .68)
+            # plt.ylim(.61, .73)
           if plot_name == 'online':
             if click_model == "perfect":
               plt.ylim(0, 1250)

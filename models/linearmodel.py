@@ -185,6 +185,48 @@ class LinearModel(object):
         self.weights[:, 0] = self.gradient_cum + noise
         self.noise_norm = norm(noise)
         self.noise_norm_cum += norm(noise)
+
+      #7: sanity check: noise added in increasing magnitude
+      elif noise_method == 6:
+        # Cumulation of gradients from 0 to current iterations
+        self.gradient_cum += self.learning_rate * gradient
+        # alpha^(T-t)
+        # alpha = 1 or log()
+        # t : n_interactions
+        # T : n_impressions
+        noise = np.random.laplace(0, (n_impressions-n_interactions)/epsilon, self.n_features)
+
+        self.weights[:, 0] = self.gradient_cum + noise
+        self.noise_norm = norm(noise)
+
+      #7: sanity check: noise added in increasing magnitude
+      elif noise_method == 6.5:
+        # Cumulation of gradients from 0 to current iterations
+        self.gradient_cum += self.learning_rate * gradient
+        noise = np.random.laplace(0, np.log((n_impressions-n_interactions))/epsilon, self.n_features)
+
+        self.weights[:, 0] = self.gradient_cum + noise
+        self.noise_norm = norm(noise)
+
+      #8: sanity check: noise added in decreasing magnitude
+      elif noise_method == 7:
+        # Cumulation of gradients from 0 to current iterations
+        self.gradient_cum += self.learning_rate * gradient
+        # alpha^t
+        # alpha = 1 or log()
+        # n_interactions is t:
+        # n_impressions is T
+        noise = np.random.laplace(0, (n_interactions+1)/epsilon, self.n_features)
+
+        self.weights[:, 0] = self.gradient_cum + noise
+        self.noise_norm = norm(noise)
+
+      elif noise_method == 7.5:
+        self.gradient_cum += self.learning_rate * gradient
+        noise = np.random.laplace(0, np.log(n_interactions+1)/epsilon, self.n_features)
+
+        self.weights[:, 0] = self.gradient_cum + noise
+        self.noise_norm = norm(noise)
           
       #####################################################################
 
