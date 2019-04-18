@@ -44,8 +44,12 @@ class P_DBGD_dp(TD_DBGD):
 
   def update_to_interaction(self, clicks, stop_index=None, n_impressions=None):
     if self.noise_interleaving:
+        # Add noise in interleaving by randomizing with P(w'>w) = exp(\epsilon c(w) / 2)
+        print(self.multileaving.winning_rankers(clicks))
+        sys.exit(0)
+
       # Add noise in interleaving by randomizing winner by rate of 1/epsilon
-      winners = self.multileaving.winning_rankers(clicks, 1.0/self.epsilon)
+      # winners = self.multileaving.winning_rankers(clicks, 1.0/self.epsilon)
     else:
       winners = self.multileaving.winning_rankers(clicks)
     # print(self.noise_method)
