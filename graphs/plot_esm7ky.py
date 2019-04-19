@@ -7,11 +7,7 @@ import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
-# import pylab as plt
-# import numpy as np
-# import random
 import argparse
-# import os
 import json
 import datetime
 import pdb
@@ -23,21 +19,18 @@ def plot(label, x, y, color=None, ax=None):
 def main():
     # Parser setup
     parser = argparse.ArgumentParser(description="parse args for graphs")
-    parser.add_argument('--pdf_folder', dest='pdf_folder', type=str, required=False, default=None,
-              help='Folder to output pdfs into.')
     parser.add_argument('plot_name', type=str, help='Name to save plots under.')
     parser.add_argument('output_files', type=str, help='Output files to be parsed.', nargs='+')
     args = parser.parse_args()
 
     # Parsing files
-    pdf_folder = args.pdf_folder
-    if not os.path.exists(pdf_folder):
-        os.makedirs(pdf_folder)
-    prefix_plot_name = args.plot_name
+    plot_title = args.plot_name
     plot_data = []
     file_no = 0
     for output_file in args.output_files:
         file_data = np.zeros((5,5000))
+        # Each file contains 15 lines (3 cm, 5 folds)
+        # need to average 5 folds and plot dbgd/mgd with/without noise together
         with open(output_file) as f:
             line_no = 0
             for line in f:
@@ -45,6 +38,7 @@ def main():
                     line_no += 1
                     continue
                 line_obj = json.loads(line)
+                plot_title = plot_title + '_' + line_obj["run_details"]["click model"][:3]
                 run_results = line_obj["run_results"]
                 for it in range(0, len(run_results)-1):
                     it_obj = run_results[it]
@@ -56,7 +50,7 @@ def main():
         file_no += 1
 
     # Plotting data
-    plt.title("MQ2007 Tree Method")
+    plt.title("MQ2007 per")
     plt.xlabel("Iteration")
     # plt.ylabel("Cumulative Noise L2 Norm")
     plt.ylabel("Online NDCG")
@@ -65,7 +59,7 @@ def main():
         plot(file_data["filename"], file_data["x"], file_data["y"])
     plt.legend(loc='upper left')
     # plt.savefig('graphs/output/differential_privacy/noise_norm/MQ2007Hybrid.png')
-    plt.savefig('graphs/output/differential_privacy/online_ndcg/MQ2007Tree.png')
+    plt.savefig('graphs/output/differential_privacy/int/' + plot_title + '.png')
     plt.clf()
 
 
