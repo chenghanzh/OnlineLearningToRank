@@ -52,7 +52,7 @@ class TD_DBGD(BasicOnlineRanker):
     multileaved_list = self.multileaving.make_multileaving(rankings)
     return multileaved_list
 
-  def update_to_interaction(self, clicks, stop_index=None):
+  def update_to_interaction(self, clicks, stop_index=None, n_impressions=None):
     if self.noise_interleaving:
       # Add noise in interleaving
       click_credits = self.multileaving.get_click_credits(clicks)
