@@ -25,24 +25,22 @@ rankers = []
 ranker_params = {
   'learning_rate_decay': 1.0,
   'learning_rate': 0.01,
-  'noise_method': None,
   'epsilon': 5,
   'noise_interleaving':True
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'differential_privacy/int/epsilon5_lr01' 
-rankers.append((run_name, P_MGD_dp, other_args))
+run_name = 'differential_privacy/int/epsilon5_lr01'
+rankers.append((run_name, TD_MGD, other_args))
 
 ranker_params = {
   'learning_rate_decay': 1.0,
   'learning_rate': 0.01,
-  'noise_method': None,
   'epsilon': 10,
   'noise_interleaving':True
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'differential_privacy/int/epsilon10_lr01' 
-rankers.append((run_name, P_MGD_dp, other_args))
+run_name = 'differential_privacy/int/epsilon10_lr01'
+rankers.append((run_name, TD_MGD, other_args))
 
 
 
