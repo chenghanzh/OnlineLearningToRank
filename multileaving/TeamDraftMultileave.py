@@ -71,7 +71,7 @@ class TeamDraftMultileave(object):
   def winning_rankers(self, clicked_docs, interleave_noise_distribution=[]):
     # Adding noise for interleaving
     if interleave_noise_distribution != []:
-        choice = np.random.choice(self.n_rankers, p=interleave_noise_distribution)
+	choice = np.random.choice(self.n_rankers, p=interleave_noise_distribution)
         if choice == 0:
             return []
         else:
