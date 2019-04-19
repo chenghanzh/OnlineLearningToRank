@@ -12,7 +12,7 @@ from multileaving.TeamDraftMultileave import TeamDraftMultileave
 # Dueling Bandit Gradient Descent
 class TD_DBGD(BasicOnlineRanker):
 
-  def __init__(self, learning_rate, learning_rate_decay,
+  def __init__(self, learning_rate, learning_rate_decay, epsilon, noise_interleaving=False,
                *args, **kargs):
     super(TD_DBGD, self).__init__(*args, **kargs)
     self.learning_rate = learning_rate
@@ -22,6 +22,8 @@ class TD_DBGD(BasicOnlineRanker):
                              learning_rate_decay = learning_rate_decay)
     self.multileaving = TeamDraftMultileave(
                              n_results=self.n_results)
+    self.epsilon = epsilon
+    self.noise_interleaving = noise_interleaving
 
 
   @staticmethod
@@ -51,5 +53,14 @@ class TD_DBGD(BasicOnlineRanker):
     return multileaved_list
 
   def update_to_interaction(self, clicks, stop_index=None):
-    winners = self.multileaving.winning_rankers(clicks)
+    if self.noise_interleaving:
+      # Add noise in interleaving
+      click_credits = self.multileaving.get_click_credits(clicks)
+      probabilities = np.zeros(self.multileaving.n_rankers)
+      for i in range(self.multileaving.n_rankers):
+        probabilities[i] = np.exp(self.epsilon * click_credits[i] / 2) # formula for epsilon-private
+      probabilities = probabilities / np.sum(probabilities)
+      winners = self.multileaving.winning_rankers(clicks, interleave_noise_distribution=probabilities)
+    else:
+      winners = self.multileaving.winning_rankers(clicks)
     self.model.update_to_mean_winners(winners)

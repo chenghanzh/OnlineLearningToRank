@@ -59,20 +59,32 @@ class TeamDraftMultileave(object):
     self.n_rankers = n_rankings
     return multileaved
 
+  def get_click_credits(self, clicked_docs):
+      clicked_docs = clicked_docs.astype(bool)
+      return np.sum(np.arange(self.n_rankers)[:,None] == self.teams[clicked_docs][None,:],axis=1)
+
   def infer_preferences(self, clicked_docs):
     clicked_docs = clicked_docs.astype(bool)
     assigned_clicks = np.sum(np.arange(self.n_rankers)[:,None] == self.teams[clicked_docs][None,:],axis=1)
     return np.sign(assigned_clicks[:,None] - assigned_clicks[None,:])
 
-  def winning_rankers(self, clicked_docs, noise=0):
-    if noise > 0: # if noise added for interleaving
-        rand = np.random.random_sample()
-        if rand < noise: # for rate of noice, throw dice to select winning ranker
-            choice = np.random.choice(self.n_rankers, 1)
-            if choice == [0]:
-                return []
-            else:
-                return choice
+  def winning_rankers(self, clicked_docs, interleave_noise_distribution=[]):
+    # Adding noise for interleaving
+    if interleave_noise_distribution:
+        choice = np.random.choice(self.n_rankers, p=interleave_noise_distribution)
+        if choice == 0:
+            return []
+        else:
+            return [choice]
+
+    # if noise > 0: # if noise added for interleaving
+    #     rand = np.random.random_sample()
+    #     if rand < noise: # for rate of noice, throw dice to select winning ranker
+    #         choice = np.random.choice(self.n_rankers, 1)
+    #         if choice == [0]:
+    #             return []
+    #         else:
+    #             return choice
 
     ranker_range = np.arange(self.n_rankers)
     match_matrix = ranker_range[:,None] == self.teams[clicked_docs][None,:]
