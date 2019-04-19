@@ -36,7 +36,7 @@ def main():
                     continue
                 line_obj = json.loads(line)
                 click_model = line_obj["run_details"]["click model"][:3]
-                if click_model != "inf": # generating graphs for inf, nav, per, separately for convenience
+                if click_model != "per": # generating graphs for inf, nav, per, separately for convenience
                     continue
                 run_results = line_obj["run_results"]
                 for it in range(0, len(run_results)-1):
