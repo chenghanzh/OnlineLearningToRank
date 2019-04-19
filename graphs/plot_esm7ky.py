@@ -26,11 +26,8 @@ def main():
     # Parsing files
     plot_title = args.plot_name
     plot_data = []
-    file_no = 0
     for output_file in args.output_files:
-        file_data = np.zeros((5,5000))
-        # Each file contains 15 lines (3 cm, 5 folds)
-        # need to average 5 folds and plot dbgd/mgd with/without noise together
+        file_data = np.zeros((5,10000))
         with open(output_file) as f:
             line_no = 0
             for line in f:
@@ -38,27 +35,25 @@ def main():
                     line_no += 1
                     continue
                 line_obj = json.loads(line)
-                plot_title = plot_title + '_' + line_obj["run_details"]["click model"][:3]
+                click_model = line_obj["run_details"]["click model"][:3]
+                if click_model != "inf": # generating graphs for inf, nav, per, separately for convenience
+                    continue
                 run_results = line_obj["run_results"]
                 for it in range(0, len(run_results)-1):
                     it_obj = run_results[it]
-                    # file_data[line_no-1][it] = it_obj["noise_norm"]
                     file_data[line_no-1][it] = it_obj["cumulative-display"]
                 line_no += 1
         avg_data = np.average(file_data, axis=0)
-        plot_data.append({"filename": output_file[output_file.rfind('/')+1:][:-4], "x": np.arange(5000), "y": avg_data})
-        file_no += 1
+        plot_data.append({"filename": output_file[output_file.rfind('/')+1:][:-4], "x": np.arange(10000), "y": avg_data})
 
     # Plotting data
-    plt.title("MQ2007 per")
+    plt.title(plot_title)
     plt.xlabel("Iteration")
-    # plt.ylabel("Cumulative Noise L2 Norm")
     plt.ylabel("Online NDCG")
-    plt.xlim((-5, 5005))
+    plt.xlim((0, 10000))
     for file_data in plot_data:
         plot(file_data["filename"], file_data["x"], file_data["y"])
     plt.legend(loc='upper left')
-    # plt.savefig('graphs/output/differential_privacy/noise_norm/MQ2007Hybrid.png')
     plt.savefig('graphs/output/differential_privacy/int/' + plot_title + '.png')
     plt.clf()
 
