@@ -30,8 +30,8 @@ ranker_params = {
   'noise_interleaving':True
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'differential_privacy/int/epsilon5_lr01' 
-rankers.append((run_name, P_DBGD_dp, other_args))
+run_name = 'differential_privacy/int/epsilon5_lr01'
+rankers.append((run_name, TD_DBGD, other_args))
 
 ranker_params = {
   'learning_rate_decay': 1.0,
@@ -41,8 +41,8 @@ ranker_params = {
   'noise_interleaving':True
   }
 sim_args, other_args = parser.parse_all_args(ranker_params)
-run_name = 'differential_privacy/int/epsilon10_lr01' 
-rankers.append((run_name, P_DBGD_dp, other_args))
+run_name = 'differential_privacy/int/epsilon10_lr01'
+rankers.append((run_name, TD_DBGD, other_args))
 
 
 
