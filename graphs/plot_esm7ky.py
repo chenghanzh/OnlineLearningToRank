@@ -1,5 +1,5 @@
 # Authored by Eric McCord-Snook
-# October 19, 2019
+# October 19, 2018
 
 import os
 import sys
@@ -27,7 +27,7 @@ def main():
     plot_title = args.plot_name
     plot_data = []
     for output_file in args.output_files:
-        file_data = np.zeros((5,10000))
+        file_data = np.zeros((25,10000))
         with open(output_file) as f:
             line_no = 0
             for line in f:
@@ -41,7 +41,7 @@ def main():
                 run_results = line_obj["run_results"]
                 for it in range(0, len(run_results)-1):
                     it_obj = run_results[it]
-                    file_data[line_no-1][it] = it_obj["cumulative-display"]
+                    file_data[line_no-1][it] = it_obj["display"]
                 line_no += 1
         avg_data = np.average(file_data, axis=0)
         plot_data.append({"filename": output_file[output_file.rfind('/')+1:][:-4], "x": np.arange(10000), "y": avg_data})
@@ -49,7 +49,7 @@ def main():
     # Plotting data
     plt.title(plot_title)
     plt.xlabel("Iteration")
-    plt.ylabel("Online NDCG")
+    plt.ylabel("Offline NDCG")
     plt.xlim((0, 10000))
     for file_data in plot_data:
         plot(file_data["filename"], file_data["x"], file_data["y"])
