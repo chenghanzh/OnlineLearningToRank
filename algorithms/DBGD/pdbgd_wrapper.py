@@ -31,6 +31,9 @@ class P_DBGD_Wrapper(TD_DBGD):
       self.prev_feat_list = []
     self.viewed = viewed
     self.docspace = docspace  # docspace=[False,0]
+    # self.actual_last_examine = actual_last_examine  # Use actual last examination index, instead of last click+k
+
+
 
   @staticmethod
   def default_parameters():
@@ -56,7 +59,7 @@ class P_DBGD_Wrapper(TD_DBGD):
     return multileaved_list
 
 
-  def update_to_interaction(self, clicks, stop_index=None):
+  def update_to_interaction(self, clicks, stop_index=None, n_impressions=None):
 
     if self.lambda_intp_rate == "inc":
       self.lambda_intp =  1 - math.exp(-0.0006 * self.n_interactions) # 1-e^(-.0006*t)
@@ -71,6 +74,7 @@ class P_DBGD_Wrapper(TD_DBGD):
       viewed_list = []
       # index of last click
       last_click = max(loc for loc, val in enumerate(clicks) if val == True)
+      # print(stop_index)
       # prevent last_click+k from exceeding interleaved list length
       k_current = self.k_initial
       if self.k_increase:

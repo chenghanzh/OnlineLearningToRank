@@ -12,7 +12,7 @@ from multileaving.TeamDraftMultileave import TeamDraftMultileave
 # Dueling Bandit Gradient Descent
 class TD_DBGD(BasicOnlineRanker):
 
-  def __init__(self, learning_rate, learning_rate_decay, epsilon, noise_interleaving=False,
+  def __init__(self, learning_rate, learning_rate_decay, epsilon=10, noise_interleaving=False,
                *args, **kargs):
     super(TD_DBGD, self).__init__(*args, **kargs)
     self.learning_rate = learning_rate

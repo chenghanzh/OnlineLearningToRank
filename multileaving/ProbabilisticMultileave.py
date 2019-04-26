@@ -67,7 +67,7 @@ class ProbabilisticMultileave(object):
                 return choice
 
     match = self.infer_preferences(clicked_docs)
-    print("match", match)
+    # print("match", match)
     return np.where(match[:, 0] > 0)[0]
 
   def probability_of_list(self, result_list, inverted_rankings, clicked_docs, tau):
@@ -130,7 +130,7 @@ class ProbabilisticMultileave(object):
     log_assign = np.logical_and(comps > lower[:, None, :], comps <= upper[:, None, :])
     # click count per ranker (samples x rankers)
     click_count = np.sum(log_assign, axis=0)
-    print("click_count", click_count)
+    # print("click_count", click_count)
     # the preference matrix for each sample
     prefs = np.sign(click_count[:, :, None] - click_count[:, None, :])
 
