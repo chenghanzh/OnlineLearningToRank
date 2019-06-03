@@ -191,17 +191,17 @@ class SingleSimulation(object):
 
   # Record gradient info
   def record_gradient(self, results, iteration, ranker,):
-    # if ranker.model.g_t is not None: 
-    #   results[-1]['u_t'] = ranker.model.u_t.tolist()
-    #   results[-1]['g_t'] = ranker.model.g_t.tolist()
-    # else:
-    #   results[-1]['u_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
-    #   results[-1]['g_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
-    # results[-1]['w_t'] = ranker.model.weights[:, 0].T.tolist()
-    # conine_wstar = cosine(self.wstar2, ranker.model.weights[:, 0].T)
-    # results[-1]['cosine_w'] = conine_wstar
-    # if iteration%100 ==0:
-    #   print iteration, conine_wstar
+    if ranker.model.g_t is not None: 
+      results[-1]['u_t'] = ranker.model.u_t.tolist()
+      results[-1]['g_t'] = ranker.model.g_t.tolist()
+    else:
+      results[-1]['u_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+      results[-1]['g_t'] = np.zeros(len(ranker.model.weights[:, 0].T)).tolist()
+    results[-1]['w_t'] = ranker.model.weights[:, 0].T.tolist()
+    conine_wstar = cosine(self.wstar2, ranker.model.weights[:, 0].T)
+    results[-1]['cosine_w'] = conine_wstar
+    if iteration%100 ==0:
+      print iteration, conine_wstar
     results[-1]['noise_norm'] = ranker.model.noise_norm
     results[-1]['noise_norm_cum'] = ranker.model.noise_norm_cum
 

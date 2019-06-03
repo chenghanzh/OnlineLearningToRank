@@ -76,10 +76,11 @@ else:
 
 to_plot = [
        ('offline','heldout'),
-       ('online','cumulative-display'), #, 'heldout' 'cosine_w' 'noise_norm' 'cumulative-display'
+       ('online','cumulative-display'),
+       ('cosine_w','cosine_w') #, 'heldout' 'cosine_w' 'noise_norm' 'cumulative-display'
 ]
 
-names = ['dbgd-wrapper', 'dbgd-wrapper perfect','mgd-wrapper', 'mgd-wrapper perfect']
+# names = ['dbgd-wrapper', 'dbgd-wrapper perfect','mgd-wrapper', 'mgd-wrapper perfect']
 for data_folder in sorted(folder_structure.keys()):
   output_files = folder_structure[data_folder]
   data = {}
@@ -103,7 +104,7 @@ for data_folder in sorted(folder_structure.keys()):
     ###########################################
     # label after directory name, not .out file name.
     # file_name_display = output_file.split('/')[-2]
-    file_name_display = names[ind] # temporary
+    # file_name_display = names[ind] # temporary
     # if file_name_display in data:
     #   file_name_display = output_file.split('/')[-2]
     # pdb.set_trace()
