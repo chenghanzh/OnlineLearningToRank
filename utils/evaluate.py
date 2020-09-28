@@ -49,7 +49,6 @@ def get_ndcg_with_ranking(model_ranking, ideal_ranking, max_len):
     for document in model_ranking:
       if document in displayed_ideal_ranking and document<len(model_ranking):
           labels[document] = 1
-      i += 1
     return get_ndcg_with_label(model_ranking, labels, max_len)
 
 
