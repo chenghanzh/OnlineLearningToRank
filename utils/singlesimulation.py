@@ -2,8 +2,11 @@
 
 import time
 import numpy as np
-from evaluate import get_idcg_list, evaluate, evaluate_ranking
+from evaluate import get_idcg_list, evaluate, evaluate_ranking, get_ndcg_with_label, get_ndcg_with_ranking
 from clicks import *
+import scipy.stats as stats # For kendall tau
+import matplotlib.pyplot as plt
+import math
 
 
 class SingleSimulation(object):
@@ -153,16 +156,112 @@ class SingleSimulation(object):
 
     run_results = []
     impressions = 0
+
+    text = open("Weights.txt","r")
+    lines = text.read().split(',')
+    lines = [float(i) for i in lines]
+    attacker_weights = np.expand_dims(np.asarray(lines), axis=1)
+
+    vector_norms = np.sum(attacker_weights ** 2, axis=0) ** (1. / 2)
+    attacker_weights /= vector_norms[None, :]
+    ndcgs = []
+    ndcgs_attacker = []
+    taus = []
+    ndcg = 0
+    ndcg_attacker = 0
+
     for impressions in range(self.n_impressions):
       ranking_i, train_ranking = self.sample_and_rank(ranker)
       ranking_labels = self.datafold.train_query_labels(ranking_i)
+
+      X = []
+      for id in train_ranking:
+        X.append([self.datafold.train_feature_matrix[id, :]])
+
+      X = np.array(X)     # (10x1x41)
+      attacker_scores = np.dot(X,attacker_weights)
+      attacker_scores = attacker_scores/np.linalg.norm(attacker_scores)
+      temp = [(train_ranking[i], attacker_scores[i], i)  for i in range(len(attacker_scores))]
+      temp = sorted(temp, key = lambda x: (-1*x[1], x[2]))
+      attacker_ranking = list(map(lambda x: x[0], temp))
+
       clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
+      # clicks = self.click_model.generate_mal_clicks(train_ranking, ranking_labels, attacker_scores, attacker_ranking)
+
+      test_r = ranker.get_test_rankings(self.datafold.test_feature_matrix, self.datafold.test_doclist_ranges, inverted=True)
+
+      test_ndcg = evaluate(
+                    test_r,
+                    self.datafold.test_label_vector,
+                    self.test_idcg_vector,
+                    self.datafold.test_doclist_ranges.shape[0] - 1,
+                    self.n_results)
+      X = []
+      for id in test_r:
+        X.append([self.datafold.test_feature_matrix[id, :]])
+      X = np.array(X)
+
+      attacker_scores = np.dot(X,attacker_weights)
+      attacker_scores = attacker_scores/np.linalg.norm(attacker_scores)
+
+      initial = 0
+      comb_tau = 0
+
+      attacker_list = []
+
+      while(initial != self.datafold.test_doclist_ranges.shape[0]-1):
+        start_doc = self.datafold.test_doclist_ranges[initial]
+        end_doc = self.datafold.test_doclist_ranges[initial+1]
+        test_labels = self.datafold.test_query_labels(initial)
+
+        temp = [(test_r[i], attacker_scores[i], i)  for i in range(start_doc, end_doc)]
+        temp = sorted(temp, key = lambda x: (-1*x[1], x[2]))
+        attacker_ranking = list(map(lambda x: x[0], temp))
+
+        assert len(attacker_ranking) == test_r[start_doc:end_doc].shape[0]
+
+        tau, _ = stats.kendalltau(attacker_ranking, test_r[start_doc:end_doc])
+        comb_tau += tau
+        attacker_list.extend(attacker_ranking)
+        initial += 1
+        # ndcg += compute_ndcg(attacker_ranking, test_r[start_doc:end_doc], 10)
+        ndcg += get_ndcg_with_label(test_r[start_doc:end_doc], test_labels, 10)
+        ndcg_attacker += get_ndcg_with_ranking(test_r[start_doc:end_doc], attacker_ranking, 10)
+
+      if impressions % 10 == 0:
+          ndcgs.append((ndcg/10.0)/initial)
+          ndcgs_attacker.append((ndcg_attacker/10.0)/initial)
+          ndcg = 0
+          ndcg_attacker = 0
+
+      # taus.append(comb_tau/initial)
+      # ndcgs.append(ndcg/initial)
+      # print("my vs. ori", ndcg/initial, test_ndcg)
+      # assert ndcg/initial == test_ndcg
+
+
       self.timestep_evaluate(run_results, impressions, ranker,
                              ranking_i, train_ranking, ranking_labels)
 
       ranker.process_clicks(clicks)
 
+
     # evaluate after final iteration
+    x = [i for i in range(self.n_impressions/10-1)]
+    # plt.plot(x, taus)
+    ndcgs = ndcgs[1:]
+    fig_ndcg, ax_ndcg = plt.subplots()
+    ax_ndcg.plot(x, ndcgs)
+    ax_ndcg.set_xlabel("Impressions")
+    ax_ndcg.set_ylabel(self.datafold.name + ": Fold " + str(self.datafold.fold_num+1) + " NDCGs")
+
+    ndcgs_attacker = ndcgs_attacker[1:]
+    fig_ndcg_attacker, ax_ndcg_attacker = plt.subplots()
+    ax_ndcg_attacker.plot(x, ndcgs_attacker)
+    ax_ndcg_attacker.set_xlabel("Impressions")
+    ax_ndcg_attacker.set_ylabel(self.datafold.name + ": Fold " + str(self.datafold.fold_num+1) + " NDCGs attacker")
+    plt.show()
+
     ranking_i, train_ranking = self.sample_and_rank(ranker)
     ranking_labels =  self.datafold.train_query_labels(ranking_i)
     impressions += 1
@@ -177,3 +276,24 @@ class SingleSimulation(object):
               'run_results': run_results}
 
     self.output_queue.put((output_key, output))
+
+
+# Custom NDCG function written by Rishab (Considering binary relevance only)
+def compute_ndcg(attacker_ranking, model_ranking, k):
+
+    num = 0
+    denom = 0
+    i = 1
+    for r in model_ranking:
+      if i > k:
+          break
+      if r in attacker_ranking[0:k]:
+          num += 1/(math.log(1+i, 2))
+      i += 1
+
+    for j in range(1,k+1):
+      if j > len(attacker_ranking):
+        break
+      denom += 1/(math.log(1+j, 2))
+
+    return num/denom

@@ -28,6 +28,31 @@ def get_single_dcg_for_rankers(descending_rankings, document_labels, max_len):
                   + 2)[None, :], axis=1)
 
 
+# Calculate NDCG with a single array of descending ranking and the corresponding labels.
+def get_ndcg_with_label(descending_ranking, labels, max_len):
+    idcg = get_idcg(np.asarray(labels), max_len)
+    ordered_labels = [0 for i in descending_ranking]
+    for i in range(len(descending_ranking)):
+        if descending_ranking[i] < len(descending_ranking):
+            ordered_labels[i] = labels[descending_ranking[i]]
+    ordered_labels = np.asarray(ordered_labels[:max_len])
+    dcg = get_dcg(ordered_labels)
+    return dcg / idcg
+
+
+# Calculate NDCG with a single array of descending model_ranking and a descending ideal_ranking.
+# Assume that the first "max_len" documents in ideal_ranking has relevance score 1 and other documents
+# have relevance score 0.
+def get_ndcg_with_ranking(model_ranking, ideal_ranking, max_len):
+    labels = [0 for i in range(len(model_ranking))]
+    displayed_ideal_ranking = ideal_ranking[:max_len]
+    for document in model_ranking:
+      if document in displayed_ideal_ranking and document<len(model_ranking):
+          labels[document] = 1
+      i += 1
+    return get_ndcg_with_label(model_ranking, labels, max_len)
+
+
 def evaluate_ranking(ranking, labels, idcg, max_len):
     ordered_labels = labels[ranking]
     if idcg == 0.0:
