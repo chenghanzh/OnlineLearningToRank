@@ -3,6 +3,7 @@
 from numpy import log2
 from random import sample
 import numpy as np
+import math
 
 
 def get_dcg(ordered_labels):
@@ -29,16 +30,20 @@ def get_single_dcg_for_rankers(descending_rankings, document_labels, max_len):
 
 
 # Calculate NDCG with a single array of descending ranking and the corresponding labels.
-def get_ndcg_with_label(descending_ranking, labels, max_len):
+def get_ndcg_with_labels(ranking, labels, max_len):
     idcg = get_idcg(np.asarray(labels), max_len)
-    ordered_labels = [0 for i in descending_ranking]
-    for i in range(len(descending_ranking)):
-        if descending_ranking[i] < len(descending_ranking):
-            ordered_labels[i] = labels[descending_ranking[i]]
-    ordered_labels = np.asarray(ordered_labels[:max_len])
-    dcg = get_dcg(ordered_labels)
-    return dcg / idcg
+    if idcg==0:
+        return 0
+    nominators = [2. ** label - 1. for label in labels]
+    denominators = [math.log(r+2., 2) for r in ranking]
+    for i in range(len(ranking)):
+        if ranking[i]>=max_len:
+            nominators[i] = 0
 
+    ndcg = 0
+    for i in range(len(nominators)):
+        ndcg += nominators[i] / denominators[i] / idcg
+    return ndcg
 
 # Calculate NDCG with a single array of descending model_ranking and a descending ideal_ranking.
 # Assume that the first "max_len" documents in ideal_ranking has relevance score 1 and other documents

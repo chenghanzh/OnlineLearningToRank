@@ -2,7 +2,8 @@
 
 import time
 import numpy as np
-from evaluate import get_idcg_list, evaluate, evaluate_ranking, get_ndcg_with_label, get_ndcg_with_ranking
+from evaluate import *
+# from evaluate import get_idcg_list, evaluate, evaluate_ranking, get_ndcg_with_label, get_ndcg_with_ranking
 from clicks import *
 import scipy.stats as stats # For kendall tau
 import matplotlib.pyplot as plt
@@ -189,7 +190,6 @@ class SingleSimulation(object):
       # clicks = self.click_model.generate_mal_clicks(train_ranking, ranking_labels, attacker_scores, attacker_ranking)
 
       test_r = ranker.get_test_rankings(self.datafold.test_feature_matrix, self.datafold.test_doclist_ranges, inverted=True)
-
       test_ndcg = evaluate(
                     test_r,
                     self.datafold.test_label_vector,
@@ -208,8 +208,8 @@ class SingleSimulation(object):
       comb_tau = 0
 
       attacker_list = []
-
-      while(initial != self.datafold.test_doclist_ranges.shape[0]-1):
+      ndcg = 0
+      while(initial < self.datafold.test_doclist_ranges.shape[0]-1):
         start_doc = self.datafold.test_doclist_ranges[initial]
         end_doc = self.datafold.test_doclist_ranges[initial+1]
         test_labels = self.datafold.test_query_labels(initial)
@@ -223,20 +223,20 @@ class SingleSimulation(object):
         tau, _ = stats.kendalltau(attacker_ranking, test_r[start_doc:end_doc])
         comb_tau += tau
         attacker_list.extend(attacker_ranking)
-        initial += 1
         # ndcg += compute_ndcg(attacker_ranking, test_r[start_doc:end_doc], 10)
-        ndcg += get_ndcg_with_label(test_r[start_doc:end_doc], test_labels, 10)
-        ndcg_attacker += get_ndcg_with_ranking(test_r[start_doc:end_doc], attacker_ranking, 10)
+        ndcg += get_ndcg_with_labels(test_r[start_doc:end_doc], test_labels, 10)
+        initial += 1
+        # ndcg_attacker += get_ndcg_with_ranking(test_r[start_doc:end_doc], attacker_ranking, 10)
 
-      if impressions % 10 == 0:
-          ndcgs.append((ndcg/10.0)/initial)
-          ndcgs_attacker.append((ndcg_attacker/10.0)/initial)
-          ndcg = 0
-          ndcg_attacker = 0
+      # if impressions % 10 == 0:
+      #     ndcgs.append((ndcg/10.0)/initial)
+      #     ndcgs_attacker.append((ndcg_attacker/10.0)/initial)
+      #     ndcg = 0
+      #     ndcg_attacker = 0
 
       # taus.append(comb_tau/initial)
       # ndcgs.append(ndcg/initial)
-      # print("my vs. ori", ndcg/initial, test_ndcg)
+      print("my vs. ori", ndcg/initial, test_ndcg)
       # assert ndcg/initial == test_ndcg
 
 
@@ -260,7 +260,7 @@ class SingleSimulation(object):
     ax_ndcg_attacker.plot(x, ndcgs_attacker)
     ax_ndcg_attacker.set_xlabel("Impressions")
     ax_ndcg_attacker.set_ylabel(self.datafold.name + ": Fold " + str(self.datafold.fold_num+1) + " NDCGs attacker")
-    plt.show()
+    # plt.show()
 
     ranking_i, train_ranking = self.sample_and_rank(ranker)
     ranking_labels =  self.datafold.train_query_labels(ranking_i)
