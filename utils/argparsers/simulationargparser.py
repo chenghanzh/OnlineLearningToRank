@@ -33,15 +33,23 @@ class SimulationArgumentParser(argparse.ArgumentParser):
 
     self._sim_add_argument('--output_folder', dest='output_folder', type=str, required=False,
                       help='Path to folders where outputs should be stored, if not given output will be printed.'
-                      , default='/zfs/ilps-plex1/slurm/datastore/hooster2/new-output/fullruns/')
+                      , default='./output')
 
     self._sim_add_argument('--log_folder', dest='log_folder', type=str, required=False,
                       help='Path to folders where run log and errors will be stored.',
-                      default='/zfs/ilps-plex1/slurm/datastore/hooster2/logs/')
+                      default='./log/')
 
     self._sim_add_argument('--average_folder', dest='average_folder', type=str, required=False,
                       help='Path to folders where averaged output of runs will be stored.',
-                      default='//zfs/ilps-plex1/slurm/datastore/hooster2/new-output/averaged/')
+                      default='./average')
+
+    self._sim_add_argument('--attacker_average_folder', dest='attacker_average_folder', type=str, required=False,
+                      help='Path to folders where averaged output of runs will be stored.',
+                      default='./attackeraverage')
+
+    self._sim_add_argument('--attacker_folder', dest='attacker_folder', type=str, required=False,
+                      help='Path to folders where attacker output of runs will be stored.',
+                      default='./attackeroutput')
 
     self._sim_add_argument('--small_dataset', dest='small_dataset', action='store_false',
                       help='Set true if dataset is small and memory is never a concern.')

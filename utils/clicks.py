@@ -51,15 +51,6 @@ class ClickModel(object):
     ranking: np array of indices which correspond with all_labels
     all_labels: np array of integers
     '''
-
-    # max_score = max(attacker_scores)
-    # clicks = (attacker_scores == max_score)
-
-    # median_score = statistics.median(attacker_scores)
-    # clicks = (attacker_scores >= median_score)
-
-    # clicks = list(np.squeeze(clicks))
-
     clicks = []
     for i in train_ranking:
       if i in attacker_ranking[0:6]:
@@ -118,6 +109,43 @@ class ExamineClickModel(object):
     else:
         return np.zeros(ranking.shape, dtype=bool) + clicks
 
+class MaliciousClickModel(object):
+
+  '''
+  Class for cascading click-models used to simulate clicks.
+  '''
+
+  def __init__(self, name, data_type):
+    '''
+    Name is used for logging and identifying the attack type.
+    '''
+    self.name = name
+    self.type = data_type
+
+  def get_name(self):
+    '''
+    Name that can be used for logging.
+    '''
+    return self.name + '_' + self.type
+
+  def generate_clicks(self, train_ranking, attacker_scores, attacker_rankings):
+      if self.name == "naive":
+          return self.naive_mal_clicks(train_ranking, attacker_scores, attacker_ranking)
+
+  def naive_mal_clicks(self, train_ranking, attacker_scores, attacker_ranking):
+    '''
+    Generates malicious clicks for a given ranking and relevance labels.
+    ranking: np array of indices which correspond with all_labels
+    all_labels: np array of integers
+    '''
+    clicks = []
+    for i in train_ranking:
+      if i in attacker_ranking[0:6]:
+        clicks.append(True)
+      else:
+        clicks.append(False)
+
+    return np.zeros(train_ranking.shape, dtype=bool) + clicks
 
 # create synonyms for keywords to ease command line use
 syn_tuples = [
@@ -138,6 +166,9 @@ syn_tuples = [
     ('short', []),
     ('long', []),
     ]
+attack_tuples = [
+    ('naive_attack', []),
+]
 synonyms = {}
 for full, abrv_list in syn_tuples:
     assert full not in synonyms or synonyms[full] == full
@@ -145,6 +176,14 @@ for full, abrv_list in syn_tuples:
     for abrv in abrv_list:
         assert abrv not in synonyms or synonyms[abrv] == full
         synonyms[abrv] = full
+
+attack_synonyms = {}
+for full, abrv_list in attack_tuples:
+    assert full not in attack_synonyms or attack_synonyms[full] == full
+    attack_synonyms[full] = full
+    for abrv in abrv_list:
+        assert abrv not in attack_synonyms or attack_synonyms[abrv] == full
+        attack_synonyms[abrv] = full
 
 bin_models = {}
 bin_models['navigational'] = np.array([.05, .95]), np.array([.2, .9])
@@ -180,20 +219,27 @@ def get_click_models(keywords):
     type_name = None
     type_keyword = None
     for keyword in keywords:
-        assert keyword in synonyms
-        if synonyms[keyword] in all_models:
+        assert (keyword in synonyms) or (keyword in attack_synonyms)
+        if keyword in synonyms and synonyms[keyword] in all_models:
             type_name = synonyms[keyword]
             type_keyword = keyword
             break
     assert type_name is not None and type_keyword is not None
 
     models_type = all_models[type_name]
-    full_names = [synonyms[key] for key in keywords if key != type_keyword]
+    full_names = []
+    for key in keywords:
+        if key in synonyms and key != type_keyword:
+            full_names.append(synonyms[key])
+        if key in attack_synonyms:
+            full_names.append(attack_synonyms[key])
 
     click_models = []
     for full in full_names:
         if full == 'ex_per_1':
             c_m = ExamineClickModel(full, type_name, *models_type[full])
+        elif full in attack_synonyms:
+            c_m = MaliciousClickModel(full, type_name)
         else:
             c_m = ClickModel(full, type_name, *models_type[full])
         click_models.append(c_m)

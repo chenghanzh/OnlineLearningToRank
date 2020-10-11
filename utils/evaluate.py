@@ -51,10 +51,10 @@ def get_ndcg_with_labels(ranking, labels, max_len):
 def get_ndcg_with_ranking(model_ranking, ideal_ranking, max_len):
     labels = [0 for i in range(len(model_ranking))]
     displayed_ideal_ranking = ideal_ranking[:max_len]
-    for document in model_ranking:
-      if document in displayed_ideal_ranking and document<len(model_ranking):
+    for document in range(len(model_ranking)):
+      if document in displayed_ideal_ranking:
           labels[document] = 1
-    return get_ndcg_with_label(model_ranking, labels, max_len)
+    return get_ndcg_with_labels(model_ranking, labels, max_len)
 
 
 def evaluate_ranking(ranking, labels, idcg, max_len):
@@ -75,7 +75,6 @@ def evaluate(rankings, label_vector, idcg_vector, n_queries, max_len):
 
     idcg_copy = np.copy(idcg_vector)
     idcg_copy[idcg_vector == 0] = 1
-
     return np.sum(nominators / denominators / idcg_copy) / n_queries
 
 
