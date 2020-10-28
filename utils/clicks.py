@@ -128,9 +128,12 @@ class MaliciousClickModel(object):
     '''
     return self.name + '_' + self.type
 
-  def generate_clicks(self, train_ranking, attacker_scores, attacker_rankings):
+  def generate_clicks(self, train_ranking, attacker_scores, attacker_rankings, ranker, ranking_i):
       if self.name == "naive":
           return self.naive_mal_clicks(train_ranking, attacker_scores, attacker_ranking)
+      if self.name == "freq":
+          return self.naive_mal_clicks(ranker, ranking_i, train_ranking, attacker_ranking)
+
 
   def naive_mal_clicks(self, train_ranking, attacker_scores, attacker_ranking):
     '''
@@ -146,6 +149,30 @@ class MaliciousClickModel(object):
         clicks.append(False)
 
     return np.zeros(train_ranking.shape, dtype=bool) + clicks
+
+  def freq_mal_clicks(self, ranker, ranking_i, train_ranking, attacker_ranking):
+    freq = {}
+    for i in range(0, 10):
+      train_ranking = ranker.get_train_query_ranking(ranking_i)
+      for r in train_ranking:
+        freq[r] = freq.get(r, 0) + 1
+
+    should_click = []
+    sorted_freqs = sorted(freq.items(), key=operator.itemgetter(1), reverse=True)
+
+    for key in freq:
+        if freq[key] >= 9:
+            should_click.append(key)
+
+    clicks = []
+    for i in train_ranking:
+      if i in should_click:
+        clicks.append(True)
+      else:
+        clicks.append(False)
+
+    return np.zeros(train_ranking.shape, dtype=bool) + clicks
+
 
 # create synonyms for keywords to ease command line use
 syn_tuples = [
@@ -168,6 +195,7 @@ syn_tuples = [
     ]
 attack_tuples = [
     ('naive_attack', []),
+    ('freq_attack', []),
 ]
 synonyms = {}
 for full, abrv_list in syn_tuples:

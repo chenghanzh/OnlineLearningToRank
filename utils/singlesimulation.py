@@ -168,7 +168,7 @@ class SingleSimulation(object):
       attacker_scores, attacker_ranking = get_attack_scores_and_ranking(train_feat)
 
       # clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
-      clicks = self.click_model.generate_clicks(train_ranking, attacker_scores, attacker_ranking)
+      clicks = self.click_model.generate_clicks(train_ranking, attacker_scores, attacker_ranking, ranker, ranking_i)
 
       self.test_evaluation(attacker_results, impressions, ranker, self.n_results)
 
