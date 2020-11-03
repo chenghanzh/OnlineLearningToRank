@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import operator
 
 
 class ClickModel(object):
@@ -128,14 +129,16 @@ class MaliciousClickModel(object):
     '''
     return self.name + '_' + self.type
 
-  def generate_clicks(self, train_ranking, attacker_scores, attacker_rankings, ranker, ranking_i):
-      if self.name == "naive":
-          return self.naive_mal_clicks(train_ranking, attacker_scores, attacker_ranking)
-      if self.name == "freq":
-          return self.naive_mal_clicks(ranker, ranking_i, train_ranking, attacker_ranking)
+  def generate_clicks(self, train_ranking, attacker_scores, attacker_ranking, ranker, ranking_i):
+      if self.name == "naive_first_attack":
+          return self.naive_mal_clicks_first(train_ranking, attacker_scores, attacker_ranking)
+      if self.name == "naive_last_attack":
+          return self.naive_mal_clicks_last(train_ranking, attacker_scores, attacker_ranking)
+      if self.name == "freq_attack":
+          return self.freq_mal_clicks(ranker, ranking_i, train_ranking, attacker_ranking)
 
 
-  def naive_mal_clicks(self, train_ranking, attacker_scores, attacker_ranking):
+  def naive_mal_clicks_first(self, train_ranking, attacker_scores, attacker_ranking):
     '''
     Generates malicious clicks for a given ranking and relevance labels.
     ranking: np array of indices which correspond with all_labels
@@ -144,6 +147,21 @@ class MaliciousClickModel(object):
     clicks = []
     for i in train_ranking:
       if i in attacker_ranking[0:6]:
+        clicks.append(True)
+      else:
+        clicks.append(False)
+
+    return np.zeros(train_ranking.shape, dtype=bool) + clicks
+
+  def naive_mal_clicks_last(self, train_ranking, attacker_scores, attacker_ranking):
+    '''
+    Generates malicious clicks for a given ranking and relevance labels.
+    ranking: np array of indices which correspond with all_labels
+    all_labels: np array of integers
+    '''
+    clicks = []
+    for i in train_ranking:
+      if i in attacker_ranking[6:11]:
         clicks.append(True)
       else:
         clicks.append(False)
@@ -194,7 +212,8 @@ syn_tuples = [
     ('long', []),
     ]
 attack_tuples = [
-    ('naive_attack', []),
+    ('naive_first_attack', []),
+    ('naive_last_attack', []),
     ('freq_attack', []),
 ]
 synonyms = {}

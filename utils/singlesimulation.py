@@ -170,7 +170,7 @@ class SingleSimulation(object):
       # clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
       clicks = self.click_model.generate_clicks(train_ranking, attacker_scores, attacker_ranking, ranker, ranking_i)
 
-      self.test_evaluation(attacker_results, impressions, ranker, self.n_results)
+      self.test_evaluation(attacker_results, impressions, ranker, clicks, self.n_results)
 
       self.timestep_evaluate(run_results, impressions, ranker,
                              ranking_i, train_ranking, ranking_labels)
@@ -209,10 +209,10 @@ class SingleSimulation(object):
     self.output_queue.put((attacker_output_key, attacker_output))
 
 
-  def test_evaluation(self, attacker_results, iteration, ranker, n_results):
+  def test_evaluation(self, attacker_results, iteration, ranker, clicks, n_results):
       test_r = ranker.get_test_rankings(self.datafold.test_feature_matrix, self.datafold.test_doclist_ranges, inverted=True)
 
-      ndcg, tau, tau_sum = 0, 0, 0
+      ndcg_attack, ndcg_label, tau, tau_sum = 0, 0, 0, 0
       for test_query in range(self.datafold.test_doclist_ranges.shape[0]-1):
         start_doc = self.datafold.test_doclist_ranges[test_query]
         end_doc = self.datafold.test_doclist_ranges[test_query+1]
@@ -224,14 +224,19 @@ class SingleSimulation(object):
 
         assert len(attacker_ranking) == test_r[start_doc:end_doc].shape[0]
 
-        ndcg += get_ndcg_with_ranking(test_r[start_doc:end_doc], attacker_ranking, n_results)
+        ndcg_attack += get_ndcg_with_ranking(test_r[start_doc:end_doc], attacker_ranking, n_results)
+        ndcg_label += get_ndcg_with_labels(test_r[start_doc:end_doc], test_labels, n_results)
         tau, _ = stats.kendalltau(attacker_ranking, test_r[start_doc:end_doc])
         tau_sum += tau
 
+      num_clicks = np.count_nonzero(clicks)
+
       cur_results = {
         'iteration': iteration,
-        'NDCG': ndcg/test_query,
+        'NDCG_attack': ndcg_attack/test_query,
+        'NDCG_label': ndcg_label/test_query,
         'Kendall\'s Tau': tau_sum/test_query,
+        'Click Number': num_clicks,
       }
 
       for name, value in ranker.get_messages().items():
