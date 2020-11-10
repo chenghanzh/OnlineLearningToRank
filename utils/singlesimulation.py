@@ -160,6 +160,12 @@ class SingleSimulation(object):
 
     for impressions in range(self.n_impressions):
       ranking_i, train_ranking = self.sample_and_rank(ranker)
+      freq = {}
+      for i in range(0, 10):
+        for r in train_ranking:
+          freq[r] = freq.get(r, 0) + 1
+        train_ranking = ranker.get_train_query_ranking(ranking_i)
+
       ranking_labels = self.datafold.train_query_labels(ranking_i)
       train_feat = ranker.get_query_features(ranking_i,
                                        self.datafold.train_feature_matrix,
@@ -168,7 +174,7 @@ class SingleSimulation(object):
       attacker_scores, attacker_ranking = get_attack_scores_and_ranking(train_feat)
 
       # clicks = self.click_model.generate_clicks(train_ranking, ranking_labels)
-      clicks = self.click_model.generate_clicks(train_ranking, attacker_scores, attacker_ranking, ranker, ranking_i)
+      clicks = self.click_model.generate_clicks(train_ranking, attacker_scores, attacker_ranking, freq)
 
       self.test_evaluation(attacker_results, impressions, ranker, clicks, self.n_results)
 

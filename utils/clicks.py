@@ -129,13 +129,13 @@ class MaliciousClickModel(object):
     '''
     return self.name + '_' + self.type
 
-  def generate_clicks(self, train_ranking, attacker_scores, attacker_ranking, ranker, ranking_i):
+  def generate_clicks(self, train_ranking, attacker_scores, attacker_ranking, freq):
       if self.name == "naive_first_attack":
           return self.naive_mal_clicks_first(train_ranking, attacker_scores, attacker_ranking)
       if self.name == "naive_last_attack":
           return self.naive_mal_clicks_last(train_ranking, attacker_scores, attacker_ranking)
       if self.name == "freq_attack":
-          return self.freq_mal_clicks(ranker, ranking_i, train_ranking, attacker_ranking)
+          return self.freq_mal_clicks(train_ranking, attacker_ranking, freq)
 
 
   def naive_mal_clicks_first(self, train_ranking, attacker_scores, attacker_ranking):
@@ -168,13 +168,7 @@ class MaliciousClickModel(object):
 
     return np.zeros(train_ranking.shape, dtype=bool) + clicks
 
-  def freq_mal_clicks(self, ranker, ranking_i, train_ranking, attacker_ranking):
-    freq = {}
-    for i in range(0, 10):
-      train_ranking = ranker.get_train_query_ranking(ranking_i)
-      for r in train_ranking:
-        freq[r] = freq.get(r, 0) + 1
-
+  def freq_mal_clicks(self, ranker, ranking_i, train_ranking, attacker_ranking, freq):
     should_click = []
     sorted_freqs = sorted(freq.items(), key=operator.itemgetter(1), reverse=True)
 
