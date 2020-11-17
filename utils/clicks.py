@@ -168,17 +168,21 @@ class MaliciousClickModel(object):
 
     return np.zeros(train_ranking.shape, dtype=bool) + clicks
 
-  def freq_mal_clicks(self, ranker, ranking_i, train_ranking, attacker_ranking, freq):
+  def freq_mal_clicks(self, train_ranking, attacker_ranking, freq):
     should_click = []
     sorted_freqs = sorted(freq.items(), key=operator.itemgetter(1), reverse=True)
 
-    for key in freq:
-        if freq[key] >= 9:
-            should_click.append(key)
+    # for key in freq:
+    #     if freq[key] >= 9:
+    #         should_click.append(key)
+
+    top_k = []
+    for i in range(0, 10):
+        top_k.append(sorted_freqs[i][0])
 
     clicks = []
     for i in train_ranking:
-      if i in should_click:
+      if i in top_k and i in attacker_ranking[0:5]:
         clicks.append(True)
       else:
         clicks.append(False)

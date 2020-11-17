@@ -232,7 +232,12 @@ class SingleSimulation(object):
 
         ndcg_attack += get_ndcg_with_ranking(test_r[start_doc:end_doc], attacker_ranking, n_results)
         ndcg_label += get_ndcg_with_labels(test_r[start_doc:end_doc], test_labels, n_results)
-        tau, _ = stats.kendalltau(attacker_ranking, test_r[start_doc:end_doc])
+
+        inverted_model_ranking = [0 for i in range(len(model_ranking))]      #  [2,3,4,1,0]  => [5, 4, 0, 1, 3]
+        for i in range(len(model_ranking)):
+            if model_ranking[i] < len(inverted_model_ranking):
+                inverted_model_ranking[model_ranking[i]] = i
+        tau, _ = stats.kendalltau(attacker_ranking, r)
         tau_sum += tau
 
       num_clicks = np.count_nonzero(clicks)
