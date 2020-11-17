@@ -176,8 +176,9 @@ class MaliciousClickModel(object):
     #     if freq[key] >= 9:
     #         should_click.append(key)
 
+    ranking_len = min(10, len(train_ranking))
     top_k = []
-    for i in range(0, 10):
+    for i in range(0, ranking_len):
         top_k.append(sorted_freqs[i][0])
 
     clicks = []

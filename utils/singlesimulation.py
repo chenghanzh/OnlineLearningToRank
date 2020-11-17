@@ -5,7 +5,7 @@ import numpy as np
 from evaluate import *
 from clicks import *
 import scipy.stats as stats # For kendall tau
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import math
 
 
@@ -224,6 +224,8 @@ class SingleSimulation(object):
         end_doc = self.datafold.test_doclist_ranges[test_query+1]
         test_labels = self.datafold.test_query_labels(test_query)
 
+        test_ranking = test_r[start_doc:end_doc]
+
         test_features = self.datafold.test_feature_matrix[start_doc:end_doc, :]
 
         attacker_scores, attacker_ranking = get_attack_scores_and_ranking(test_features)
@@ -233,11 +235,11 @@ class SingleSimulation(object):
         ndcg_attack += get_ndcg_with_ranking(test_r[start_doc:end_doc], attacker_ranking, n_results)
         ndcg_label += get_ndcg_with_labels(test_r[start_doc:end_doc], test_labels, n_results)
 
-        inverted_model_ranking = [0 for i in range(len(model_ranking))]      #  [2,3,4,1,0]  => [5, 4, 0, 1, 3]
-        for i in range(len(model_ranking)):
-            if model_ranking[i] < len(inverted_model_ranking):
-                inverted_model_ranking[model_ranking[i]] = i
-        tau, _ = stats.kendalltau(attacker_ranking, r)
+        inverted_test_ranking = [0 for i in range(len(test_ranking))]      #  [2,3,4,1,0]  => [5, 4, 0, 1, 3]
+        for i in range(len(test_ranking)):
+            if test_ranking[i] < len(inverted_test_ranking):
+                inverted_test_ranking[test_ranking[i]] = i
+        tau, _ = stats.kendalltau(attacker_ranking, inverted_test_ranking)
         tau_sum += tau
 
       num_clicks = np.count_nonzero(clicks)

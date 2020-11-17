@@ -160,6 +160,15 @@ DATASET_COLLECTION['MQ2007'] = DataSet('MQ2007', [
                                                range(21,26), #BM25
                                                range(26,41)  #LMIR
                                              ])
+DATASET_COLLECTION['MQ2007_F1'] = DataSet('MQ2007',
+                                '/zf15/hw7ww/Bandit/Code/datasets/MQ2007/Fold1/',
+                                'short',
+                                       True, 41,
+                                       multileave_feat=[
+                                               range(11,16), #TF-IDF
+                                               range(21,26), #BM25
+                                               range(26,41)  #LMIR
+                                             ])
 DATASET_COLLECTION['OHSUMED'] = DataSet('OHSUMED', '/zfs/ilps-plex1/slurm/datastore/hooster2/datasets/OHSUMED/Fold*/', 'short'
                                         , True, 36,
                                        multileave_feat=[
