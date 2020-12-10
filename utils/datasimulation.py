@@ -72,6 +72,7 @@ class DataSimulation(object):
       self.wait_for_output()
     self.update_active()
 
+    print("launched, outputs_found", self._launched, self._outputs_found)
     seconds_past = time.time() - starttime
     print ('Time taken: %s (%d seconds)' %
         (str(datetime.timedelta(seconds=seconds_past)),
@@ -103,7 +104,7 @@ class DataSimulation(object):
       r_args = r_class.default_parameters()
       r_args.update(r_new_args)
       output_key = run_name, datafold.name
-      attacker_output_key = run_name, datafold.name, "attacker"
+      attacker_output_key = run_name + ":attacker", datafold.name
       if not output_key in self.run_outputs:
         self.run_outputs[output_key] = SimulationOutput(
                 self.sim_args, run_name, datafold,
@@ -197,4 +198,4 @@ class DataSimulation(object):
     self.update_active()
 
   def _expecting_output(self):
-    return self._outputs_found < self._launched
+    return self._outputs_found < self._launched*2
